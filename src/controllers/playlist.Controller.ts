@@ -27,11 +27,11 @@ export const createPlaylist = async (req: Request, res: Response) => {
             }
         })
 
-        res.status(201).send({ status: 'success', message: 'Movie created successfully', newPlaylist });
+        res.status(201).send({message: 'playlist created successfully', newPlaylist });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
         // In case of internal error, return an error message with status code 500
-        return res.status(500).send({ status: 'error', error: 'Internal server error' });
+        return res.status(500).send({error: 'Internal server error' });
     }
 };

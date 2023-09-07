@@ -30,7 +30,7 @@ export const createUser = async (req: Request, res: Response) => {
         } })
 
         if(!emailExist) {
-            // If we pass all the previous validations, create a new user in the database
+            // if the user does not exist in the database, create a new user
             const newUser = await prisma.user.create({data: {  name: name, email: email},
                 include: {playlist: {
                     select: {
@@ -44,7 +44,7 @@ export const createUser = async (req: Request, res: Response) => {
                     }
                     }
                 }})
-                return res.status(201).send({ status: 'success', message: "User created successfully!", user: newUser });
+                return res.status(201).send({message: "User created successfully!", user: newUser });
         } else {
              // If the email already exists, return the data of the existing user
              return res.status(200).send({ status: 'success', message: 'User already exists.', user: emailExist });
@@ -54,6 +54,6 @@ export const createUser = async (req: Request, res: Response) => {
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
         // In case of internal error, return an error message with status code 500
-     return res.status(500).send({ status: 'error', error: 'Internal server error' });
+     return res.status(500).send({ error: 'Internal server error' });
     }
 };
