@@ -3,6 +3,7 @@ import express, { Express } from 'express';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import userRoutes from './routes/user.routes';
 
 
 
@@ -19,7 +20,7 @@ app.use(fileUpload({
 }));
 
 
-// app.use(/user, userRoutes);
+app.use('/user', userRoutes);
 
 
 export default app;
