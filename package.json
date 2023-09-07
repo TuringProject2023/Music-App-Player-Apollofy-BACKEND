@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",
+    "@types/dotenv": "^8.2.0",
     "@types/express-fileupload": "^1.4.1",
     "@types/fs-extra": "^11.0.1",
     "cloudinary": "^1.40.0",
