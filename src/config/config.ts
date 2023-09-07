@@ -52,7 +52,6 @@ const CONFIG: TConfig = {
         // }
     },
 };
-console.log(CONFIG)
 
 export const CLOUDINARY_CLOUD_NAME = process.env['CLOUDINARY_NAME']
 export const CLOUDINARY_API_KEY = process.env['CLOUDINARY_API_KEY']

@@ -4,16 +4,19 @@ import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import userRoutes from './routes/user.routes';
+import playlistRoutes from './routes/playlist.routes';
+import songRoutes from './routes/song.routes';
 
 
 
 const app: express.Application = express();
 
 
-app.use(cors());
-app.use(morgan('dev'));
-app.use(helmet());
 app.use(express.json());
+app.use(morgan('dev'));
+app.use(cors());
+app.use(express.urlencoded({ extended: false })); // Middleware for parsing form data
+app.use(helmet());
 app.use(fileUpload({
     useTempFiles: true,
     tempFileDir: './uploads'
@@ -21,6 +24,8 @@ app.use(fileUpload({
 
 
 app.use('/user', userRoutes);
+app.use('/playlist', playlistRoutes);
+app.use('/song', songRoutes);
 
 
 export default app;
