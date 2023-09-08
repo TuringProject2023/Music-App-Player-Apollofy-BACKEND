@@ -5,6 +5,6 @@ import { createSong } from '../controllers/song.Controller';
 const songRoutes = Router();
 
 songRoutes
-    .post('/:userId', createSong);
+    .post('/', createSong);
 
 export default songRoutes;
