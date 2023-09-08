@@ -16,9 +16,9 @@ model User {
   name        String?
   playlistIDs String[]   @db.ObjectId
   playlist    Playlist[] @relation(fields: [playlistIDs], references: [id])
-  songs       Song[]     @relation("UserSongs")
+  songsIDs    String[]   @db.ObjectId
+  songs       Song[]     @relation(fields: [songsIDs], references: [id])
 }
-
 
 model Playlist {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -36,7 +36,6 @@ model Song {
   url        String
   playlist   Playlist[] @relation(fields: [playlistId], references: [id])
   playlistId String[]   @db.ObjectId
-  userId     String     @db.ObjectId
-  user       User       @relation("UserSongs", fields: [userId], references: [id])
+  userId     String[]   @db.ObjectId
+  user       User[]     @relation(fields: [userId], references: [id])
 }
-
