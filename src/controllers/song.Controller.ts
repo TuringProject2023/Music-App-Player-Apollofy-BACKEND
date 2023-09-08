@@ -1,29 +1,25 @@
-import { Request, Response } from 'express'
-import { prisma } from '../db/clientPrisma'
-
+import { Request, Response } from "express";
+import { prisma } from "../db/clientPrisma";
 
 export const createSong = async (req: Request, res: Response) => {
-    const { userId } = req.params;
-    const { name, url } = req.body;
+  const { name, url } = req.body;
 
-    try {
+  try {
+    const newSong = await prisma.song.create({
+      data: {
+        name,
+        url,
+      },
+    });
 
-        const newSong = await prisma.song.create({
-            data: {
-                name,
-                url,
-                userId: userId
-            }
-        });
-
-        return res.status(201).send({ message: 'Song created successfully', newSong });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send({ error: 'Internal server error' });
-    }
+    return res
+      .status(201)
+      .send({ message: "Song created successfully", newSong });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ error: "Internal server error" });
+  }
 };
-
-
 
 // Crear 4 canciones para probar
 // crear playlist vacia
