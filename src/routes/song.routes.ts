@@ -1,10 +1,8 @@
-import { Router } from 'express';
-import { createSong } from '../controllers/song.Controller';
-
+import { Router } from "express";
+import { createSong } from "../controllers/song.Controller";
 
 const songRoutes = Router();
 
-songRoutes
-    .post('/', createSong);
+songRoutes.post("/", createSong);
 
 export default songRoutes;
