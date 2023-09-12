@@ -93,7 +93,7 @@ model Album {
 
 model Genre {
   id             String     @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
+  genreName      String
   genreImage     String
   genreCreatedAt DateTime   @default(now())
   genreUpdatedAt DateTime   @updatedAt

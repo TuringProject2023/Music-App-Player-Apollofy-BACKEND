@@ -4,6 +4,7 @@ import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { playlistRoutes, trackRoutes, userRoutes } from './routes';
+import genreRoutes from './routes/genre.routes';
 
 
 
@@ -24,6 +25,7 @@ app.use(fileUpload({
 app.use('/user', userRoutes);
 app.use('/playlist', playlistRoutes);
 app.use('/track', trackRoutes);
+app.use('/genre', genreRoutes)
 
 
 export default app;
