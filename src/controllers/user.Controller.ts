@@ -63,23 +63,23 @@ export const createUser = async (req: Request, res: Response) => {
     }
 };
 
-export const getUserById = async (req: Request, res: Response) => {
 
-    const { userId } = req.params
+
+
+
+export const getUserByEmail = async (req: Request, res: Response) => {
+
+    const { userEmail } = req.params
 
     try {
-
-
         const userById = await prisma.user.findUnique({
-            where: { userEmail: userId },
+            where: { userEmail: userEmail },
             include: {
 
             }
         })
 
-        return res.status(201).send({ message: "User created successfully!", user: userById });
-
-
+        return res.status(200).send({ message: "User getted successfully!", user: userById });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -91,9 +91,7 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const getAllUsers = async (req: Request, res: Response) => {
 
-
     try {
-
 
         const allUsers = await prisma.user.findMany({
             include: {
@@ -102,8 +100,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
         })
 
         return res.status(201).send({ message: "User created successfully!", user: allUsers });
-
-
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -132,17 +128,16 @@ export const updateUserById = async (req: Request, res: Response) => {
     }
 };
 
+
 export const deleteUserById = async (req: Request, res: Response) => {
 
     const { userId } = req.params
-   
+
     try {
 
-        const deleteUser = await prisma.user.delete({ where: {id: userId} })
+        const deleteUser = await prisma.user.delete({ where: { id: userId } })
 
-        return res.status(201).send({ message: "User updated successfully!", user: deleteUser });
-
-
+        return res.status(201).send({ message: "User deleted successfully!", user: deleteUser });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes

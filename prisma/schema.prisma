@@ -11,40 +11,39 @@ datasource db {
 }
 
 model User {
-  id               String     @id @default(auto()) @map("_id") @db.ObjectId
-  userEmail        String     @unique
-  userName         String?
-  userImage        String
-  userCreatedAt    DateTime   @default(now())
-  userUpdatedAt    DateTime   @updatedAt
-  playlistLikedId  String[]   @db.ObjectId
-  playlistLiked    Playlist[] @relation("likedBy", fields: [playlistLikedId], references: [id])
-  tracksId         String[]   @db.ObjectId
-  tracks           Track[]    @relation(fields: [tracksId], references: [id])
-  postId           String[]   @db.ObjectId
-  post             Post[]     @relation(fields: [postId], references: [id])
-  albumId          String[]   @db.ObjectId
-  album            Album[]    @relation(fields: [albumId], references: [id])
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
+  userEmail         String     @unique
+  userName          String?
+  userImage         String
+  userCreatedAt     DateTime   @default(now())
+  userUpdatedAt     DateTime   @updatedAt
+  playlistLikedId   String[]   @db.ObjectId
+  playlistLiked     Playlist[] @relation("likedBy", fields: [playlistLikedId], references: [id])
+  tracksId          String[]   @db.ObjectId
+  tracks            Track[]    @relation(fields: [tracksId], references: [id])
+  postId            String[]   @db.ObjectId
+  post              Post[]     @relation(fields: [postId], references: [id])
+  albumId           String[]   @db.ObjectId
+  album             Album[]    @relation(fields: [albumId], references: [id])
   playlistCreatedId String[]   @db.ObjectId
-  playlistCreated  Playlist[] @relation("createdBy")
+  playlistCreated   Playlist[] @relation("createdBy")
 }
 
 model Playlist {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  playlistName      String
-  playlistImage     String
-  playlistCreatedAt DateTime @default(now())
-  playlistUpdatedAt DateTime @updatedAt
-  trackIds          String[] @db.ObjectId
-  track             Track[]  @relation(fields: [trackIds], references: [id])
-  playlistLikedById String[] @db.ObjectId
-  playlistLikedBy   User[]   @relation("likedBy", fields: [playlistLikedById], references: [id])
-  playlistCreatedBy String?   @db.ObjectId
-  playlistCreateBy  User?   @relation("createdBy", fields: [playlistCreatedBy], references: [id])
-  genre             Genre[]  @relation(fields: [genreId], references: [id])
-  genreId           String[] @db.ObjectId
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  playlistName        String
+  playlistImage       String
+  playlistCreatedAt   DateTime @default(now())
+  playlistUpdatedAt   DateTime @updatedAt
+  trackIds            String[] @db.ObjectId
+  track               Track[]  @relation(fields: [trackIds], references: [id])
+  playlistLikedById   String[] @db.ObjectId
+  playlistLikedBy     User[]   @relation("likedBy", fields: [playlistLikedById], references: [id])
+  playlistCreatedById String?  @db.ObjectId
+  playlistCreatedBy   User?    @relation("createdBy", fields: [playlistCreatedById], references: [id])
+  genre               Genre[]  @relation(fields: [genreId], references: [id])
+  genreId             String[] @db.ObjectId
 }
-
 
 model Track {
   id             String     @id @default(auto()) @map("_id") @db.ObjectId
