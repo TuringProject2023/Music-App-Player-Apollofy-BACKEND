@@ -25,7 +25,7 @@ app.use(fileUpload({
 
 app.use('/user', userRoutes);
 app.use('/playlist', playlistRoutes);
-app.use('/song', trackRoutes);
+app.use('/track', trackRoutes);
 
 
 export default app;
