@@ -5,9 +5,9 @@ const trackRoutes = Router();
 
 trackRoutes
     .post("/", createTrack)
-    .get("/track", getTrackById)
-    .get("/track", getAllTracks)
-    .put("/track", updateTrackById)
-    .delete("/track", deleteTrackById)
+    .get("/:trackId", getTrackById)
+    .get("/", getAllTracks)
+    .put("/:trackId", updateTrackById)
+    .delete("/:trackId", deleteTrackById)
 
 export default trackRoutes;
