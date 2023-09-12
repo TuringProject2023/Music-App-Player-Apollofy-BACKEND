@@ -3,9 +3,7 @@ import express, { Express } from 'express';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { playlistRoutes, trackRoutes, userRoutes } from './routes';
-import genreRoutes from './routes/genre.routes';
-
+import { genreRoutes, playlistRoutes, trackRoutes, userRoutes } from './routes';
 
 
 const app: express.Application = express();
