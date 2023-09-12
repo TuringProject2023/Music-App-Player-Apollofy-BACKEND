@@ -3,7 +3,8 @@ import express, { Express } from 'express';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { genreRoutes, playlistRoutes, trackRoutes, userRoutes } from './routes';
+import { albumRoutes, artistRoutes, genreRoutes, playlistRoutes, trackRoutes, userRoutes } from './routes';
+
 
 
 const app: express.Application = express();
@@ -23,7 +24,9 @@ app.use(fileUpload({
 app.use('/user', userRoutes);
 app.use('/playlist', playlistRoutes);
 app.use('/track', trackRoutes);
-app.use('/genre', genreRoutes)
+app.use('/genre', genreRoutes);
+app.use('/artist', artistRoutes);
+app.use('/album', albumRoutes);
 
 
 export default app;
