@@ -3,9 +3,7 @@ import express, { Express } from 'express';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import userRoutes from './routes/user.routes';
-import playlistRoutes from './routes/playlist.routes';
-import trackRoutes from './routes/track.routes';
+import { playlistRoutes, trackRoutes, userRoutes } from './routes';
 
 
 
