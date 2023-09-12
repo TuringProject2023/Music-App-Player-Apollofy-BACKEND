@@ -22,4 +22,10 @@ export async function uploadImage(filePath: string) {
     }
   }
 
+  export const deleteImage = async (imageId:string) => {
+
+    return await cloudinary.uploader.destroy(imageId)
+
+};
+
 
