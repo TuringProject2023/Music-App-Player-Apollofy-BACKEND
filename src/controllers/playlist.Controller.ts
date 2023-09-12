@@ -25,11 +25,11 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
                         id: genreId
                     })
                 },
-                playlistCreatedBy: {
-                    connect: {
-                        id: userId,
-                    }
-                },
+                // playlistCreatedBy: {
+                //     connect: {
+                //         id: userId,
+                //     }
+                // },
                 // playlistLikedBy: {
                 //     connect: {
                 //         id: userId,

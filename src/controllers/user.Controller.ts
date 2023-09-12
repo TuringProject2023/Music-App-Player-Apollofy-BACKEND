@@ -4,10 +4,69 @@ import { prisma } from "../db/clientPrisma";
 export const createUser = async (req: Request, res: Response) => {
   const { email, name, userAvatar } = req.body;
 
+<<<<<<< HEAD
   try {
     // Check if all required fields are provided
     if (!name || !email) {
       return res.status(400).send({ status: "error", error: "Name and email are required fields." });
+=======
+    const { email, name } = req.body
+
+    try {
+        // Check if all required fields are provided
+        if (!name || !email) {
+            return res.status(400).send({ status: 'error', error: 'Name and email are required fields.' });
+        }
+
+        // Check if the email already exists in the database
+        const emailExist = await prisma.user.findUnique({
+            where: { userEmail: email },
+            include: {
+                playlistCreated: {
+                    select: {
+                        playlistName: true,
+                        track: {
+                            select: {
+                                trackName: true,
+                                trackUrl: true
+                            }
+                        },
+
+                    }
+                }
+            }
+        })
+
+        if (!emailExist) {
+            // if the user does not exist in the database, create a new user
+            const newUser = await prisma.user.create({
+                data: { userName: name, userEmail: email},
+                include: {
+                    playlistCreated: {
+                        select: {
+                            playlistName: true,
+                            track: {
+                                select: {
+                                    trackName: true,
+                                    trackUrl: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            return res.status(201).send({ message: "User created successfully!", user: newUser });
+        } else {
+            // If the email already exists, return the data of the existing user
+            return res.status(200).send({ status: 'success', message: 'User already exists.', user: emailExist });
+        }
+
+
+    } catch (err) {
+        console.error(err); // Log the error to the console for debugging purposes
+        // In case of internal error, return an error message with status code 500
+        return res.status(500).send({ error: 'Internal server error' });
+>>>>>>> d71196ba9e620ec30421be9a453d3de613730bae
     }
 
     // Check if the email already exists in the database
