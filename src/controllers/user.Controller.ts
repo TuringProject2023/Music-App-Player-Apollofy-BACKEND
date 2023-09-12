@@ -64,9 +64,6 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 
-
-
-
 export const getUserByEmail = async (req: Request, res: Response) => {
 
     const { userEmail } = req.params
@@ -107,6 +104,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
         return res.status(500).send({ error: 'Internal server error' });
     }
 };
+
 
 export const updateUserById = async (req: Request, res: Response) => {
 
