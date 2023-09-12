@@ -4,7 +4,7 @@ import { prisma } from '../db/clientPrisma'
 
 export const createUser = async (req: Request, res: Response) => {
 
-    const { email, name, userAvatar } = req.body
+    const { email, name } = req.body
 
     try {
         // Check if all required fields are provided
@@ -34,7 +34,7 @@ export const createUser = async (req: Request, res: Response) => {
         if (!emailExist) {
             // if the user does not exist in the database, create a new user
             const newUser = await prisma.user.create({
-                data: { userName: name, userEmail: email, userImage: userAvatar },
+                data: { userName: name, userEmail: email},
                 include: {
                     playlistCreated: {
                         select: {
