@@ -14,7 +14,7 @@ model User {
   id                String     @id @default(auto()) @map("_id") @db.ObjectId
   userEmail         String     @unique
   userName          String?
-  userImage         String
+  userImage         String?
   userCreatedAt     DateTime   @default(now())
   userUpdatedAt     DateTime   @updatedAt
   playlistLikedId   String[]   @db.ObjectId

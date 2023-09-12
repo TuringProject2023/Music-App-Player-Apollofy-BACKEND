@@ -2,19 +2,20 @@ import { Request, Response } from 'express'
 import { prisma } from '../db/clientPrisma'
 
 
-export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {
+export const createAlbum = async (req: Request, res: Response): Promise<Response> => {
     const { userId } = req.params
-    const { playlistName, playlistImage, track, genre } = req.body
+    const { albumName, albumImage, track, genre, albumCreatedAt } = req.body
 
 
     try {
         // if () {
         //     return res.status(400).json({ error: 'Missing requiered input email.' })
         // }
-        const newPlaylist = await prisma.playlist.create({
+        const newAlbum = await prisma.album.create({
             data: {
-                playlistName,
-                playlistImage,
+                albumName,
+                albumImage,
+                albumCreatedAt,
                 track: {
                     connect: track.map((trackId: string) => {
                         id: trackId
@@ -25,12 +26,7 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
                         id: genreId
                     })
                 },
-                // playlistCreatedBy: {
-                //     connect: {
-                //         id: userId,
-                //     }
-                // },
-                // playlistLikedBy: {
+                // AlbumLikedBy: {
                 //     connect: {
                 //         id: userId,
                 //     }
@@ -38,7 +34,7 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
             }
         })
 
-       return res.status(201).send({ message: 'playlist created successfully', newPlaylist });
+       return res.status(201).send({ message: 'Album created successfully', newAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -48,22 +44,22 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
 };
 
 
-export const getPlaylistById = async (req: Request, res: Response): Promise<Response> => {
-    const { playlistId } = req.params
+export const getAlbumById = async (req: Request, res: Response): Promise<Response> => {
+    const { albumId } = req.params
 
 
     try {
         // if () {
         //     return res.status(400).json({ error: 'Missing requiered input email.' })
         // }
-        const gettedPlaylist = await prisma.playlist.findUnique({
+        const gettedAlbum = await prisma.album.findUnique({
             where: {
-                id: playlistId,
+                id: albumId,
 
             }
         })
 
-       return res.status(200).send({ message: 'playlist getted successfully', gettedPlaylist });
+       return res.status(200).send({ message: 'Album getted successfully', gettedAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -73,27 +69,27 @@ export const getPlaylistById = async (req: Request, res: Response): Promise<Resp
 };
 
 
-export const updatePlaylist = async (req: Request, res: Response): Promise<Response> => {
-    const { playlistId } = req.params //TOFIX posibilidad de modificar solo el creador de la playlist
-    const { playlistName, playlistImage, track, genre } = req.body
+export const updateAlbum = async (req: Request, res: Response): Promise<Response> => {
+    const { albumId } = req.params //TOFIX posibilidad de modificar solo el creador de la album
+    const { albumName, albumImage, track, genre } = req.body
 
 
     try {
-        const playlistById = await prisma.playlist.findUnique({
+        const albumById = await prisma.album.findUnique({
             where: {
-                id: playlistId
+                id: albumId
             }
         })
-        if (!playlistById) {
-            return res.status(404).json({ error: 'Playlist not found.' })
+        if (!albumById) {
+            return res.status(404).json({ error: 'Album not found.' })
         }
-        const updatePlaylist = await prisma.playlist.update({
+        const updateAlbum = await prisma.album.update({
             where: {
-                id: playlistId
+                id: albumId
             },
             data: {
-                playlistName,
-                playlistImage,
+                albumName,
+                albumImage,
                 track: {
                     connect: track.map((trackId: string) => {
                         id: trackId
@@ -108,7 +104,7 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
         }
         )
 
-       return res.status(200).send({ message: 'Playlist updated successfully', updatePlaylist });
+       return res.status(200).send({ message: 'Album updated successfully', updateAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -118,21 +114,21 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
 };
 
 
-export const deletePlaylistById = async (req: Request, res: Response): Promise<Response> => {
-    const { playlistId } = req.params
+export const deleteAlbumById = async (req: Request, res: Response): Promise<Response> => {
+    const { AlbumId } = req.params
 
 
     try {
-        if (!playlistId) {
-            return res.status(404).json({ error: 'Missing requiered playlistId.' })
+        if (!AlbumId) {
+            return res.status(404).json({ error: 'Missing requiered AlbumId.' })
         }
-        const deletedPlaylist = await prisma.playlist.delete({
+        const deletedAlbum = await prisma.album.delete({
             where: {
-                id: playlistId,
+                id: AlbumId,
             }
         })
 
-       return res.status(200).send({ message: 'Playlist deleted successfully', deletedPlaylist });
+       return res.status(200).send({ message: 'Album deleted successfully', deletedAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -142,15 +138,13 @@ export const deletePlaylistById = async (req: Request, res: Response): Promise<R
 };
 
 
-export const getAllPlaylist = async (req: Request, res: Response): Promise<Response> => {
+export const getAllAlbum = async (req: Request, res: Response): Promise<Response> => {
 
     try {
-        // if () {
-        //     return res.status(400).json({ error: 'Missing requiered input email.' })
-        // }
-        const gettedAllPlaylist = await prisma.playlist.findMany({})
+        
+        const gettedAllAlbum = await prisma.album.findMany({})
 
-       return res.status(200).send({ message: 'All playlists getted successfully', gettedAllPlaylist });
+       return res.status(200).send({ message: 'All Albums getted successfully', gettedAllAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes

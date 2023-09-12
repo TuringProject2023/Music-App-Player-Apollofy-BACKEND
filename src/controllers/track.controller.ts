@@ -28,9 +28,7 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
 
     });
 
-    return res
-      .status(201)
-      .send({ message: "Song created successfully", newTrack });
+    return res.status(201).send({ message: "Track created successfully", newTrack });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
@@ -54,7 +52,7 @@ export const getTrackById = async (req: Request, res: Response): Promise<Respons
       },
     });
 
-    return res.status(201).send({ message: "Song created successfully", getTrack });
+    return res.status(200).send({ message: "Track getted successfully", getTrack });
 
   } catch (err) {
     console.error(err);
@@ -74,7 +72,7 @@ export const getAllTracks = async (req: Request, res: Response): Promise<Respons
 
     });
 
-    return res.status(201).send({ message: "Song created successfully", allTrack });
+    return res.status(200).send({ message: "Track getted successfully", allTrack });
 
   } catch (err) {
     console.error(err);
@@ -116,7 +114,24 @@ export const updateTrackById = async (req: Request, res: Response): Promise<Resp
     return res.status(500).send({ error: "Internal server error" });
   }
 };
+export const deleteTrackById = async (req: Request, res: Response): Promise<Response> => {
 
+  const { trackId } = req.params;
+
+  try {
+    const deleteTrack = await prisma.track.delete({
+      where: {
+        id: trackId,
+      }
+    });
+
+    return res.status(200).send({ message: "Track deleted successfully", deleteTrack });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ error: "Internal server error" });
+  }
+};
 
 // Crear 4 canciones para probar
 // crear playlist vacia
