@@ -39,16 +39,16 @@ export const getGenreByID = async (req: Request, res: Response) => {
 
 export const updateGenreByID = async (req: Request, res: Response): Promise<Response> => {
 	const {genreId} = req.params;
-	const {genre} = req.body;
+	const {genreName} = req.body;
 	try {
-		if (!genre) {
+		if (!genreName) {
 			return res.status(404).send({msg: 'Genres not found'});
 		}
 		const genreFound = await prisma.genre.update({
 			where: {
 				id: genreId,
 			},
-			data: {genre},
+			data: {genreName},
 		});
 
 		return res.status(200).send(genreFound);
