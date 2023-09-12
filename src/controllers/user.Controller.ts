@@ -4,7 +4,7 @@ import { prisma } from '../db/clientPrisma'
 
 export const createUser = async (req: Request, res: Response) => {
 
-    const { email, name} = req.body
+    const { email, name, userAvatar} = req.body
 
     try {
        // Check if all required fields are provided
@@ -13,15 +13,15 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
         // Check if the email already exists in the database
-        const emailExist = await prisma.user.findUnique({ where: { email: email  },
+        const emailExist = await prisma.user.findUnique({ where: { userEmail: email  },
         include: {
-            playlist: {
+            playlistCreated: {
                 select: {
                     playlistName: true,
-                    songs: {
+                    track: {
                         select: {
-                            name: true,
-                            url: true
+                            trackName: true,
+                            trackUrl: true
                         }
                     },
 
@@ -31,14 +31,14 @@ export const createUser = async (req: Request, res: Response) => {
 
         if(!emailExist) {
             // if the user does not exist in the database, create a new user
-            const newUser = await prisma.user.create({data: {  name: name, email: email},
-                include: {playlist: {
+            const newUser = await prisma.user.create({data: {  userName: name, userEmail: email, userImage: userAvatar},
+                include: {playlistCreated: {
                     select: {
                         playlistName: true,
-                        songs: {
+                        track: {
                             select: {
-                                name: true,
-                                url: true
+                                trackName: true,
+                                trackUrl: true
                             }
                         }
                     }
