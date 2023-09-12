@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import userRoutes from './routes/user.routes';
 import playlistRoutes from './routes/playlist.routes';
-import songRoutes from './routes/song.routes';
+import trackRoutes from './routes/track.routes';
 
 
 
@@ -25,7 +25,7 @@ app.use(fileUpload({
 
 app.use('/user', userRoutes);
 app.use('/playlist', playlistRoutes);
-app.use('/song', songRoutes);
+app.use('/song', trackRoutes);
 
 
 export default app;
