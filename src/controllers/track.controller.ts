@@ -6,10 +6,12 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
     trackName,
     trackUrl,
     trackImage,
-    // trackCreatedAt,
+    trackCreatedAt,
     genreId,
     artistId,
     albumId,
+    post,
+    counter
   } = req.body;
 
   console.log(req.body);
@@ -23,7 +25,7 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
         trackName,
         trackUrl,
         trackImage,
-        // trackCreatedAt,
+        trackCreatedAt,
         genre: genreId ?
           { connect: { id: genreId } }
           : undefined,
@@ -32,7 +34,9 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
           : undefined,
         album: albumId ?
           { connect: { id: albumId } }
-          : undefined
+          : undefined,
+        post: post ?? null,
+        counter: counter ?? null
       },
     });
 
@@ -69,10 +73,7 @@ export const getTrackById = async (
 
 //TOFIX getTrackByAlbumId
 
-export const getAllTracks = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const getAllTracks = async (req: Request, res: Response): Promise<Response> => {
   try {
     const allTrack = await prisma.track.findMany({});
 

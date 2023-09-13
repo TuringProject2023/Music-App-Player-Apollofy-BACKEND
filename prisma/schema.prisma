@@ -35,8 +35,8 @@ model Playlist {
   playlistImage       String
   playlistCreatedAt   DateTime @default(now())
   playlistUpdatedAt   DateTime @updatedAt
-  track               Track[]  @relation(fields: [trackIds], references: [id])
-  trackIds            String[] @db.ObjectId
+  track               Track[]  @relation(fields: [trackId], references: [id])
+  trackId             String[] @db.ObjectId
   playlistLikedBy     User[]   @relation("likedBy", fields: [playlistLikedById], references: [id])
   playlistLikedById   String[] @db.ObjectId
   playlistCreatedBy   User?    @relation("createdBy", fields: [playlistCreatedById], references: [id])
@@ -115,9 +115,9 @@ model Post {
   userId   String[] @db.ObjectId
   track    Track?   @relation(fields: [trackId], references: [id])
   trackId  String?  @db.ObjectId
-  artist   Artist?  @relation(fields: [trackId], references: [id])
+  artist   Artist?  @relation(fields: [artistId], references: [id])
   artistId String?  @db.ObjectId
-  album    Album?   @relation(fields: [trackId], references: [id])
+  album    Album?   @relation(fields: [albumId], references: [id])
   albumId  String?  @db.ObjectId
 }
 

@@ -3,9 +3,11 @@ import { prisma } from '../db/clientPrisma'
 
 
 export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {
-    const { userId } = req.params
-    const { playlistName, playlistImage, track, genre } = req.body
+    // const { userId } = req.params
+    const { playlistName, playlistImage, genreId, userId } = req.body;
+    let { trackId } = req.body;
 
+    if (typeof trackId === 'string') { trackId = Array.from(trackId.split(',')) }
 
     try {
         // if () {
@@ -15,30 +17,14 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
             data: {
                 playlistName,
                 playlistImage,
-                track: {
-                    connect: track.map((trackId: string) => {
-                        id: trackId
-                    })
-                },
-                genre: {
-                    connect: genre.map((genreId: string) => {
-                        id: genreId
-                    })
-                },
-                // playlistCreatedBy: {
-                //     connect: {
-                //         id: userId,
-                //     }
-                // },
-                // playlistLikedBy: {
-                //     connect: {
-                //         id: userId,
-                //     }
-                // }
+                trackId: trackId,
+                genreId: genreId,//TOFIX ojo al tipo de dato, está pasado como string?
+                playlistCreatedById: userId,
+                playlistLikedById: [userId],
             }
-        })
+        });
 
-       return res.status(201).send({ message: 'playlist created successfully', newPlaylist });
+        return res.status(201).send({ message: 'playlist created successfully', newPlaylist });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -63,7 +49,7 @@ export const getPlaylistById = async (req: Request, res: Response): Promise<Resp
             }
         })
 
-       return res.status(200).send({ message: 'playlist getted successfully', gettedPlaylist });
+        return res.status(200).send({ message: 'playlist getted successfully', gettedPlaylist });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -80,7 +66,7 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
         // }
         const gettedAllPlaylist = await prisma.playlist.findMany({})
 
-       return res.status(200).send({ message: 'All playlists getted successfully', gettedAllPlaylist });
+        return res.status(200).send({ message: 'All playlists getted successfully', gettedAllPlaylist });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -124,7 +110,7 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
         }
         )
 
-       return res.status(200).send({ message: 'Playlist updated successfully', updatePlaylist });
+        return res.status(200).send({ message: 'Playlist updated successfully', updatePlaylist });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -148,7 +134,7 @@ export const deletePlaylistById = async (req: Request, res: Response): Promise<R
             }
         })
 
-       return res.status(200).send({ message: 'Playlist deleted successfully', deletedPlaylist });
+        return res.status(200).send({ message: 'Playlist deleted successfully', deletedPlaylist });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
