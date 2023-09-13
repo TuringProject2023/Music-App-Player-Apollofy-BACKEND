@@ -3,37 +3,46 @@ import { prisma } from "../db/clientPrisma";
 
 export const createArtist = async (req: Request, res: Response) => {
   const { artistName, popularity } = req.body;
-
+  console.log(req.body);
   try {
-    // Check if all required fields are provided
     if (!artistName) {
-      return res.status(400).send({ status: "error", error: "Name and email are required fields." });
+      return res.status(400).send({
+        status: "error",
+        error: "ArtistName, Popularity are required fields.",
+      });
     }
 
-    // Check if the email already exists in the database
-    const artistExist = await prisma.artist.findUnique({
-      where: { id: artistName }
+    // Check if the artist already exists in the database
+    const artistExist = await prisma.artist.findMany({
+      where: { artistName: artistName },
     });
 
-    if (!artistExist) {
+    console.log(artistExist);
+    if (artistExist.length === 0) {
       // if the Artist does not exist in the database, create a new Artist
       const newArtist = await prisma.artist.create({
-        data: { artistName,  popularity },
+        data: { artistName, popularity },
         include: {
           album: true,
           genre: true,
-          track: true
+          track: true,
         },
       });
-      return res.status(201).send({ message: "Artist created successfully!", Artist: newArtist });
+      return res
+        .status(201)
+        .send({ message: "Artist created successfully!", Artist: newArtist });
     } else {
-      // If the email already exists, return the data of the existing Artist
-      return res.status(200).send({ status: "success", message: "Artist already exists.", Artist: artistExist });
+      // If the artist already exists, return the data of the existing Artist
+      return res.status(200).send({
+        status: "success",
+        message: "Artist already exists.",
+        Artist: artistExist,
+      });
     }
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
-    return res.status(500).send({ error: "Internal server error" });
+    return res.status(500).send({ error: err });
   }
 };
 
@@ -46,7 +55,9 @@ export const getArtistById = async (req: Request, res: Response) => {
       include: {},
     });
 
-    return res.status(200).send({ message: "Artist getted successfully!", Artist: ArtistById });
+    return res
+      .status(200)
+      .send({ message: "Artist getted successfully!", Artist: ArtistById });
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
@@ -60,7 +71,9 @@ export const getAllArtists = async (req: Request, res: Response) => {
       include: {},
     });
 
-    return res.status(200).send({ message: "Artist created successfully!", Artist: allArtists });
+    return res
+      .status(200)
+      .send({ message: "Artist created successfully!", Artist: allArtists });
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
@@ -73,9 +86,14 @@ export const updateArtistById = async (req: Request, res: Response) => {
   const { artistName, popularity } = req.body;
 
   try {
-    const updateArtist = await prisma.artist.update({ where: { id: artistId }, data: { artistName, popularity } });
+    const updateArtist = await prisma.artist.update({
+      where: { id: artistId },
+      data: { artistName, popularity },
+    });
 
-    return res.status(200).send({ message: "Artist updated successfully!", Artist: updateArtist });
+    return res
+      .status(200)
+      .send({ message: "Artist updated successfully!", Artist: updateArtist });
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
@@ -87,9 +105,13 @@ export const deleteArtistById = async (req: Request, res: Response) => {
   const { ArtistId } = req.params;
 
   try {
-    const deleteArtist = await prisma.artist.delete({ where: { id: ArtistId } });
+    const deleteArtist = await prisma.artist.delete({
+      where: { id: ArtistId },
+    });
 
-    return res.status(201).send({ message: "Artist deleted successfully!", Artist: deleteArtist });
+    return res
+      .status(201)
+      .send({ message: "Artist deleted successfully!", Artist: deleteArtist });
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500

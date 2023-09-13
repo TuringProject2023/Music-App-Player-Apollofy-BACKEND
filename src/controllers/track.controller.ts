@@ -1,93 +1,109 @@
 import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
 
+export const createTrack = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const {
+    trackName,
+    trackUrl,
+    trackImage,
+    // trackCreatedAt,
+    genreId,
+    artistId,
+    // albumId,
+  } = req.body;
 
-export const createTrack = async (req: Request, res: Response): Promise<Response> => {
-  const { trackName, trackUrl, trackImage, trackCreatedAt, genreId, artistId, albumId } = req.body;
-
+  console.log(req.body);
   try {
+    if (!trackName || !trackUrl)
+      return res.status(400).send({ error: "Missing Required Fields" });
 
-    if (!trackName || !trackUrl) return res.status(400).send({ error: "Missing Required Fields" });
+    const trackDetails = {
+      trackImage,
+      trackName,
+      trackUrl,
+      genreId,
+      artistId,
+    };
+    console.log(trackDetails);
 
+    // if (artistId) return artistId;
     const newTrack = await prisma.track.create({
       data: {
         trackName,
         trackUrl,
         trackImage,
-        trackCreatedAt,
+        // trackCreatedAt,
         genre: {
-          connect: { id: genreId }
+          connect: { id: genreId },
         },
         artist: {
-          connect: { id: artistId }
+          connect: { id: artistId },
         },
-        album: {
-          connect: { id: albumId }
-        }
+        // album: {
+        //   connect: { id: albumId },
+        // },
       },
-
     });
 
-    return res.status(201).send({ message: "Track created successfully", newTrack });
+    return res
+      .status(201)
+      .send({ message: "Track created successfully", newTrack });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
 
-
-export const getTrackById = async (req: Request, res: Response): Promise<Response> => {
-
+export const getTrackById = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const { trackId } = req.params;
 
   try {
-
-
     const getTrack = await prisma.track.findUnique({
-
       where: {
-
-        id: trackId
-
+        id: trackId,
       },
     });
 
-    return res.status(200).send({ message: "Track getted successfully", getTrack });
-
+    return res
+      .status(200)
+      .send({ message: "Track getted successfully", getTrack });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
-
 
 //TOFIX getTrackByAlbumId
 
-
-export const getAllTracks = async (req: Request, res: Response): Promise<Response> => {
-
-
+export const getAllTracks = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
+    const allTrack = await prisma.track.findMany({});
 
-
-    const allTrack = await prisma.track.findMany({
-
-
-    });
-
-    return res.status(200).send({ message: "Track getted successfully", allTrack });
-
+    return res
+      .status(200)
+      .send({ message: "Track getted successfully", allTrack });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
 
-
-export const updateTrackById = async (req: Request, res: Response): Promise<Response> => {
-
+export const updateTrackById = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const { trackId } = req.params;
-  const { trackName, trackUrl, trackImage, genreId, artistId, albumId } = req.body
+  const { trackName, trackUrl, trackImage, genreId, artistId, albumId } =
+    req.body;
 
   try {
     const updateTrack = await prisma.track.update({
@@ -99,39 +115,42 @@ export const updateTrackById = async (req: Request, res: Response): Promise<Resp
         trackUrl,
         trackImage,
         genre: {
-          connect: { id: genreId }
+          connect: { id: genreId },
         },
         artist: {
-          connect: { id: artistId }
+          connect: { id: artistId },
         },
         album: {
-          connect: { id: albumId }
-        }
-      }
+          connect: { id: albumId },
+        },
+      },
     });
 
-    return res.status(200).send({ message: "Track updated successfully", updateTrack });
-
+    return res
+      .status(200)
+      .send({ message: "Track updated successfully", updateTrack });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
 
-
-export const deleteTrackById = async (req: Request, res: Response): Promise<Response> => {
-
+export const deleteTrackById = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   const { trackId } = req.params;
 
   try {
     const deleteTrack = await prisma.track.delete({
       where: {
         id: trackId,
-      }
+      },
     });
 
-    return res.status(200).send({ message: "Track deleted successfully", deleteTrack });
-
+    return res
+      .status(200)
+      .send({ message: "Track deleted successfully", deleteTrack });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
