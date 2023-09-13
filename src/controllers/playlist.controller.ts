@@ -2,12 +2,16 @@ import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
 
 
+
+//Incoming data:
+//body: playlistName-string ; playlistImage-string ; userId-string ; genreId-string("id1,id2,id3,id4")
 export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {
     // const { userId } = req.params
-    const { playlistName, playlistImage, genreId, userId } = req.body;
-    let { trackId } = req.body;
+    const { playlistName, playlistImage, userId } = req.body;
+    let { trackId, genreId } = req.body;
 
     if (typeof trackId === 'string') { trackId = Array.from(trackId.split(',')) }
+    if (typeof genreId === 'string') { genreId = Array.from(genreId.split(',')) }
 
     try {
         // if () {
