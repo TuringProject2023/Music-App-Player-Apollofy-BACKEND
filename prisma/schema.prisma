@@ -50,7 +50,7 @@ model Track {
   trackName      String
   trackUrl       String
   trackImage     String?
-  trackCreatedAt DateTime?
+  trackCreatedAt String?
   playlist       Playlist[]    @relation(fields: [playlistId], references: [id])
   playlistId     String[]      @db.ObjectId
   user           User[]        @relation(fields: [trackLikedBy], references: [id])

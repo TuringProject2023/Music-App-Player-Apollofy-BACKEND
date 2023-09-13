@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
 
-export const createTrack = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const createTrack = async (req: Request, res: Response): Promise<Response> => {
   const {
     trackName,
     trackUrl,
@@ -12,39 +9,30 @@ export const createTrack = async (
     // trackCreatedAt,
     genreId,
     artistId,
-    // albumId,
+    albumId,
   } = req.body;
 
   console.log(req.body);
   try {
+
     if (!trackName || !trackUrl)
       return res.status(400).send({ error: "Missing Required Fields" });
 
-    const trackDetails = {
-      trackImage,
-      trackName,
-      trackUrl,
-      genreId,
-      artistId,
-    };
-    console.log(trackDetails);
-
-    // if (artistId) return artistId;
     const newTrack = await prisma.track.create({
       data: {
         trackName,
         trackUrl,
         trackImage,
         // trackCreatedAt,
-        genre: {
-          connect: { id: genreId },
-        },
-        artist: {
-          connect: { id: artistId },
-        },
-        // album: {
-        //   connect: { id: albumId },
-        // },
+        genre: genreId ?
+          { connect: { id: genreId } }
+          : undefined,
+        artist: artistId ?
+          { connect: { id: artistId } }
+          : undefined,
+        album: albumId ?
+          { connect: { id: albumId } }
+          : undefined
       },
     });
 
