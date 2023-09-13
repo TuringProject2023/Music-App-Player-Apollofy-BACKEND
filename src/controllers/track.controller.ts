@@ -61,6 +61,9 @@ export const getTrackById = async (req: Request, res: Response): Promise<Respons
 };
 
 
+//TOFIX getTrackByAlbumId
+
+
 export const getAllTracks = async (req: Request, res: Response): Promise<Response> => {
 
 
@@ -114,6 +117,8 @@ export const updateTrackById = async (req: Request, res: Response): Promise<Resp
     return res.status(500).send({ error: "Internal server error" });
   }
 };
+
+
 export const deleteTrackById = async (req: Request, res: Response): Promise<Response> => {
 
   const { trackId } = req.params;

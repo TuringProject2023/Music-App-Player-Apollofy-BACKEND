@@ -46,22 +46,23 @@ model Playlist {
 }
 
 model Track {
-  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
   trackName      String
   trackUrl       String
   trackImage     String?
   trackCreatedAt DateTime?
-  playlist       Playlist[] @relation(fields: [playlistId], references: [id])
-  playlistId     String[]   @db.ObjectId
-  user           User[]     @relation(fields: [trackLikedBy], references: [id])
-  trackLikedBy   String[]   @db.ObjectId
-  album          Album[]    @relation(fields: [albumId], references: [id])
-  albumId        String[]   @db.ObjectId
-  artist         Artist[]   @relation(fields: [artistId], references: [id])
-  artistId       String[]   @db.ObjectId
-  genre          Genre[]    @relation(fields: [genreId], references: [id])
-  genreId        String[]   @db.ObjectId
+  playlist       Playlist[]    @relation(fields: [playlistId], references: [id])
+  playlistId     String[]      @db.ObjectId
+  user           User[]        @relation(fields: [trackLikedBy], references: [id])
+  trackLikedBy   String[]      @db.ObjectId
+  album          Album[]       @relation(fields: [albumId], references: [id])
+  albumId        String[]      @db.ObjectId
+  artist         Artist[]      @relation(fields: [artistId], references: [id])
+  artistId       String[]      @db.ObjectId
+  genre          Genre[]       @relation(fields: [genreId], references: [id])
+  genreId        String[]      @db.ObjectId
   post           Post[]
+  counter        CounterTrack?
 }
 
 model Artist {
@@ -95,19 +96,17 @@ model Album {
 }
 
 model Genre {
-  id             String     @id @default(auto()) @map("_id") @db.ObjectId
-  genreName      String
-  genreImage     String?
-  genreCreatedAt DateTime   @default(now())
-  genreUpdatedAt DateTime   @updatedAt
-  artist         Artist[]   @relation(fields: [artistId], references: [id])
-  artistId       String[]   @db.ObjectId
-  album          Album[]    @relation(fields: [albumId], references: [id])
-  albumId        String[]   @db.ObjectId
-  playlist       Playlist[] @relation(fields: [playlistId], references: [id])
-  playlistId     String[]   @db.ObjectId
-  track          Track[]    @relation(fields: [trackId], references: [id])
-  trackId        String[]   @db.ObjectId
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  genreName  String
+  genreImage String?
+  artist     Artist[]   @relation(fields: [artistId], references: [id])
+  artistId   String[]   @db.ObjectId
+  album      Album[]    @relation(fields: [albumId], references: [id])
+  albumId    String[]   @db.ObjectId
+  playlist   Playlist[] @relation(fields: [playlistId], references: [id])
+  playlistId String[]   @db.ObjectId
+  track      Track[]    @relation(fields: [trackId], references: [id])
+  trackId    String[]   @db.ObjectId
 }
 
 model Post {
@@ -120,4 +119,11 @@ model Post {
   artistId String?  @db.ObjectId
   album    Album?   @relation(fields: [trackId], references: [id])
   albumId  String?  @db.ObjectId
+}
+
+model CounterTrack {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  track         Track  @relation(fields: [trackId], references: [id])
+  trackId       String @unique @db.ObjectId
+  countListened Int    @default(0)
 }
