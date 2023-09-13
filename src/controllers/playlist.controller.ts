@@ -1,5 +1,5 @@
-import { Request, Response } from 'express'
-import { prisma } from '../db/clientPrisma'
+import { Request, Response } from "express";
+import { prisma } from "../db/clientPrisma";
 
 
 export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {
@@ -35,8 +35,7 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
 
 
 export const getPlaylistById = async (req: Request, res: Response): Promise<Response> => {
-    const { playlistId } = req.params
-
+    const { playlistId } = req.params;
 
     try {
         // if () {
@@ -58,6 +57,7 @@ export const getPlaylistById = async (req: Request, res: Response): Promise<Resp
     }
 };
 
+
 export const getAllPlaylist = async (req: Request, res: Response): Promise<Response> => {
 
     try {
@@ -75,10 +75,10 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
     }
 };
 
-export const updatePlaylist = async (req: Request, res: Response): Promise<Response> => {
-    const { playlistId } = req.params //TOFIX posibilidad de modificar solo el creador de la playlist
-    const { playlistName, playlistImage, track, genre } = req.body
 
+export const updatePlaylist = async (req: Request, res: Response): Promise<Response> => {
+    const { playlistId } = req.params; //TOFIX posibilidad de modificar solo el creador de la playlist
+    const { playlistName, playlistImage, track, genre } = req.body;
 
     try {
         const playlistById = await prisma.playlist.findUnique({
@@ -121,8 +121,7 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
 
 
 export const deletePlaylistById = async (req: Request, res: Response): Promise<Response> => {
-    const { playlistId } = req.params
-
+    const { playlistId } = req.params;
 
     try {
         if (!playlistId) {
@@ -142,4 +141,3 @@ export const deletePlaylistById = async (req: Request, res: Response): Promise<R
         return res.status(500).send({ error: 'Internal server error' });
     }
 };
-
