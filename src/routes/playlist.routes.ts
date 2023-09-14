@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createPlaylist, deletePlaylistById, getAllPlaylist, getPlaylistById, updatePlaylist } from '../controllers/';
+import { createPlaylist, deletePlaylistById, getAllPlaylist, getPlaylistById, updatePlaylist } from '../controllers';
 
 
 const playlistRoutes = Router();

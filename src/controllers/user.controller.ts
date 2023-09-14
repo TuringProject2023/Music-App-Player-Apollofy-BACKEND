@@ -133,3 +133,91 @@ export const deleteUserById = async (req: Request, res: Response) => {
     return res.status(500).send({ error: "Internal server error" });
   }
 };
+
+export const getTracksByUserEmail = async (req: Request, res: Response) => {
+    const { userEmail } = req.params;
+  
+    try {
+      const userByEmail = await prisma.user.findUnique({
+        where: { userEmail: userEmail },
+        
+        select: {
+
+            tracksId: true
+
+        },
+      });
+  
+      return res.status(200).send({ message: "User gotten successfully!", user: userByEmail });
+    } catch (err) {
+      console.error(err); // Log the error to the console for debugging purposes
+      // In case of internal error, return an error message with status code 500
+      return res.status(500).send({ error: "Internal server error" });
+    }
+  };
+
+  export const getPlaylistByUserEmail = async (req: Request, res: Response) => {
+    const { userEmail } = req.params;
+  
+    try {
+      const userByEmail = await prisma.user.findUnique({
+        where: { userEmail: userEmail },
+        
+        select: {
+
+          playlistCreatedId: true
+
+        },
+      });
+  
+      return res.status(200).send({ message: "User gotten successfully!", user: userByEmail });
+    } catch (err) {
+      console.error(err); // Log the error to the console for debugging purposes
+      // In case of internal error, return an error message with status code 500
+      return res.status(500).send({ error: "Internal server error" });
+    }
+  };
+
+  export const getAlbumByUserEmail = async (req: Request, res: Response) => {
+    const { userEmail } = req.params;
+  
+    try {
+      const userByEmail = await prisma.user.findUnique({
+        where: { userEmail: userEmail },
+        
+        select: {
+
+            albumId: true
+
+        },
+      });
+  
+      return res.status(200).send({ message: "User gotten successfully!", user: userByEmail });
+    } catch (err) {
+      console.error(err); // Log the error to the console for debugging purposes
+      // In case of internal error, return an error message with status code 500
+      return res.status(500).send({ error: "Internal server error" });
+    }
+  };
+
+  export const getLikedPlaylistByUserEmail = async (req: Request, res: Response) => {
+    const { userEmail } = req.params;
+  
+    try {
+      const userByEmail = await prisma.user.findUnique({
+        where: { userEmail: userEmail },
+        
+        select: {
+
+            playlistLikedId: true
+
+        },
+      });
+  
+      return res.status(200).send({ message: "User gotten successfully!", user: userByEmail });
+    } catch (err) {
+      console.error(err); // Log the error to the console for debugging purposes
+      // In case of internal error, return an error message with status code 500
+      return res.status(500).send({ error: "Internal server error" });
+    }
+  };

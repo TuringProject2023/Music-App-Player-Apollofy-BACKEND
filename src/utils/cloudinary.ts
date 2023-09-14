@@ -13,7 +13,7 @@ cloudinary.config({
 export async function uploadImage(filePath: string) {
     try {
       const result = await cloudinary.uploader.upload(filePath, {
-        folder: 'movieImage'
+        folder: 'apollofyImages',
       });
       return result;
     } catch (error) {

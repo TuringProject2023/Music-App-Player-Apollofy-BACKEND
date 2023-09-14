@@ -2,6 +2,9 @@ import dotenv from 'dotenv';
 // import { APP_ORIGIN, AUTH_AUDIENCE, AUTH_ISSUER } from './authReferences';
 // import { getEnvVar } from '../utils/getEnvVar'
 
+
+
+
 type TConfig = { [key: string]: EnvironmentConfig };
 
 type EnvironmentConfig = {
@@ -45,7 +48,7 @@ const CONFIG: TConfig = {
             issuer: process.env.AUTH0_ISSUER
         },
         cloudinary: {
-            cloud_name: process.env.CLOUD_NAME,
+            cloud_name: process.env.CLOUDINARY_NAME,
             api_key: process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET
         }
@@ -63,16 +66,15 @@ const CONFIG: TConfig = {
             issuer: process.env.AUTH0_ISSUER
         },
         cloudinary: {
-            cloud_name: process.env.CLOUD_NAME,
+            cloud_name: process.env.CLOUDINARY_NAME,
             api_key: process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET
         }
     },
 };
 
+export default CONFIG[ENV];
 
 export const CLOUDINARY_CLOUD_NAME = process.env['CLOUDINARY_NAME']
 export const CLOUDINARY_API_KEY = process.env['CLOUDINARY_API_KEY']
 export const CLOUDINARY_API_SECRET = process.env['CLOUDINARY_API_SECRET']
-
-export default CONFIG[ENV];
