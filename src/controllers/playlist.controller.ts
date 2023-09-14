@@ -1,21 +1,24 @@
 import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
+import { getUserByEmailFunction } from "./user.controller";
+
 import { uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
 
 //Incoming data:
 //body: playlistName-string ; playlistImage-string ; userId-string ; genreId-string("id1,id2,id3,id4")
 export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {
-  const { userId } = req.params;
-  const { playlistName } = req.body;
-  let { trackId, genreId } = req.body;
+    const { userEmail } = req.params
+    const userId = await getUserByEmailFunction(userEmail)
+    const { playlistName, playlistImage } = req.body;
+    let { trackId, genreId } = req.body;
 
-  if (typeof trackId === "string") {
-    trackId = Array.from(trackId.split(","));
-  }
-  if (typeof genreId === "string") {
-    genreId = Array.from(genreId.split(","));
-  }
+    if (typeof trackId === "string") {
+        trackId = Array.from(trackId.split(","));
+    }
+    if (typeof genreId === "string") {
+        genreId = Array.from(genreId.split(","));
+    }
 
   try {
     // if () {
@@ -69,44 +72,44 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
 };
 
 export const getPlaylistById = async (req: Request, res: Response): Promise<Response> => {
-  const { playlistId } = req.params;
+    const { playlistId } = req.params;
 
-  try {
-    // if () {
-    //     return res.status(400).json({ error: 'Missing requiered input email.' })
-    // }
-    const gottenPlaylist = await prisma.playlist.findUnique({
-      where: {
-        id: playlistId,
-      },
-    });
+    try {
+        // if () {
+        //     return res.status(400).json({ error: 'Missing requiered input email.' })
+        // }
+        const gottenPlaylist = await prisma.playlist.findUnique({
+            where: {
+                id: playlistId,
+            },
+        });
 
-    return res.status(200).send({ message: "playlist gotten successfully", gottenPlaylist });
-  } catch (err) {
-    console.error(err); // Log the error to the console for debugging purposes
-    // In case of internal error, return an error message with status code 500
-    return res.status(500).send({ error: "Internal server error" });
-  }
+        return res.status(200).send({ message: "playlist gotten successfully", gottenPlaylist });
+    } catch (err) {
+        console.error(err); // Log the error to the console for debugging purposes
+        // In case of internal error, return an error message with status code 500
+        return res.status(500).send({ error: "Internal server error" });
+    }
 };
 
 export const getAllPlaylist = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    // if () {
-    //     return res.status(400).json({ error: 'Missing requiered input email.' })
-    // }
-    const gottenAllPlaylist = await prisma.playlist.findMany({});
+    try {
+        // if () {
+        //     return res.status(400).json({ error: 'Missing requiered input email.' })
+        // }
+        const gottenAllPlaylist = await prisma.playlist.findMany({});
 
-    return res.status(200).send({ message: "All playlists gotten successfully", gottenAllPlaylist });
-  } catch (err) {
-    console.error(err); // Log the error to the console for debugging purposes
-    // In case of internal error, return an error message with status code 500
-    return res.status(500).send({ error: "Internal server error" });
-  }
+        return res.status(200).send({ message: "All playlists gotten successfully", gottenAllPlaylist });
+    } catch (err) {
+        console.error(err); // Log the error to the console for debugging purposes
+        // In case of internal error, return an error message with status code 500
+        return res.status(500).send({ error: "Internal server error" });
+    }
 };
 
 export const updatePlaylist = async (req: Request, res: Response): Promise<Response> => {
-  const { playlistId } = req.params; //TOFIX posibilidad de modificar solo el creador de la playlist
-  const { playlistName, playlistImage, track, genre } = req.body;
+    const { playlistId } = req.params; //TOFIX posibilidad de modificar solo el creador de la playlist
+    const { playlistName, playlistImage, track, genre } = req.body;
 
   try {
     const playlistById = await prisma.playlist.findUnique({
@@ -155,57 +158,57 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
 };
 
 export const togglePlaylistById = async (req: Request, res: Response): Promise<Response> => {
-  const { playlistId, userId } = req.params;
+    const { playlistId, userId } = req.params;
 
-  try {
-    const userToUpdate = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
+    try {
+        const userToUpdate = await prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+        });
 
-    let arrayPlaylistLikedUser = userToUpdate?.tracksId || [];
-    const index = arrayPlaylistLikedUser.indexOf(playlistId);
+        let arrayPlaylistLikedUser = userToUpdate?.tracksId || [];
+        const index = arrayPlaylistLikedUser.indexOf(playlistId);
 
-    if (index === -1) {
-      arrayPlaylistLikedUser.push(playlistId);
-    } else {
-      arrayPlaylistLikedUser.splice(index, 1);
+        if (index === -1) {
+            arrayPlaylistLikedUser.push(playlistId);
+        } else {
+            arrayPlaylistLikedUser.splice(index, 1);
+        }
+
+        const newPlaylistLiked = await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                playlistLikedId: arrayPlaylistLikedUser,
+            },
+        });
+
+        return res.status(200).send({ message: "Playlist liked modified successfully", newPlaylistLiked });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ error: "Internal server error" });
     }
-
-    const newPlaylistLiked = await prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        playlistLikedId: arrayPlaylistLikedUser,
-      },
-    });
-
-    return res.status(200).send({ message: "Playlist liked modified successfully", newPlaylistLiked });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send({ error: "Internal server error" });
-  }
 };
 
 export const deletePlaylistById = async (req: Request, res: Response): Promise<Response> => {
-  const { playlistId } = req.params;
+    const { playlistId } = req.params;
 
-  try {
-    if (!playlistId) {
-      return res.status(404).json({ error: "Missing requiered playlistId." });
+    try {
+        if (!playlistId) {
+            return res.status(404).json({ error: "Missing requiered playlistId." });
+        }
+        const deletedPlaylist = await prisma.playlist.delete({
+            where: {
+                id: playlistId,
+            },
+        });
+
+        return res.status(200).send({ message: "Playlist deleted successfully", deletedPlaylist });
+    } catch (err) {
+        console.error(err); // Log the error to the console for debugging purposes
+        // In case of internal error, return an error message with status code 500
+        return res.status(500).send({ error: "Internal server error" });
     }
-    const deletedPlaylist = await prisma.playlist.delete({
-      where: {
-        id: playlistId,
-      },
-    });
-
-    return res.status(200).send({ message: "Playlist deleted successfully", deletedPlaylist });
-  } catch (err) {
-    console.error(err); // Log the error to the console for debugging purposes
-    // In case of internal error, return an error message with status code 500
-    return res.status(500).send({ error: "Internal server error" });
-  }
 };

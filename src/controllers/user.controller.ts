@@ -31,7 +31,7 @@ export const createUser = async (req: Request, res: Response) => {
     if (!emailExist) {
       // if the user does not exist in the database, create a new user
       const newUser = await prisma.user.create({
-        data: { userName: name, userEmail: email, userImage: picture},
+        data: { userName: name, userEmail: email, userImage: picture },
         include: {
           playlistCreated: {
             select: {
@@ -58,9 +58,9 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-export const getUserByEmail = async (req: Request, res: Response) => {
+export const getUserByEmailParams = async (req: Request, res: Response) => {
   const { userEmail } = req.params;
-
+  //TOFIX meter protección para que nadie pueda pedir la info de otro usuario pasando el mail. Es decir verificar que el user.mail es el mail que está llegando a params...
   try {
     const userById = await prisma.user.findUnique({
       where: { userEmail: userEmail },
@@ -72,6 +72,24 @@ export const getUserByEmail = async (req: Request, res: Response) => {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
     return res.status(500).send({ error: "Internal server error" });
+  }
+};
+
+export const getUserByEmailFunction = async (email: string) => {
+  const userEmail = email;
+  //TOFIX meter protección para que nadie pueda pedir la info de otro usuario pasando el mail. Es decir verificar que el user.mail es el mail que está llegando a params...
+  try {
+    const userById = await prisma.user.findUnique({
+      where: { userEmail: userEmail },
+      include: {},
+    });
+
+    return userById?.id;
+
+  } catch (err) {
+    console.error(err); // Log the error to the console for debugging purposes
+    // In case of internal error, return an error message with status code 500
+    return "Error while finding userEmail/Id";
   }
 };
 
