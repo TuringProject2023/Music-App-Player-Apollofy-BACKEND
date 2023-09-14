@@ -45,14 +45,14 @@ export const getPlaylistById = async (req: Request, res: Response): Promise<Resp
         // if () {
         //     return res.status(400).json({ error: 'Missing requiered input email.' })
         // }
-        const gettedPlaylist = await prisma.playlist.findUnique({
+        const gottenPlaylist = await prisma.playlist.findUnique({
             where: {
                 id: playlistId,
 
             }
         })
 
-        return res.status(200).send({ message: 'playlist getted successfully', gettedPlaylist });
+        return res.status(200).send({ message: 'playlist gotten successfully', gottenPlaylist });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -68,9 +68,9 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
         // if () {
         //     return res.status(400).json({ error: 'Missing requiered input email.' })
         // }
-        const gettedAllPlaylist = await prisma.playlist.findMany({})
+        const gottenAllPlaylist = await prisma.playlist.findMany({})
 
-        return res.status(200).send({ message: 'All playlists getted successfully', gettedAllPlaylist });
+        return res.status(200).send({ message: 'All playlists gotten successfully', gottenAllPlaylist });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes

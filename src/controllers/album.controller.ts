@@ -59,7 +59,7 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
             }
         })
 
-       return res.status(200).send({ message: 'Album getted successfully', gettedAlbum });
+       return res.status(200).send({ message: 'Album gotten successfully', gettedAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -142,9 +142,9 @@ export const getAllAlbum = async (req: Request, res: Response): Promise<Response
 
     try {
         
-        const gettedAllAlbum = await prisma.album.findMany({})
+        const gottenAllAlbum = await prisma.album.findMany({})
 
-       return res.status(200).send({ message: 'All Albums getted successfully', gettedAllAlbum });
+       return res.status(200).send({ message: 'All Albums gotten successfully', gottenAllAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes

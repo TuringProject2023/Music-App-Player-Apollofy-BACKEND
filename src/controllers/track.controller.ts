@@ -64,7 +64,7 @@ export const getTrackById = async (
 
     return res
       .status(200)
-      .send({ message: "Track getted successfully", getTrack });
+      .send({ message: "Track gotten successfully", getTrack });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
@@ -79,7 +79,7 @@ export const getAllTracks = async (req: Request, res: Response): Promise<Respons
 
     return res
       .status(200)
-      .send({ message: "Track getted successfully", allTrack });
+      .send({ message: "Track gotten successfully", allTrack });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
