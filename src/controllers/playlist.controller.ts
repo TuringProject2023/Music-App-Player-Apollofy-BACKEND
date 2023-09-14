@@ -10,7 +10,7 @@ import fs from "fs-extra";
 export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {
     const { userEmail } = req.params
     const userId = await getUserByEmailFunction(userEmail)
-    const { playlistName, playlistImage } = req.body;
+    const { playlistName } = req.body;
     let { trackId, genreId } = req.body;
 
     if (typeof trackId === "string") {
@@ -109,7 +109,15 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
 
 export const updatePlaylist = async (req: Request, res: Response): Promise<Response> => {
     const { playlistId } = req.params; //TOFIX posibilidad de modificar solo el creador de la playlist
-    const { playlistName, playlistImage, track, genre } = req.body;
+    const { playlistName } = req.body;
+    let { trackId, genreId } = req.body;
+
+    if (typeof trackId === "string") {
+        trackId = Array.from(trackId.split(","));
+    }
+    if (typeof genreId === "string") {
+        genreId = Array.from(genreId.split(","));
+    }
 
   try {
     const playlistById = await prisma.playlist.findUnique({
@@ -136,12 +144,12 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
           playlistName,
           playlistImage: upload.secure_url,
           track: {
-            connect: track.map((trackId: string) => {
+            connect: trackId.map((trackId: string) => {
               id: trackId;
             }),
           },
           genre: {
-            connect: genre.map((genreId: string) => {
+            connect: genreId.map((genreId: string) => {
               id: genreId;
             }),
           },
