@@ -13,12 +13,8 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
     const { playlistName, playlistImage } = req.body;
     let { trackId, genreId } = req.body;
 
-    if (typeof trackId === "string") {
-        trackId = Array.from(trackId.split(","));
-    }
-    if (typeof genreId === "string") {
-        genreId = Array.from(genreId.split(","));
-    }
+    if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
+    if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
 
     try {
         // if () {
@@ -44,21 +40,21 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
                 },
             });
 
-            //   const newPlaylistId = newPlaylist.id;
+            const newPlaylistId = newPlaylist.id;
 
-            //   if (newPlaylistId) {
-            //     const newPlaylistLiked = await prisma.user.update({
-            //       where: {
-            //         id: userId,
-            //       },
-            //       data: {
-            //         playlistLikedId: {
-            //           push: newPlaylistId,
-            //         },
-            //       },
-            //     });
-            //     return res.status(201).send({ newPlaylistLiked });
-            //   }
+            if (newPlaylistId) {
+                const newPlaylistLiked = await prisma.user.update({
+                    where: {
+                        id: userId,
+                    },
+                    data: {
+                        playlistLikedId: {
+                            push: newPlaylistId,
+                        },
+                    },
+                });
+                return res.status(201).send({ newPlaylistLiked });
+            }
             return res.status(201).send({ newPlaylist });
         }
         return res.status(404).send({ message: "File not found" });
