@@ -5,7 +5,7 @@ import { createPlaylist, deletePlaylistById, getAllPlaylist, getPlaylistById, up
 const playlistRoutes = Router();
 
 playlistRoutes
-    .post('/', createPlaylist)
+    .post('/:userId', createPlaylist)
     .get('/:playlistId', getPlaylistById)
     .get('/', getAllPlaylist)
     .put('/:playlistId', updatePlaylist)

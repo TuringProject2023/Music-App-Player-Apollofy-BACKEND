@@ -6,8 +6,8 @@ import { prisma } from "../db/clientPrisma";
 //Incoming data:
 //body: playlistName-string ; playlistImage-string ; userId-string ; genreId-string("id1,id2,id3,id4")
 export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {
-    // const { userId } = req.params
-    const { playlistName, playlistImage, userId } = req.body;
+    const { userId } = req.params
+    const { playlistName, playlistImage } = req.body;
     let { trackId, genreId } = req.body;
 
     if (typeof trackId === 'string') { trackId = Array.from(trackId.split(',')) }
@@ -24,9 +24,22 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
                 trackId: trackId,
                 genreId: genreId,//TOFIX ojo al tipo de dato, está pasado como string?
                 playlistCreatedById: userId,
-                playlistLikedById: [userId],
+                // playlistLikedById: [userId],
             }
         });
+
+        const newPlaylistId = newPlaylist.id
+
+        const newPlaylistLiked = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                playlistLikedId: {
+                    push: newPlaylistId
+                }
+            }
+        })
 
         return res.status(201).send({ message: 'playlist created successfully', newPlaylist });
 
@@ -120,6 +133,44 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
         console.error(err); // Log the error to the console for debugging purposes
         // In case of internal error, return an error message with status code 500
         return res.status(500).send({ error: 'Internal server error' });
+    }
+};
+
+
+export const togglePlaylistById = async (req: Request, res: Response): Promise<Response> => {
+    const { playlistId, userId } = req.params;
+
+    try {
+        const userToUpdate = await prisma.user.findUnique({
+            where: {
+                id: userId,
+            }
+        });
+
+        let arrayPlaylistLikedUser = userToUpdate?.tracksId || [];
+        const index = arrayPlaylistLikedUser.indexOf(playlistId);
+
+        if (index === -1) {
+            arrayPlaylistLikedUser.push(playlistId);
+        } else {
+            arrayPlaylistLikedUser.splice(index, 1);
+        }
+
+        const newPlaylistLiked = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                playlistLikedId: arrayPlaylistLikedUser
+            }
+        })
+
+        return res
+            .status(200)
+            .send({ message: "Playlist liked modified successfully", newPlaylistLiked });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ error: "Internal server error" });
     }
 };
 

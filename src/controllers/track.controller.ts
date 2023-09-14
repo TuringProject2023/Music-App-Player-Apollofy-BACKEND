@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
 
 export const createTrack = async (req: Request, res: Response): Promise<Response> => {
+  const { userId } = req.params;
   const {
     trackName,
     trackUrl,
@@ -35,10 +36,23 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
         album: albumId ?
           { connect: { id: albumId } }
           : undefined,
-        post: post ?? null,
-        counter: counter ?? null
+        // post: post ?? null,
+        // counter: counter ?? null
       },
     });
+
+    const newTrackId = newTrack.id
+
+    const newTrackLiked = await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        tracksId: {
+          push: newTrackId
+        }
+      }
+    })
 
     return res
       .status(201)
@@ -86,6 +100,7 @@ export const getAllTracks = async (req: Request, res: Response): Promise<Respons
   }
 };
 
+
 export const updateTrackById = async (
   req: Request,
   res: Response
@@ -123,6 +138,45 @@ export const updateTrackById = async (
     return res.status(500).send({ error: "Internal server error" });
   }
 };
+
+
+export const toggleTrackById = async (req: Request, res: Response): Promise<Response> => {
+  const { trackId, userId } = req.params;
+
+  try {
+    const userToUpdate = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      }
+    });
+
+    let arrayTracksUser = userToUpdate?.tracksId || [];
+    const index = arrayTracksUser.indexOf(trackId);
+
+    if (index === -1) {
+      arrayTracksUser.push(trackId);
+    } else {
+      arrayTracksUser.splice(index, 1);
+    }
+
+    const newTrackLiked = await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        tracksId: arrayTracksUser
+      }
+    })
+
+    return res
+      .status(200)
+      .send({ message: "Tracks liked modified successfully", newTrackLiked });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ error: "Internal server error" });
+  }
+};
+
 
 export const deleteTrackById = async (
   req: Request,

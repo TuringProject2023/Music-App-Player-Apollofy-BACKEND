@@ -34,7 +34,7 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
             }
         })
 
-       return res.status(201).send({ message: 'Album created successfully', newAlbum });
+        return res.status(201).send({ message: 'Album created successfully', newAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -59,7 +59,7 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
             }
         })
 
-       return res.status(200).send({ message: 'Album gotten successfully', gettedAlbum });
+        return res.status(200).send({ message: 'Album gotten successfully', gettedAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -104,12 +104,50 @@ export const updateAlbum = async (req: Request, res: Response): Promise<Response
         }
         )
 
-       return res.status(200).send({ message: 'Album updated successfully', updateAlbum });
+        return res.status(200).send({ message: 'Album updated successfully', updateAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
         // In case of internal error, return an error message with status code 500
         return res.status(500).send({ error: 'Internal server error' });
+    }
+};
+
+
+export const toggleAlbumById = async (req: Request, res: Response): Promise<Response> => {
+    const { albumId, userId } = req.params;
+
+    try {
+        const userToUpdate = await prisma.user.findUnique({
+            where: {
+                id: userId,
+            }
+        });
+
+        let arrayAlbumsUser = userToUpdate?.tracksId || [];
+        const index = arrayAlbumsUser.indexOf(albumId);
+
+        if (index === -1) {
+            arrayAlbumsUser.push(albumId);
+        } else {
+            arrayAlbumsUser.splice(index, 1);
+        }
+
+        const newAlbumLiked = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                tracksId: arrayAlbumsUser
+            }
+        })
+
+        return res
+            .status(200)
+            .send({ message: "Tracks liked modified successfully", newAlbumLiked });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ error: "Internal server error" });
     }
 };
 
@@ -128,7 +166,7 @@ export const deleteAlbumById = async (req: Request, res: Response): Promise<Resp
             }
         })
 
-       return res.status(200).send({ message: 'Album deleted successfully', deletedAlbum });
+        return res.status(200).send({ message: 'Album deleted successfully', deletedAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
@@ -141,10 +179,10 @@ export const deleteAlbumById = async (req: Request, res: Response): Promise<Resp
 export const getAllAlbum = async (req: Request, res: Response): Promise<Response> => {
 
     try {
-        
+
         const gottenAllAlbum = await prisma.album.findMany({})
 
-       return res.status(200).send({ message: 'All Albums gotten successfully', gottenAllAlbum });
+        return res.status(200).send({ message: 'All Albums gotten successfully', gottenAllAlbum });
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
