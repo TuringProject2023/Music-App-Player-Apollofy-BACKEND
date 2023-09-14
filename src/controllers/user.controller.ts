@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
 
 export const createUser = async (req: Request, res: Response) => {
-  const { email, name, userAvatar } = req.body;
+  const { email, name, picture } = req.body;
 
   try {
     // Check if all required fields are provided
@@ -31,7 +31,7 @@ export const createUser = async (req: Request, res: Response) => {
     if (!emailExist) {
       // if the user does not exist in the database, create a new user
       const newUser = await prisma.user.create({
-        data: { userName: name, userEmail: email, userImage: userAvatar },
+        data: { userName: name, userEmail: email, userImage: picture},
         include: {
           playlistCreated: {
             select: {
@@ -94,7 +94,7 @@ export const updateUserById = async (req: Request, res: Response) => {
   try {
     const updateUser = await prisma.user.update({ where: { id: userId }, data: { userName, userEmail } });
 
-    return res.status(201).send({ message: "User updated successfully!", user: updateUser });
+    return res.status(201).send({ status: "success", message: "User updated successfully!", user: updateUser });
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
@@ -108,7 +108,7 @@ export const deleteUserById = async (req: Request, res: Response) => {
   try {
     const deleteUser = await prisma.user.delete({ where: { id: userId } });
 
-    return res.status(201).send({ message: "User deleted successfully!", user: deleteUser });
+    return res.status(204).send({ message: "User deleted successfully!", user: deleteUser });
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
