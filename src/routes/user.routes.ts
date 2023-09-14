@@ -12,7 +12,7 @@ userRoutes
     .get('/playlistCreated/:userEmail', getPlaylistByUserEmail)
     .get('/album/:userEmail', getAlbumByUserEmail)
     .get('/playlistLiked/:userEmail', getLikedPlaylistByUserEmail)
-    .put('/:userId', updateUserById)
+    .patch('/:userId', updateUserById)
     .delete('/:userId', deleteUserById);
 
 export default userRoutes;
