@@ -1,8 +1,14 @@
 import { Router } from "express";
-import { createTrack } from "../controllers/track.controller";
+import { createTrack, deleteTrackById, getAllTracks, getTrackById, toggleTrackById, updateTrackById } from "../controllers/";
 
 const trackRoutes = Router();
 
-trackRoutes.post("/", createTrack);
+trackRoutes
+    .post("/:userId", createTrack)
+    .get("/:trackId", getTrackById)
+    .get("/", getAllTracks)
+    .put("/:trackId", updateTrackById)
+    .patch("/:trackId/:userId", toggleTrackById)
+    .delete("/:trackId", deleteTrackById)
 
 export default trackRoutes;
