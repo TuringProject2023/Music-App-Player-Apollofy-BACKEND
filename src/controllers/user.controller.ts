@@ -67,7 +67,7 @@ export const getUserByEmail = async (req: Request, res: Response) => {
       include: {},
     });
 
-    return res.status(200).send({ message: "User getted successfully!", user: userById });
+    return res.status(200).send({ message: "User gotten successfully!", user: userById });
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500

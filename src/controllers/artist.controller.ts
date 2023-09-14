@@ -57,7 +57,7 @@ export const getArtistById = async (req: Request, res: Response) => {
 
     return res
       .status(200)
-      .send({ message: "Artist getted successfully!", Artist: ArtistById });
+      .send({ message: "Artist gotten successfully!", Artist: ArtistById });
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
