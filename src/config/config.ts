@@ -74,7 +74,7 @@ const CONFIG: TConfig = {
 };
 
 export default CONFIG[ENV];
-
-export const CLOUDINARY_CLOUD_NAME = process.env['CLOUDINARY_NAME']
-export const CLOUDINARY_API_KEY = process.env['CLOUDINARY_API_KEY']
-export const CLOUDINARY_API_SECRET = process.env['CLOUDINARY_API_SECRET']
+//tofix  comprobar si es necessario o eliminar
+// export const CLOUDINARY_CLOUD_NAME = process.env['CLOUDINARY_NAME']
+// export const CLOUDINARY_API_KEY = process.env['CLOUDINARY_API_KEY']
+// export const CLOUDINARY_API_SECRET = process.env['CLOUDINARY_API_SECRET']

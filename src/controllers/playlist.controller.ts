@@ -10,7 +10,7 @@ import fs from "fs-extra";
 export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {
     const { userEmail } = req.params
     const userId = await getUserByEmailFunction(userEmail)
-    const { playlistName, playlistImage } = req.body;
+    const { playlistName } = req.body;
     let { trackId, genreId } = req.body;
 
     if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
@@ -18,17 +18,15 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
 
     try {
         // if () {
-        //     return res.status(400).json({ error: 'Missing requiered input email.' })
+        //     return res.status(400).json({ error: 'Missing requiered input userId.' })
         // }
         if (!req.files?.playlistImage) {
-
             return res.status(400).json({ error: "Image is missing" });
         }
-        const imageVerefication = req.files?.playlistImage
+        const imageVerefication = req.files?.playlistImage;
         if ("tempFilePath" in imageVerefication) {
             const upload = await uploadImage(imageVerefication.tempFilePath);
             await fs.unlink(imageVerefication.tempFilePath);
-            console.log(upload.secure_url)
             const newPlaylist = await prisma.playlist.create({
                 data: {
                     playlistName,
@@ -36,7 +34,11 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
                     trackId: trackId,
                     genreId: genreId, //TOFIX ojo al tipo de dato, está pasado como string?
                     playlistCreatedById: userId,
-                    // playlistLikedById: [userId],
+                    // playlistLikedBy:{
+                    //   connect: {
+                    //     userEmail: userId
+                    //   }
+                    // }
                 },
             });
 
@@ -103,7 +105,15 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
 
 export const updatePlaylist = async (req: Request, res: Response): Promise<Response> => {
     const { playlistId } = req.params; //TOFIX posibilidad de modificar solo el creador de la playlist
-    const { playlistName, playlistImage, track, genre } = req.body;
+    const { playlistName } = req.body;
+    let { trackId, genreId } = req.body;
+
+    if (typeof trackId === "string") {
+        trackId = Array.from(trackId.split(","));
+    }
+    if (typeof genreId === "string") {
+        genreId = Array.from(genreId.split(","));
+    }
 
     try {
         const playlistById = await prisma.playlist.findUnique({
@@ -114,27 +124,36 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
         if (!playlistById) {
             return res.status(404).json({ error: "Playlist not found." });
         }
-        const updatePlaylist = await prisma.playlist.update({
-            where: {
-                id: playlistId,
-            },
-            data: {
-                playlistName,
-                playlistImage,
-                track: {
-                    connect: track.map((trackId: string) => {
-                        id: trackId;
-                    }),
-                },
-                genre: {
-                    connect: genre.map((genreId: string) => {
-                        id: genreId;
-                    }),
-                },
-            },
-        });
 
-        return res.status(200).send({ message: "Playlist updated successfully", updatePlaylist });
+        if (!req.files?.playlistImage) {
+            return res.status(400).json({ error: "Image is missing" });
+        }
+        const imageVerefication = req.files?.playlistImage;
+        if ("tempFilePath" in imageVerefication) {
+            const upload = await uploadImage(imageVerefication.tempFilePath);
+            await fs.unlink(imageVerefication.tempFilePath);
+            const updatePlaylist = await prisma.playlist.update({
+                where: {
+                    id: playlistId,
+                },
+                data: {
+                    playlistName,
+                    playlistImage: upload.secure_url,
+                    track: {
+                        connect: trackId.map((trackId: string) => {
+                            id: trackId;
+                        }),
+                    },
+                    genre: {
+                        connect: genreId.map((genreId: string) => {
+                            id: genreId;
+                        }),
+                    },
+                },
+            });
+            return res.status(200).send({ message: "Playlist updated successfully", updatePlaylist });
+        }
+        return res.status(404).send({ message: "File not found" });
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
         // In case of internal error, return an error message with status code 500
