@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
+import { getUserByEmailFunction } from "./user.controller";
 
 
 
 //Incoming data:
 //body: playlistName-string ; playlistImage-string ; userId-string ; genreId-string("id1,id2,id3,id4")
 export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {
-    const { userId } = req.params
+    const { userEmail } = req.params
+    const userId = await getUserByEmailFunction(userEmail)
     const { playlistName, playlistImage } = req.body;
     let { trackId, genreId } = req.body;
 
