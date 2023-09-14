@@ -107,8 +107,11 @@ export const deleteUserById = async (req: Request, res: Response) => {
 
   try {
     const deleteUser = await prisma.user.delete({ where: { id: userId } });
+    if (!deleteUser) {
+      return res.status(204).send();
+  }
 
-    return res.status(204).send({ message: "User deleted successfully!", user: deleteUser });
+    return res.status(204).send({message: "User deleted successfully!"});
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
