@@ -77,9 +77,7 @@ export const getUserByEmail = async (req: Request, res: Response) => {
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const allUsers = await prisma.user.findMany({
-      include: {},
-    });
+    const allUsers = await prisma.user.findMany();
 
     return res.status(201).send({ message: "User created successfully!", user: allUsers });
   } catch (err) {

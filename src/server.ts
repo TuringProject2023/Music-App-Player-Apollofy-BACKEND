@@ -4,6 +4,7 @@ import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { albumRoutes, artistRoutes, genreRoutes, playlistRoutes, trackRoutes, userRoutes } from './routes';
+import errorHandler from './middlewares/errorHandler';
 
 
 
@@ -27,6 +28,6 @@ app.use('/track', trackRoutes);
 app.use('/genre', genreRoutes);
 app.use('/artist', artistRoutes);
 app.use('/album', albumRoutes);
-
+app.use(errorHandler)
 
 export default app;

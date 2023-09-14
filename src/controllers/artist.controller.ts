@@ -67,9 +67,7 @@ export const getArtistById = async (req: Request, res: Response) => {
 
 export const getAllArtists = async (req: Request, res: Response) => {
   try {
-    const allArtists = await prisma.artist.findMany({
-      include: {},
-    });
+    const allArtists = await prisma.artist.findMany();
 
     return res
       .status(200)
