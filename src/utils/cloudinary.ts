@@ -8,7 +8,7 @@ cloudinary.config({
   api_secret: config.cloudinary.api_secret,
   secure: true
 });
-console.log(config.cloudinary.cloud_name)
+
 // Función para cargar imágenes
 export async function uploadImage(filePath: string) {
   try {

@@ -3,8 +3,6 @@ import dotenv from 'dotenv';
 // import { getEnvVar } from '../utils/getEnvVar'
 
 
-
-
 type TConfig = { [key: string]: EnvironmentConfig };
 
 type EnvironmentConfig = {
@@ -73,9 +71,6 @@ const CONFIG: TConfig = {
     },
 };
 
-console.log(CONFIG.development.cloudinary.cloud_name)
-console.log(CONFIG.development.cloudinary.api_key)
-console.log(CONFIG.development.cloudinary.api_secret)
 
 export default CONFIG[ENV];
 //tofix  comprobar si es necessario o eliminar
