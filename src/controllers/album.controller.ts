@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
 import { prisma } from '../db/clientPrisma'
+import { uploadImage } from "../utils/cloudinary";
+import fs from "fs-extra";
 
 
 export const createAlbum = async (req: Request, res: Response): Promise<Response> => {
