@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
 import { uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
-
+const imageFolder = 'apollofyImages';
 export const createGenre = async (req: Request, res: Response) => {
   const { genreName } = req.body;
 
@@ -12,7 +12,7 @@ export const createGenre = async (req: Request, res: Response) => {
     }
     const imageVerefication = req.files?.genreImage;
     if ("tempFilePath" in imageVerefication) {
-      const upload = await uploadImage(imageVerefication.tempFilePath);
+      const upload = await  uploadImage(imageVerefication.tempFilePath, imageFolder);
       await fs.unlink(imageVerefication.tempFilePath);
       const newGenre = await prisma.genre.create({
         data: { genreName, genreImage: upload.secure_url },
@@ -60,7 +60,7 @@ export const updateGenreByID = async (req: Request, res: Response): Promise<Resp
     }
     const imageVerefication = req.files?.genreImage;
     if ("tempFilePath" in imageVerefication) {
-      const upload = await uploadImage(imageVerefication.tempFilePath);
+      const upload = await uploadImage(imageVerefication.tempFilePath, imageFolder);
       await fs.unlink(imageVerefication.tempFilePath);
       const genreFound = await prisma.genre.update({
         where: {

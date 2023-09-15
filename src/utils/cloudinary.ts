@@ -10,10 +10,10 @@ cloudinary.config({
 });
 
 // Función para cargar imágenes
-export async function uploadImage(filePath: string) {
+export async function uploadImage(filePath: string, folder: string) {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
-      folder: 'apollofyImages',
+      folder: folder,
     });
     return result;
   } catch (error) {

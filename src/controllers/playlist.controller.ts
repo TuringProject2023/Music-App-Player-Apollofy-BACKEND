@@ -4,6 +4,7 @@ import { getUserByEmailFunction } from "./user.controller";
 
 import { uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
+const imageFolder = 'apollofyImages';
 
 //Incoming data:
 //body: playlistName-string ; playlistImage-string ; userId-string ; genreId-string("id1,id2,id3,id4")
@@ -25,7 +26,7 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
         }
         const imageVerefication = req.files?.playlistImage;
         if ("tempFilePath" in imageVerefication) {
-            const upload = await uploadImage(imageVerefication.tempFilePath);
+            const upload = await uploadImage(imageVerefication.tempFilePath, imageFolder);
             await fs.unlink(imageVerefication.tempFilePath);
             const newPlaylist = await prisma.playlist.create({
                 data: {
@@ -130,7 +131,7 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
         }
         const imageVerefication = req.files?.playlistImage;
         if ("tempFilePath" in imageVerefication) {
-            const upload = await uploadImage(imageVerefication.tempFilePath);
+            const upload = await uploadImage(imageVerefication.tempFilePath, imageFolder);
             await fs.unlink(imageVerefication.tempFilePath);
             const updatePlaylist = await prisma.playlist.update({
                 where: {

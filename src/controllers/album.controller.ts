@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { prisma } from '../db/clientPrisma'
 import { uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
-
+const imageFolder = 'apollofyImages';
 
 export const createAlbum = async (req: Request, res: Response): Promise<Response> => {
     const { userEmail } = req.params
@@ -21,7 +21,7 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
         }
         const imageVerefication = req.files?.albumImage;
         if ("tempFilePath" in imageVerefication) {
-            const upload = await uploadImage(imageVerefication.tempFilePath);
+            const upload = await uploadImage(imageVerefication.tempFilePath, imageFolder);
             await fs.unlink(imageVerefication.tempFilePath);
             const newAlbum = await prisma.album.create({
                 data: {
@@ -93,7 +93,7 @@ export const updateAlbum = async (req: Request, res: Response): Promise<Response
         }
         const imageVerefication = req.files?.albumImage;
         if ("tempFilePath" in imageVerefication) {
-            const upload = await uploadImage(imageVerefication.tempFilePath);
+            const upload = await uploadImage(imageVerefication.tempFilePath, imageFolder);
             await fs.unlink(imageVerefication.tempFilePath);
             const updateAlbum = await prisma.album.update({
                 where: {

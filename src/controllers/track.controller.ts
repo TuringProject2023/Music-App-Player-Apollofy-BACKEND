@@ -2,10 +2,13 @@ import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
 import { deleteImage, uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
+const imageFolder = 'apollofyImages';
+const audioFolder = 'apollofyAudio';
+
 
 export const createTrack = async (req: Request, res: Response): Promise<Response> => {
   const { userId } = req.params;
-  const { trackName, trackUrl, trackImage, trackCreatedAt, genreId, artistId, albumId, post, counter } = req.body;
+  const { trackName, trackUrl, trackCreatedAt, genreId, artistId, albumId } = req.body;
 
   console.log(req.body);
   try {
@@ -14,14 +17,22 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
       return res.status(400).json({ error: "Image is missing" });
     }
     const imageVerefication = req.files?.trackImage;
-    if ("tempFilePath" in imageVerefication) {
-      const upload = await uploadImage(imageVerefication.tempFilePath);
+    const audioFile = req.files?.trackUrl;
+
+
+    if ("tempFilePath" in imageVerefication ) {
+      const imageUpload  = await uploadImage(imageVerefication.tempFilePath, imageFolder);
       await fs.unlink(imageVerefication.tempFilePath);
+
+      if("tempFilePath" in audioFile){
+        const audioUpload  = await uploadImage(audioFile.tempFilePath, audioFolder);
+      await fs.unlink(audioFile.tempFilePath);
+
       const newTrack = await prisma.track.create({
         data: {
           trackName,
-          trackUrl,
-          trackImage: upload.secure_url,
+          trackUrl: audioUpload.secure_url,
+          trackImage: imageUpload.secure_url,
           trackCreatedAt,
           genre: genreId ? { connect: { id: genreId } } : undefined,
           artist: artistId ? { connect: { id: artistId } } : undefined,
@@ -45,7 +56,7 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
       });
 
       return res.status(201).send({ message: "Track created successfully", newTrack });
-    }
+    }}
     return res.status(404).send({ message: "File not found" });
   } catch (err) {
     console.error(err);
@@ -92,17 +103,23 @@ export const updateTrackById = async (req: Request, res: Response): Promise<Resp
       return res.status(400).json({ error: "Image is missing" });
     }
     const imageVerefication = req.files?.trackImage;
+    const audioFile = req.files?.trackUrl;
+
     if ("tempFilePath" in imageVerefication) {
-      const upload = await uploadImage(imageVerefication.tempFilePath);
+      const imageUpload = await uploadImage(imageVerefication.tempFilePath, imageFolder);
       await fs.unlink(imageVerefication.tempFilePath);
+
+      if("tempFilePath" in audioFile){
+        const audioUpload  = await uploadImage(audioFile.tempFilePath, audioFolder);
+      await fs.unlink(audioFile.tempFilePath);
       const updateTrack = await prisma.track.update({
         where: {
           id: trackId,
         },
         data: {
           trackName,
-          trackUrl,
-          trackImage: upload.secure_url,
+          trackUrl:audioUpload.secure_url,
+          trackImage: imageUpload.secure_url,
           genre: {
             connect: { id: genreId },
           },
@@ -116,7 +133,7 @@ export const updateTrackById = async (req: Request, res: Response): Promise<Resp
       });
 
       return res.status(200).send({ message: "Track updated successfully", updateTrack });
-    }
+    }}
     return res.status(404).send({ message: "File not found" });
   } catch (err) {
     console.error(err);
