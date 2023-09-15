@@ -1,41 +1,44 @@
 import { Request, Response } from 'express'
 import { prisma } from '../db/clientPrisma'
+import { uploadImage } from '../utils/cloudinary';
+import { traceDeprecation } from 'process';
 
 
 export const createAlbum = async (req: Request, res: Response): Promise<Response> => {
-    const { userId } = req.params
-    const { albumName, albumImage, track, genre, albumCreatedAt } = req.body
+    const { userEmail } = req.params
+    const { albumName, albumCreatedAt } = req.body
+    let { trackId, genreId } = req.body //TOFIX. FALTA RECIBIR EL ARTISTA...
 
+    if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
+    if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
 
     try {
         // if () {
         //     return res.status(400).json({ error: 'Missing requiered input email.' })
         // }
-        const newAlbum = await prisma.album.create({
-            data: {
-                albumName,
-                albumImage,
-                albumCreatedAt,
-                track: {
-                    connect: track.map((trackId: string) => {
-                        id: trackId
-                    })
-                },
-                genre: {
-                    connect: genre.map((genreId: string) => {
-                        id: genreId
-                    })
-                },
-                // AlbumLikedBy: {
-                //     connect: {
-                //         id: userId,
-                //     }
-                // }
-            }
-        })
-
-        return res.status(201).send({ message: 'Album created successfully', newAlbum });
-
+        if (!req.files?.albumImage) {
+            return res.status(404).json({ error: "Image is missing" });
+        }
+        const imageVerefication = req.files?.albumImage;
+        if ("tempFilePath" in imageVerefication) {
+            const upload = await uploadImage(imageVerefication.tempFilePath);
+            const newAlbum = await prisma.album.create({
+                data: {
+                    albumName,
+                    albumImage: upload.secure_url,
+                    albumCreatedAt,
+                    trackId: trackId,
+                    genreId: genreId,
+                    // AlbumLikedBy: {
+                    //     connect: {
+                    //         id: userId,
+                    //     }
+                    // }
+                }
+            })
+            return res.status(201).send(newAlbum);
+        }
+        return res.status(404).send({ message: 'tempFilePath property not found' });
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
         // In case of internal error, return an error message with status code 500
@@ -47,15 +50,13 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
 export const getAlbumById = async (req: Request, res: Response): Promise<Response> => {
     const { albumId } = req.params
 
-
     try {
         // if () {
         //     return res.status(400).json({ error: 'Missing requiered input email.' })
         // }
         const gettedAlbum = await prisma.album.findUnique({
             where: {
-                id: albumId,
-
+                id: albumId
             }
         })
 
@@ -71,8 +72,11 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
 
 export const updateAlbum = async (req: Request, res: Response): Promise<Response> => {
     const { albumId } = req.params //TOFIX posibilidad de modificar solo el creador de la album
-    const { albumName, albumImage, track, genre } = req.body
+    const { albumName, albumCreatedAt } = req.body
+    let { trackId, genreId } = req.body
 
+    if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
+    if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
 
     try {
         const albumById = await prisma.album.findUnique({
@@ -83,29 +87,28 @@ export const updateAlbum = async (req: Request, res: Response): Promise<Response
         if (!albumById) {
             return res.status(404).json({ error: 'Album not found.' })
         }
-        const updateAlbum = await prisma.album.update({
-            where: {
-                id: albumId
-            },
-            data: {
-                albumName,
-                albumImage,
-                track: {
-                    connect: track.map((trackId: string) => {
-                        id: trackId
-                    })
-                },
-                genre: {
-                    connect: genre.map((genreId: string) => {
-                        id: genreId
-                    })
-                }
-            },
+        if (!req.files?.albumImage) {
+            return res.status(404).json({ error: "Image is missing" });
         }
-        )
+        const imageVerefication = req.files?.albumImage;
+        if ("tempFilePath" in imageVerefication) {
+            const upload = await uploadImage(imageVerefication.tempFilePath);
+            const updateAlbum = await prisma.album.update({
+                where: {
+                    id: albumId
+                },
+                data: {
+                    albumName,
+                    albumImage: upload.secure_url,
+                    trackId: trackId,
+                    genreId: genreId
+                },
+            }
+            )
 
-        return res.status(200).send({ message: 'Album updated successfully', updateAlbum });
-
+            return res.status(200).send({ message: 'Album updated successfully', updateAlbum });
+        }
+        return res.status(404).send({ message: 'tempFilePath property not found' });
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
         // In case of internal error, return an error message with status code 500

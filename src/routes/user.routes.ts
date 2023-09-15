@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createUser, deleteUserById, getAlbumByUserEmail, getAllUsers, getLikedPlaylistByUserEmail, getPlaylistByUserEmail, getTracksByUserEmail, getUserByEmailParams, updateUserById } from '../controllers/';
+import { createUser, deleteUserById, getAlbumByUserEmail, getAllUsers, getPlaylistLikedByUserEmail, getPlaylistCreatedByUserEmail, getTracksByUserEmail, getUserByEmailParams, updateUserById } from '../controllers/';
 
 
 const userRoutes = Router();
@@ -8,10 +8,11 @@ userRoutes
     .post('/', createUser)
     .get('/:userEmail', getUserByEmailParams)
     .get('/', getAllUsers)
-    .get('/track/:userEmail', getTracksByUserEmail)
-    .get('/playlistCreated/:userEmail', getPlaylistByUserEmail)
+    .get('/playlistCreated/:userEmail', getPlaylistCreatedByUserEmail)
+    .get('/playlistLiked/:userEmail', getPlaylistLikedByUserEmail)
     .get('/album/:userEmail', getAlbumByUserEmail)
-    .get('/playlistLiked/:userEmail', getLikedPlaylistByUserEmail)
+    .get('/track/:userEmail', getTracksByUserEmail)
+    // .get('/artist/:userEmail', getArtistsByUserEmail)//TOFIX - FALTA AÑADIR LA PETICIÓN DE ARTISTAS
     .patch('/:userId', updateUserById)
     .delete('/:userId', deleteUserById);
 

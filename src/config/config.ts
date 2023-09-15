@@ -73,6 +73,10 @@ const CONFIG: TConfig = {
     },
 };
 
+console.log(CONFIG.development.cloudinary.cloud_name)
+console.log(CONFIG.development.cloudinary.api_key)
+console.log(CONFIG.development.cloudinary.api_secret)
+
 export default CONFIG[ENV];
 //tofix  comprobar si es necessario o eliminar
 // export const CLOUDINARY_CLOUD_NAME = process.env['CLOUDINARY_NAME']

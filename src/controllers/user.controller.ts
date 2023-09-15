@@ -127,9 +127,9 @@ export const deleteUserById = async (req: Request, res: Response) => {
     const deleteUser = await prisma.user.delete({ where: { id: userId } });
     if (!deleteUser) {
       return res.status(204).send();
-  }
+    }
 
-    return res.status(204).send({message: "User deleted successfully!"});
+    return res.status(204).send({ message: "User deleted successfully!" });
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
@@ -154,7 +154,7 @@ export const getTracksByUserEmail = async (req: Request, res: Response) => {
   }
 };
 
-export const getPlaylistByUserEmail = async (req: Request, res: Response) => {
+export const getPlaylistCreatedByUserEmail = async (req: Request, res: Response) => {
   const { userEmail } = req.params;
 
   try {
@@ -188,7 +188,7 @@ export const getAlbumByUserEmail = async (req: Request, res: Response) => {
   }
 };
 
-export const getLikedPlaylistByUserEmail = async (req: Request, res: Response) => {
+export const getPlaylistLikedByUserEmail = async (req: Request, res: Response) => {
   const { userEmail } = req.params;
 
   try {
@@ -197,7 +197,7 @@ export const getLikedPlaylistByUserEmail = async (req: Request, res: Response) =
       select: { playlistLiked: true },
     });
 
-    return res.status(200).send({ message: "User gotten successfully!", user: userByEmail });
+    return res.status(200).send(userByEmail?.playlistLiked);
   } catch (err) {
     console.error(err); // Log the error to the console for debugging purposes
     // In case of internal error, return an error message with status code 500
