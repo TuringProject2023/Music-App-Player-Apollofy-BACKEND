@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
 import { uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
-const imageFolder = 'apollofyImages';
+
 
 export const createArtist = async (req: Request, res: Response) => {
   const { artistName, popularity } = req.body;
@@ -28,7 +28,7 @@ export const createArtist = async (req: Request, res: Response) => {
       }
       const imageVerefication = req.files?.artistImage;
       if ("tempFilePath" in imageVerefication) {
-        const upload = await uploadImage(imageVerefication.tempFilePath, imageFolder);
+        const upload = await uploadImage(imageVerefication.tempFilePath);
         await fs.unlink(imageVerefication.tempFilePath);
         const newArtist = await prisma.artist.create({
           data: { artistName, popularity, artistImage: upload.secure_url },
@@ -94,7 +94,7 @@ export const updateArtistById = async (req: Request, res: Response) => {
     }
     const imageVerefication = req.files?.artistImage;
     if ("tempFilePath" in imageVerefication) {
-      const upload = await  uploadImage(imageVerefication.tempFilePath, imageFolder);
+      const upload = await  uploadImage(imageVerefication.tempFilePath);
       await fs.unlink(imageVerefication.tempFilePath);
       const updateArtist = await prisma.artist.update({
         where: { id: artistId },
