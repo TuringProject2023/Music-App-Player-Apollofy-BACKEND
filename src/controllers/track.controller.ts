@@ -88,7 +88,20 @@ export const getTrackById = async (req: Request, res: Response): Promise<Respons
 
 export const getAllTracks = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const allTrack = await prisma.track.findMany({});
+    const allTrack = await prisma.track.findMany({
+      include: {
+        artist: {
+          select: {
+            artistName: true
+          }
+        },
+        genre: {
+          select: {
+            genreName: true
+          }
+        }
+      }
+    });
 
     return res.status(200).send(allTrack);
   } catch (err) {
