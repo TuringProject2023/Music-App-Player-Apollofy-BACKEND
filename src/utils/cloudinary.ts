@@ -9,10 +9,6 @@ cloudinary.config({
   secure: true
 });
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 4f8a1055e973875e7e84200887befe55318b7267
 export async function uploadImage(filePath: string) {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
