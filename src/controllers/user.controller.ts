@@ -160,7 +160,18 @@ export const getPlaylistCreatedByUserEmail = async (req: Request, res: Response)
   try {
     const userByEmail = await prisma.user.findUnique({
       where: { userEmail: userEmail },
-      select: { playlistCreated: true },
+      select: {
+        playlistCreated: {
+          include: {
+            genre: {
+              select: {
+                genreName: true,
+                id: true,
+              }
+            },
+          }
+        }
+      },
     });
 
     return res.status(200).send(userByEmail?.playlistCreated);
@@ -194,7 +205,18 @@ export const getPlaylistLikedByUserEmail = async (req: Request, res: Response) =
   try {
     const userByEmail = await prisma.user.findUnique({
       where: { userEmail: userEmail },
-      select: { playlistLiked: true },
+      select: {
+        playlistLiked: {
+          include: {
+            genre: {
+              select: {
+                genreName: true,
+                id: true,
+              }
+            },
+          }
+        }
+      },
     });
 
     return res.status(200).send(userByEmail?.playlistLiked);

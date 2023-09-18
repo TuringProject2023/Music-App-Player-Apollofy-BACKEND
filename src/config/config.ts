@@ -71,10 +71,6 @@ const CONFIG: TConfig = {
     },
 };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4f8a1055e973875e7e84200887befe55318b7267
 export default CONFIG[ENV];
 
 //tofix  comprobar si es necessario o eliminar

@@ -94,9 +94,11 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
         // if () {
         //     return res.status(400).json({ error: 'Missing requiered input email.' })
         // }
-        const gottenAllPlaylist = await prisma.playlist.findMany({});
+        const gottenAllPlaylist = await prisma.playlist.findMany({
 
-        return res.status(200).send({ message: "All playlists gotten successfully", gottenAllPlaylist });
+        });
+
+        return res.status(200).send(gottenAllPlaylist);
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes
         // In case of internal error, return an error message with status code 500
