@@ -6,7 +6,7 @@ import fs from "fs-extra";
 
 export const createAlbum = async (req: Request, res: Response): Promise<Response> => {
     const { userEmail } = req.params
-    const { albumName, albumCreatedAt } = req.body
+    const { albumName, albumCreatedAt, artistId } = req.body
     let { trackId, genreId } = req.body //TOFIX. FALTA RECIBIR EL ARTISTA...
 
     if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
@@ -30,6 +30,7 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
                     albumCreatedAt,
                     trackId: trackId,
                     genreId: genreId,
+                    artistId: artistId,
                     // AlbumLikedBy: {
                     //     connect: {
                     //         id: userId,
