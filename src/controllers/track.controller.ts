@@ -76,7 +76,7 @@ export const getAllTracks = async (req: Request, res: Response): Promise<Respons
   try {
     const allTrack = await prisma.track.findMany({});
 
-    return res.status(200).send({ message: "Track gotten successfully", allTrack });
+    return res.status(200).send(allTrack);
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
@@ -163,16 +163,16 @@ export const deleteTrackById = async (req: Request, res: Response): Promise<Resp
   const { trackId } = req.params;
 
   try {
-     //Find Track by id
-     const track = await prisma.track.findUnique({
-      where: { id:  trackId  }
+    //Find Track by id
+    const track = await prisma.track.findUnique({
+      where: { id: trackId }
     });
 
     if (!track) {
       return res.status(404).send({ status: "Error", msg: "track not found" });
-    }else {      
-        await deleteImage(track.trackImage)
-      
+    } else {
+      await deleteImage(track.trackImage)
+
     }
 
     const deleteTrack = await prisma.track.delete({

@@ -7,9 +7,7 @@ import { albumRoutes, artistRoutes, genreRoutes, playlistRoutes, trackRoutes, us
 import errorHandler from './middlewares/errorHandler';
 
 
-
 const app: express.Application = express();
-
 
 app.use(express.json());
 app.use(morgan('dev'));
@@ -20,7 +18,6 @@ app.use(fileUpload({
     useTempFiles: true,
     tempFileDir: './uploads'
 }));
-
 
 app.use('/user', userRoutes);
 app.use('/playlist', playlistRoutes);

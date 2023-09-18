@@ -187,7 +187,7 @@ export const getAllAlbum = async (req: Request, res: Response): Promise<Response
 
         const gottenAllAlbum = await prisma.album.findMany({})
 
-        return res.status(200).send({ message: 'All Albums gotten successfully', gottenAllAlbum });
+        return res.status(200).send(gottenAllAlbum);
 
     } catch (err) {
         console.error(err); // Log the error to the console for debugging purposes

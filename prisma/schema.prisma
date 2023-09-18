@@ -98,7 +98,7 @@ model Album {
 model Genre {
   id         String     @id @default(auto()) @map("_id") @db.ObjectId
   genreName  String
-  genreImage String
+  genreImage String?
   artist     Artist[]   @relation(fields: [artistId], references: [id])
   artistId   String[]   @db.ObjectId
   album      Album[]    @relation(fields: [albumId], references: [id])
