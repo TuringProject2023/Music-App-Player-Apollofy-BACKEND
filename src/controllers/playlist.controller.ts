@@ -5,6 +5,7 @@ import { getUserByEmailFunction } from "./user.controller";
 import { uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
 
+
 //Incoming data:
 //body: playlistName-string ; playlistImage-string ; userId-string ; genreId-string("id1,id2,id3,id4")
 export const createPlaylist = async (req: Request, res: Response): Promise<Response> => {

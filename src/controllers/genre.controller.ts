@@ -12,7 +12,7 @@ export const createGenre = async (req: Request, res: Response) => {
     }
     const imageVerefication = req.files?.genreImage;
     if ("tempFilePath" in imageVerefication) {
-      const upload = await uploadImage(imageVerefication.tempFilePath);
+      const upload = await  uploadImage(imageVerefication.tempFilePath);
       await fs.unlink(imageVerefication.tempFilePath);
       const newGenre = await prisma.genre.create({
         data: { genreName, genreImage: upload.secure_url },

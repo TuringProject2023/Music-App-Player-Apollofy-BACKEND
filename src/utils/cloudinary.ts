@@ -9,11 +9,14 @@ cloudinary.config({
   secure: true
 });
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4f8a1055e973875e7e84200887befe55318b7267
 export async function uploadImage(filePath: string) {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
-      folder: 'apollofyImages',
+      folder: "apollofyImages",
     });
     return result;
   } catch (error) {
@@ -22,10 +25,20 @@ export async function uploadImage(filePath: string) {
   }
 }
 
+// Función para cargar archivos de audio
+export async function uploadAudio(filePath: string) {
+  try {
+    const result = await cloudinary.uploader.upload(filePath, {
+      folder: "apollofyAudio",
+      resource_type: 'video', // Utiliza 'video' para archivos de audio
+    });
+    return result;
+  } catch (error) {
+    console.error('Error al subir el archivo de audio a Cloudinary:', error);
+    throw error;
+  }
+}
+
 export const deleteImage = async (imageId: string) => {
-
-  return await cloudinary.uploader.destroy(imageId)
-
+  return await cloudinary.uploader.destroy(imageId);
 };
-
-
