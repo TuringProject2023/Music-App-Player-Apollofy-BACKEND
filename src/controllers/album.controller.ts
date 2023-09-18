@@ -59,6 +59,9 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
         const gettedAlbum = await prisma.album.findUnique({
             where: {
                 id: albumId
+            },
+            include: {
+                track: true
             }
         })
 
@@ -186,7 +189,10 @@ export const getAllAlbum = async (req: Request, res: Response): Promise<Response
 
     try {
 
-        const gottenAllAlbum = await prisma.album.findMany({})
+        const gottenAllAlbum = await prisma.album.findMany({
+            include:{
+                track: true
+            }})
 
         return res.status(200).send(gottenAllAlbum);
 
