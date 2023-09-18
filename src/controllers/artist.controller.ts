@@ -7,6 +7,13 @@ import fs from "fs-extra";
 export const createArtist = async (req: Request, res: Response) => {
   const { artistName, popularity } = req.body;
   console.log(req.body);
+  let {  genreId } = req.body
+  // Convert popularity to an integer
+  const popularityAsInt = parseInt(popularity, 10);
+
+  
+  if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
+
   try {
     if (!artistName) {
       return res.status(400).send({
@@ -15,8 +22,6 @@ export const createArtist = async (req: Request, res: Response) => {
       });
     }
 
-    // Convert popularity to an integer
-    const popularityAsInt = parseInt(popularity, 10);
 
     // Check if the conversion was successful
     if (isNaN(popularityAsInt)) {
@@ -39,7 +44,7 @@ export const createArtist = async (req: Request, res: Response) => {
         const upload = await uploadImage(imageVerefication.tempFilePath);
         await fs.unlink(imageVerefication.tempFilePath);
         const newArtist = await prisma.artist.create({
-          data: { artistName, popularity: popularityAsInt, artistImage: upload.secure_url },
+          data: { artistName, popularity: popularityAsInt, artistImage: upload.secure_url, genreId: genreId },
           include: {
             album: true,
             genre: true,
