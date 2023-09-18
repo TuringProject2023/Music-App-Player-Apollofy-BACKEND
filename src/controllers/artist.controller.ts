@@ -15,6 +15,14 @@ export const createArtist = async (req: Request, res: Response) => {
       });
     }
 
+    // Convert popularity to an integer
+    const popularityAsInt = parseInt(popularity, 10);
+
+    // Check if the conversion was successful
+    if (isNaN(popularityAsInt)) {
+      return res.status(400).json({ error: "Invalid popularity value. Must be a number." });
+    }
+
     // Check if the artist already exists in the database
     const artistExist = await prisma.artist.findMany({
       where: { artistName: artistName },
@@ -31,7 +39,7 @@ export const createArtist = async (req: Request, res: Response) => {
         const upload = await uploadImage(imageVerefication.tempFilePath);
         await fs.unlink(imageVerefication.tempFilePath);
         const newArtist = await prisma.artist.create({
-          data: { artistName, popularity, artistImage: upload.secure_url },
+          data: { artistName, popularity: popularityAsInt, artistImage: upload.secure_url },
           include: {
             album: true,
             genre: true,
