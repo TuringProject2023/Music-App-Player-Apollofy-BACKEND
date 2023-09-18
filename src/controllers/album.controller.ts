@@ -5,21 +5,19 @@ import fs from "fs-extra";
 
 
 export const createAlbum = async (req: Request, res: Response): Promise<Response> => {
-    const { userEmail } = req.params
     const { albumName, albumCreatedAt } = req.body
-    let { trackId, genreId } = req.body //TOFIX. FALTA RECIBIR EL ARTISTA...
+    let { trackId, genreId,artistId } = req.body //TOFIX. FALTA RECIBIR EL ARTISTA...
 
     if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
     if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
+    if (typeof artistId === "string") { artistId = Array.from(artistId.split(",")); }
 
     try {
-        // if () {
-        //     return res.status(400).json({ error: 'Missing requiered input email.' })
-        // }
         if (!req.files?.albumImage) {
-            return res.status(404).json({ error: "Image is missing" });
-        }
+            return res.status(400).json({ error: "Image is missing" });
+          }
         const imageVerefication = req.files?.albumImage;
+
         if ("tempFilePath" in imageVerefication) {
             const upload = await uploadImage(imageVerefication.tempFilePath);
             await fs.unlink(imageVerefication.tempFilePath);
@@ -30,6 +28,7 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
                     albumCreatedAt,
                     trackId: trackId,
                     genreId: genreId,
+                    artistId: artistId,
                     // AlbumLikedBy: {
                     //     connect: {
                     //         id: userId,
@@ -37,6 +36,7 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
                     // }
                 }
             })
+            console.log(trackId)
             return res.status(201).send(newAlbum);
         }
         return res.status(404).send({ message: 'tempFilePath property not found' });
