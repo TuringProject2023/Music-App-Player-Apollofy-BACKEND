@@ -62,8 +62,7 @@ export const createArtist = async (req: Request, res: Response) => {
       }
     }
   } catch (err) {
-    console.error(err); // Log the error to the console for debugging purposes
-    // In case of internal error, return an error message with status code 500
+    console.error(err); 
     return res.status(500).send({ error: err });
   }
 };
@@ -79,8 +78,7 @@ export const getArtistById = async (req: Request, res: Response) => {
 
     return res.status(200).send({ message: "Artist gotten successfully!", Artist: ArtistById });
   } catch (err) {
-    console.error(err); // Log the error to the console for debugging purposes
-    // In case of internal error, return an error message with status code 500
+    console.error(err); 
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -91,8 +89,7 @@ export const getAllArtists = async (req: Request, res: Response) => {
 
     return res.status(200).send({ message: "Artist created successfully!", Artist: allArtists });
   } catch (err) {
-    console.error(err); // Log the error to the console for debugging purposes
-    // In case of internal error, return an error message with status code 500
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -118,8 +115,7 @@ export const updateArtistById = async (req: Request, res: Response) => {
     }
     return res.status(404).send({ message: "File not found" });
   } catch (err) {
-    console.error(err); // Log the error to the console for debugging purposes
-    // In case of internal error, return an error message with status code 500
+    console.error(err); 
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -134,8 +130,7 @@ export const deleteArtistById = async (req: Request, res: Response) => {
 
     return res.status(201).send({ message: "Artist deleted successfully!", Artist: deleteArtist });
   } catch (err) {
-    console.error(err); // Log the error to the console for debugging purposes
-    // In case of internal error, return an error message with status code 500
+    console.error(err); 
     return res.status(500).send({ error: "Internal server error" });
   }
 };

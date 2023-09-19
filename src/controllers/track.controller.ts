@@ -75,6 +75,9 @@ export const getTrackById = async (req: Request, res: Response): Promise<Respons
       where: {
         id: trackId,
       },
+      include:{
+        artist: true
+      }
     });
 
     return res.status(200).send({ message: "Track gotten successfully", getTrack });
@@ -90,11 +93,7 @@ export const getAllTracks = async (req: Request, res: Response): Promise<Respons
   try {
     const allTrack = await prisma.track.findMany({
       include: {
-        artist: {
-          select: {
-            artistName: true
-          }
-        },
+        artist: true,
         genre: {
           select: {
             genreName: true

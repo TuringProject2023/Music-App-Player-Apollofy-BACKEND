@@ -6,8 +6,7 @@ import fs from "fs-extra";
 
 export const createAlbum = async (req: Request, res: Response): Promise<Response> => {
     const { albumName, albumCreatedAt } = req.body
-    let { trackId, genreId,artistId } = req.body //TOFIX. FALTA RECIBIR EL ARTISTA...
-    console.log(trackId)
+    let { trackId, genreId,artistId } = req.body
 
     if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
     if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
@@ -42,8 +41,7 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
         }
         return res.status(404).send({ message: 'tempFilePath property not found' });
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err); 
         return res.status(500).send({ error: 'Internal server error' });
     }
 };
@@ -56,7 +54,7 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
         // if () {
         //     return res.status(400).json({ error: 'Missing requiered input email.' })
         // }
-        const gettedAlbum = await prisma.album.findUnique({
+        const gottenAlbum = await prisma.album.findUnique({
             where: {
                 id: albumId
             },
@@ -65,18 +63,17 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
             }
         })
 
-        return res.status(200).send({ message: 'Album gotten successfully', gettedAlbum });
+        return res.status(200).send({ message: 'Album gotten successfully', gottenAlbum });
 
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err);
         return res.status(500).send({ error: 'Internal server error' });
     }
 };
 
 
 export const updateAlbum = async (req: Request, res: Response): Promise<Response> => {
-    const { albumId } = req.params //TOFIX posibilidad de modificar solo el creador de la album
+    const { albumId } = req.params //TOFIX posibilidad de modificar solo el creador del album
     const { albumName, albumCreatedAt } = req.body
     let { trackId, genreId } = req.body
 
@@ -116,8 +113,7 @@ export const updateAlbum = async (req: Request, res: Response): Promise<Response
         }
         return res.status(404).send({ message: 'tempFilePath property not found' });
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err);
         return res.status(500).send({ error: 'Internal server error' });
     }
 };
@@ -178,8 +174,7 @@ export const deleteAlbumById = async (req: Request, res: Response): Promise<Resp
         return res.status(200).send({ message: 'Album deleted successfully', deletedAlbum });
 
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err);
         return res.status(500).send({ error: 'Internal server error' });
     }
 };
@@ -197,8 +192,7 @@ export const getAllAlbum = async (req: Request, res: Response): Promise<Response
         return res.status(200).send(gottenAllAlbum);
 
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err);
         return res.status(500).send({ error: 'Internal server error' });
     }
 };
