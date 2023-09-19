@@ -33,7 +33,6 @@ export const createArtist = async (req: Request, res: Response) => {
       where: { artistName: artistName },
     });
 
-    console.log(artistExist);
     if (artistExist.length === 0) {
       // if the Artist does not exist in the database, create a new Artist
       if (!req.files?.artistImage) {

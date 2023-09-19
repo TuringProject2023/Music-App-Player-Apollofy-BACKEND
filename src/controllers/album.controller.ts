@@ -59,7 +59,8 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
                 id: albumId
             },
             include: {
-                track: true
+                track: true,
+                artist: true
             }
         })
 
@@ -186,7 +187,8 @@ export const getAllAlbum = async (req: Request, res: Response): Promise<Response
 
         const gottenAllAlbum = await prisma.album.findMany({
             include:{
-                track: true
+                track: true,
+                artist: true,
             }})
 
         return res.status(200).send(gottenAllAlbum);
