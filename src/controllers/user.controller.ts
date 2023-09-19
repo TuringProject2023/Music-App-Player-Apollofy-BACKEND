@@ -205,6 +205,7 @@ export const getPlaylistLikedByUserEmail = async (req: Request, res: Response) =
                 id: true,
               }
             },
+            track: true,
           }
         }
       },
