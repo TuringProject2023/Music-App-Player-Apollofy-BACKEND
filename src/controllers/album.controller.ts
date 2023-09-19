@@ -7,6 +7,7 @@ import fs from "fs-extra";
 export const createAlbum = async (req: Request, res: Response): Promise<Response> => {
     const { albumName, albumCreatedAt } = req.body
     let { trackId, genreId,artistId } = req.body //TOFIX. FALTA RECIBIR EL ARTISTA...
+    console.log(trackId)
 
     if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
     if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
