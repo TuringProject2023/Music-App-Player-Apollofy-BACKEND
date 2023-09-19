@@ -79,6 +79,9 @@ export const getPlaylistById = async (req: Request, res: Response): Promise<Resp
             where: {
                 id: playlistId,
             },
+            include: {
+                track: true
+            }
         });
 
         return res.status(200).send({ message: "playlist gotten successfully", gottenPlaylist });
@@ -95,7 +98,9 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
         //     return res.status(400).json({ error: 'Missing requiered input email.' })
         // }
         const gottenAllPlaylist = await prisma.playlist.findMany({
-
+            include: {
+                track: true
+            }
         });
 
         return res.status(200).send(gottenAllPlaylist);
