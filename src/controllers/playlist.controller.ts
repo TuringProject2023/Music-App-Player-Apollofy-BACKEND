@@ -62,8 +62,7 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
         }
         return res.status(404).send({ message: "File not found" });
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err); 
         return res.status(500).send({ err, error: "Internal server error" });
     }
 };
@@ -86,8 +85,7 @@ export const getPlaylistById = async (req: Request, res: Response): Promise<Resp
 
         return res.status(200).send({ message: "playlist gotten successfully", gottenPlaylist });
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err);
         return res.status(500).send({ error: "Internal server error" });
     }
 };
@@ -105,8 +103,7 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
 
         return res.status(200).send(gottenAllPlaylist);
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err);
         return res.status(500).send({ error: "Internal server error" });
     }
 };
@@ -163,8 +160,7 @@ export const updatePlaylist = async (req: Request, res: Response): Promise<Respo
         }
         return res.status(404).send({ message: "File not found" });
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err); 
         return res.status(500).send({ error: "Internal server error" });
     }
 };
@@ -219,8 +215,7 @@ export const deletePlaylistById = async (req: Request, res: Response): Promise<R
 
         return res.status(200).send({ message: "Playlist deleted successfully", deletedPlaylist });
     } catch (err) {
-        console.error(err); // Log the error to the console for debugging purposes
-        // In case of internal error, return an error message with status code 500
+        console.error(err); 
         return res.status(500).send({ error: "Internal server error" });
     }
 };
