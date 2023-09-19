@@ -87,7 +87,7 @@ export const getAllArtists = async (req: Request, res: Response) => {
   try {
     const allArtists = await prisma.artist.findMany();
 
-    return res.status(200).send({ message: "Artist created successfully!", Artist: allArtists });
+    return res.status(200).send(allArtists);
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
