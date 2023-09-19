@@ -20,8 +20,6 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
     const imageVerefication = req.files?.trackImage;
     const audioFile = req.files?.trackUrl;
 
-    console.log(audioFile)
-    console.log(imageVerefication)
     if ("tempFilePath" in imageVerefication) {
       const imageUpload = await uploadImage(imageVerefication.tempFilePath);
       await fs.unlink(imageVerefication.tempFilePath);
