@@ -52,7 +52,7 @@ export const createUser = async (req: Request, res: Response) => {
       return res.status(200).send({ status: "success", message: "User already exists.", user: emailExist });
     }
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -66,9 +66,9 @@ export const getUserByEmailParams = async (req: Request, res: Response) => {
       include: {},
     });
 
-    return res.status(200).send({ message: "User gotten successfully!", user: userById });
+    return res.status(200).send(userById);
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -85,7 +85,7 @@ export const getUserByEmailFunction = async (email: string) => {
     return userById?.id;
 
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return "Error while finding userEmail/Id";
   }
 };
@@ -96,7 +96,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
     return res.status(201).send({ message: "User created successfully!", user: allUsers });
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -110,7 +110,43 @@ export const updateUserById = async (req: Request, res: Response) => {
 
     return res.status(201).send({ status: "success", message: "User updated successfully!", user: updateUser });
   } catch (err) {
-    console.error(err); 
+    console.error(err);
+    return res.status(500).send({ error: "Internal server error" });
+  }
+};
+
+export const updateUserLikedByEmail = async (req: Request, res: Response) => {
+  const { userEmail } = req.params;
+  const { tracksId, albumId, playlistLikedId } = req.body;
+
+  console.log(userEmail)
+  console.log(tracksId)
+  console.log(albumId)
+  console.log(playlistLikedId)
+
+  const tracksIdArr = tracksId.split(',').filter(Boolean);
+  const albumIdArr = albumId.split(',').filter(Boolean);
+  const playlistLikedIdArr = playlistLikedId.split(',').filter(Boolean);
+
+  console.log(tracksIdArr)
+  console.log(albumIdArr)
+  console.log(playlistLikedIdArr)
+
+  try {
+    const updateUser = await prisma.user.update({
+      where: {
+        userEmail: userEmail
+      },
+      data: {
+        tracksId: tracksIdArr,
+        albumId: albumIdArr,
+        playlistLikedId: playlistLikedIdArr,
+      }
+    });
+
+    return res.status(201).send({ status: "success", message: "User updated successfully!", user: updateUser });
+  } catch (err) {
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -126,7 +162,7 @@ export const deleteUserById = async (req: Request, res: Response) => {
 
     return res.status(204).send({ message: "User deleted successfully!" });
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -142,7 +178,7 @@ export const getTracksByUserEmail = async (req: Request, res: Response) => {
 
     return res.status(200).send(userByEmail?.tracks);
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -169,7 +205,7 @@ export const getPlaylistCreatedByUserEmail = async (req: Request, res: Response)
 
     return res.status(200).send(userByEmail?.playlistCreated);
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -185,7 +221,7 @@ export const getAlbumByUserEmail = async (req: Request, res: Response) => {
 
     return res.status(200).send(userByEmail?.album);
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -213,7 +249,7 @@ export const getPlaylistLikedByUserEmail = async (req: Request, res: Response) =
 
     return res.status(200).send(userByEmail?.playlistLiked);
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
