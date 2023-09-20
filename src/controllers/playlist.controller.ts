@@ -97,7 +97,8 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
         // }
         const gottenAllPlaylist = await prisma.playlist.findMany({
             include: {
-                track: true
+                track: true,
+                genre: true
             }
         });
 

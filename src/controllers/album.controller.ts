@@ -60,7 +60,8 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
             },
             include: {
                 track: true,
-                artist: true
+                artist: true,
+                genre: true
             }
         })
 
@@ -189,6 +190,7 @@ export const getAllAlbum = async (req: Request, res: Response): Promise<Response
             include:{
                 track: true,
                 artist: true,
+                genre: true
             }})
 
         return res.status(200).send(gottenAllAlbum);

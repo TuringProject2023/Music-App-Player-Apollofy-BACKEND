@@ -74,7 +74,10 @@ export const getTrackById = async (req: Request, res: Response): Promise<Respons
         id: trackId,
       },
       include:{
-        artist: true
+        artist: true,
+        genre: true,
+        album: true
+
       }
     });
 
