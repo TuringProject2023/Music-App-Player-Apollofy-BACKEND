@@ -7,7 +7,7 @@ trackRoutes
     .post("/:userId", createTrack)
     .get("/:trackId", getTrackById)
     .get("/", getAllTracks)
-    .put("/:trackId", updateTrackById)
+    .patch("/:trackId", updateTrackById)
     .patch("/:trackId/:userId", toggleTrackById)
     .delete("/:trackId", deleteTrackById)
 
