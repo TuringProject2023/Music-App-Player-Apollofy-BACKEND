@@ -35,6 +35,7 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
                     trackId: trackId,
                     genreId: genreId, //TOFIX ojo al tipo de dato, está pasado como string?
                     playlistCreatedById: userId,
+                    
                     // playlistLikedBy:{
                     //   connect: {
                     //     userEmail: userId
