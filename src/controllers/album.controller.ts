@@ -45,6 +45,54 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
         return res.status(500).send({ error: 'Internal server error' });
     }
 };
+export const createAlbumByUserId = async (req: Request, res: Response): Promise<Response> => {
+    const { albumName, albumCreatedAt } = req.body
+    const {userId} = req.params
+    let { trackId, genreId,artistId } = req.body
+
+    if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
+    if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
+    if (typeof artistId === "string") { artistId = Array.from(artistId.split(",")); }
+
+    try {
+        if (!req.files?.albumImage) {
+            return res.status(400).json({ error: "Image is missing" });
+          }
+        const imageVerefication = req.files?.albumImage;
+
+        if ("tempFilePath" in imageVerefication) {
+            const upload = await uploadImage(imageVerefication.tempFilePath);
+            await fs.unlink(imageVerefication.tempFilePath);
+            const newAlbum = await prisma.album.create({
+                data: {
+                    albumName,
+                    albumImage: upload.secure_url,
+                    albumCreatedAt,
+                    trackId: trackId,
+                    genreId: genreId,
+                    artistId: artistId,
+                    // AlbumLikedBy: {
+                    //     connect: {
+                    //         id: userId,
+                    //     }
+                    // }
+                    user: {
+                        connect: {
+                            id: userId,
+                        }
+                    }
+                }
+
+            })
+            
+            return res.status(201).send(newAlbum);
+        }
+        return res.status(404).send({ message: 'tempFilePath property not found' });
+    } catch (err) {
+        console.error(err); 
+        return res.status(500).send({ error: 'Internal server error' });
+    }
+};
 
 
 export const getAlbumById = async (req: Request, res: Response): Promise<Response> => {

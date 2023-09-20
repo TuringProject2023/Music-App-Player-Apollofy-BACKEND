@@ -6,10 +6,14 @@ import fs from "fs-extra";
 
 export const createTrack = async (req: Request, res: Response): Promise<Response> => {
   const { userId } = req.params;
-  const { trackName, trackCreatedAt, genreId, artistId, albumId } = req.body;
+  const { trackName, trackCreatedAt } = req.body;
+  let { genreId, artistId, albumId } = req.body
 
 
   try {
+    if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
+    if (typeof artistId === "string") { artistId = Array.from(artistId.split(",")); }
+    if (typeof albumId === "string") { albumId = Array.from(albumId.split(",")); }
 
     if (!req.files?.trackImage) {
       return res.status(400).json({ error: "Image is missing" });
@@ -34,12 +38,12 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
             trackUrl: audioUpload.secure_url,
             trackImage: imageUpload.secure_url,
             trackCreatedAt,
-            genre: genreId ? { connect: { id: genreId } } : undefined,
-            artist: artistId ? { connect: { id: artistId } } : undefined,
-            album: albumId ? { connect: { id: albumId } } : undefined,
+            genreId: genreId,
+            artistId: artistId,
+            albumId:albumId,
             // post: post ?? null,
             // counter: counter ?? null
-            // user: { connect: { id: userId } },
+            user: { connect: { id: userId } },
           },
         });
 
