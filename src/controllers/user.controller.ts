@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
+import { uploadImage } from "../utils/cloudinary";
+import fs from "fs-extra";
 
 export const createUser = async (req: Request, res: Response) => {
   const { email, name, picture } = req.body;
@@ -9,7 +11,6 @@ export const createUser = async (req: Request, res: Response) => {
     if (!name || !email) {
       return res.status(400).send({ status: "error", error: "Name and email are required fields." });
     }
-
     // Check if the email already exists in the database
     const emailExist = await prisma.user.findUnique({
       where: { userEmail: email },
@@ -106,11 +107,20 @@ export const updateUserById = async (req: Request, res: Response) => {
   const { userName, userEmail } = req.body;
 
   try {
-    const updateUser = await prisma.user.update({ where: { id: userId }, data: { userName, userEmail } });
+    if (!req.files?.userImage) {
+      return res.status(400).json({ error: "Image is missing" });
+    }
+  const imageVerefication = req.files?.userImage;
+
+  if ("tempFilePath" in imageVerefication) {
+      const upload = await uploadImage(imageVerefication.tempFilePath);
+      await fs.unlink(imageVerefication.tempFilePath);
+    const updateUser = await prisma.user.update({ where: { id: userId }, data: { userName, userEmail,userImage: upload.secure_url } });
 
     return res.status(201).send({ status: "success", message: "User updated successfully!", user: updateUser });
+  }
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
