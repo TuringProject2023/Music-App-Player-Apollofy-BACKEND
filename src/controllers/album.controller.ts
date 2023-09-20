@@ -36,7 +36,7 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
                     // }
                 }
             })
-            console.log(trackId)
+            
             return res.status(201).send(newAlbum);
         }
         return res.status(404).send({ message: 'tempFilePath property not found' });

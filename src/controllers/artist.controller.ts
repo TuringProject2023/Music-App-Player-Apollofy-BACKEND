@@ -3,16 +3,16 @@ import { prisma } from "../db/clientPrisma";
 import { uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
 
-
 export const createArtist = async (req: Request, res: Response) => {
   const { artistName, popularity } = req.body;
-  console.log(req.body);
-  let {  genreId } = req.body
+
+  let { genreId } = req.body;
   // Convert popularity to an integer
   const popularityAsInt = parseInt(popularity, 10);
 
-  
-  if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
+  if (typeof genreId === "string") {
+    genreId = Array.from(genreId.split(","));
+  }
 
   try {
     if (!artistName) {
@@ -21,7 +21,6 @@ export const createArtist = async (req: Request, res: Response) => {
         error: "ArtistName, Popularity are required fields.",
       });
     }
-
 
     // Check if the conversion was successful
     if (isNaN(popularityAsInt)) {
@@ -61,7 +60,7 @@ export const createArtist = async (req: Request, res: Response) => {
       }
     }
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: err });
   }
 };
@@ -77,7 +76,7 @@ export const getArtistById = async (req: Request, res: Response) => {
 
     return res.status(200).send({ message: "Artist gotten successfully!", Artist: ArtistById });
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -103,7 +102,7 @@ export const updateArtistById = async (req: Request, res: Response) => {
     }
     const imageVerefication = req.files?.artistImage;
     if ("tempFilePath" in imageVerefication) {
-      const upload = await  uploadImage(imageVerefication.tempFilePath);
+      const upload = await uploadImage(imageVerefication.tempFilePath);
       await fs.unlink(imageVerefication.tempFilePath);
       const updateArtist = await prisma.artist.update({
         where: { id: artistId },
@@ -114,7 +113,7 @@ export const updateArtistById = async (req: Request, res: Response) => {
     }
     return res.status(404).send({ message: "File not found" });
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
@@ -129,7 +128,7 @@ export const deleteArtistById = async (req: Request, res: Response) => {
 
     return res.status(201).send({ message: "Artist deleted successfully!", Artist: deleteArtist });
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
