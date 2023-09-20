@@ -5,7 +5,7 @@ import { createAlbum, deleteAlbumById, getAlbumById, getAllAlbum, updateAlbum } 
 const albumRoutes = Router();
 
 albumRoutes
-    .post('/:userId', createAlbum)
+    .post('/', createAlbum)
     .get('/:albumId', getAlbumById)
     .get('/', getAllAlbum)
     .put('/:albumId', updateAlbum)
