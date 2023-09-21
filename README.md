@@ -4,10 +4,10 @@
 
 Apollofy - Spotify Clone with React and TypeScript.
 
-![movil-modified_1](https://github.com/JorgeMunarriz/Music-App-Player-Apollofy/assets/129197162/ca9e7ebc-6502-4364-ace4-0428810c9454)
+![movil-modified_1](/client/src/assets/img/Mobile-version.png)
 
 
-![Pc-version](https://github.com/JorgeMunarriz/Music-App-Player-Apollofy/assets/129197162/4d76be7b-d800-48ec-8e16-90b77065464a)
+![Pc-version](/client/src/assets/img/Derktop-version.png)
 
 
 Apollofy is a popular digital music streaming platform that offers a vast collection of tracks, albums, podcasts, and other audio content.
