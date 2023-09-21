@@ -18,9 +18,7 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
     if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
 
     try {
-        // if () {
-        //     return res.status(400).json({ error: 'Missing requiered input userId.' })
-        // }
+        
         if (!req.files?.playlistImage) {
             return res.status(400).json({ error: "Image is missing" });
         }
@@ -33,14 +31,9 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
                     playlistName,
                     playlistImage: upload.secure_url,
                     trackId: trackId,
-                    genreId: genreId, //TOFIX ojo al tipo de dato, está pasado como string?
+                    genreId: genreId,
                     playlistCreatedById: userId,
                     
-                    // playlistLikedBy:{
-                    //   connect: {
-                    //     userEmail: userId
-                    //   }
-                    // }
                 },
             });
 
@@ -72,9 +65,6 @@ export const getPlaylistById = async (req: Request, res: Response): Promise<Resp
     const { playlistId } = req.params;
 
     try {
-        // if () {
-        //     return res.status(400).json({ error: 'Missing requiered input email.' })
-        // }
         const gottenPlaylist = await prisma.playlist.findUnique({
             where: {
                 id: playlistId,
@@ -92,10 +82,7 @@ export const getPlaylistById = async (req: Request, res: Response): Promise<Resp
 };
 
 export const getAllPlaylist = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        // if () {
-        //     return res.status(400).json({ error: 'Missing requiered input email.' })
-        // }
+    try {       
         const gottenAllPlaylist = await prisma.playlist.findMany({
             include: {
                 track: true,
@@ -111,7 +98,7 @@ export const getAllPlaylist = async (req: Request, res: Response): Promise<Respo
 };
 
 export const updatePlaylist = async (req: Request, res: Response): Promise<Response> => {
-    const { playlistId } = req.params; //TOFIX posibilidad de modificar solo el creador de la playlist
+    const { playlistId } = req.params; 
     const { playlistName } = req.body;
     let { trackId, genreId } = req.body;
 

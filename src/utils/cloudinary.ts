@@ -21,12 +21,12 @@ export async function uploadImage(filePath: string) {
   }
 }
 
-// Función para cargar archivos de audio
+// Function to upload audio files
 export async function uploadAudio(filePath: string) {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
       folder: "apollofyAudio",
-      resource_type: 'video', // Utiliza 'video' para archivos de audio
+      resource_type: 'video', // Use 'video' for audio files
     });
     return result;
   } catch (error) {

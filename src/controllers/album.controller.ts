@@ -29,11 +29,7 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
                     trackId: trackId,
                     genreId: genreId,
                     artistId: artistId,
-                    // AlbumLikedBy: {
-                    //     connect: {
-                    //         id: userId,
-                    //     }
-                    // }
+                    
                 }
             })
             
@@ -51,9 +47,7 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
     const { albumId } = req.params
 
     try {
-        // if () {
-        //     return res.status(400).json({ error: 'Missing requiered input email.' })
-        // }
+        
         const gottenAlbum = await prisma.album.findUnique({
             where: {
                 id: albumId

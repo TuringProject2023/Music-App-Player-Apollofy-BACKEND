@@ -88,7 +88,6 @@ export const getTrackById = async (req: Request, res: Response): Promise<Respons
   }
 };
 
-//TOFIX getTrackByAlbumId
 
 export const getAllTracks = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -112,7 +111,7 @@ export const getAllTracks = async (req: Request, res: Response): Promise<Respons
 
 export const updateTrackById = async (req: Request, res: Response): Promise<Response> => {
   const { trackId } = req.params;
-  const { trackName, trackUrl, genreId, artistId, albumId } = req.body;
+  const { trackName, genreId, artistId, albumId } = req.body;
 
   try {
     if (!req.files?.trackImage) {
