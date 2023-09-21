@@ -1,0 +1,47 @@
+{
+  "name": "music-player-apollofy",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "json-server": "json-server --w src/assets/db/data.db.json set --port 4000",
+    "json-user": "json-server --w src/assets/db/users.db.json set --port=3004",
+    "proxy": "http://localhost:3000",
+    "commit": "git add .&& git commit"
+  },
+  "dependencies": {
+    "@auth0/auth0-react": "^2.2.1",
+    "buffer": "^6.0.3",
+    "react": "^18.2.0",
+    "react-content-loader": "^6.2.1",
+    "react-dom": "^18.2.0",
+    "react-h5-audio-player": "^3.8.6",
+    "react-hook-form": "^7.46.1",
+    "react-icons": "^4.10.1",
+    "react-loader-spinner": "^5.3.4",
+    "react-multi-select-component": "^4.3.4",
+    "react-router-dom": "^6.14.1",
+    "react-spring": "^9.7.2",
+    "react-transition-group": "^4.4.5",
+    "styled-components": "^6.0.3",
+    "swiper": "^10.0.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "@types/react-transition-group": "^4.4.6",
+    "@types/swiper": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "@vitejs/plugin-react": "^4.0.1",
+    "eslint": "^8.44.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.1",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.0"
+  }
+}
