@@ -31,12 +31,9 @@
     "swiper": "^10.0.4"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "@types/eslint": "^8.44.4",
     "@types/node": "^20.8.4",
-=======
     "@testing-library/react": "^14.0.0",
->>>>>>> 500f4d1c5838d6c2efd891f7d127de3cb0f1cc2a
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@types/react-transition-group": "^4.4.6",
