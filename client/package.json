@@ -8,14 +8,14 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "json-server": "json-server --w src/assets/db/data.db.json set --port 4000",
-    "json-user": "json-server --w src/assets/db/users.db.json set --port=3004",
+    "test": "vitest --ui",
     "proxy": "http://localhost:3000",
     "commit": "git add .&& git commit"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.1",
     "buffer": "^6.0.3",
+    "jsdom": "^22.1.0",
     "react": "^18.2.0",
     "react-content-loader": "^6.2.1",
     "react-dom": "^18.2.0",
@@ -31,8 +31,12 @@
     "swiper": "^10.0.4"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@types/eslint": "^8.44.4",
     "@types/node": "^20.8.4",
+=======
+    "@testing-library/react": "^14.0.0",
+>>>>>>> 500f4d1c5838d6c2efd891f7d127de3cb0f1cc2a
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@types/react-transition-group": "^4.4.6",
@@ -40,10 +44,12 @@
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "@vitejs/plugin-react": "^4.0.1",
+    "@vitest/ui": "^0.34.6",
     "eslint": "^8.44.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.1",
     "typescript": "^5.0.2",
-    "vite": "^4.4.0"
+    "vite": "^4.4.0",
+    "vitest": "^0.34.6"
   }
 }
