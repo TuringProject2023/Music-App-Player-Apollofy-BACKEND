@@ -1,5 +1,4 @@
 import { ReactNode, FC } from 'react';
-
 import { ModalContainer } from './modalContainer.styled';
 
 interface ModalProps {

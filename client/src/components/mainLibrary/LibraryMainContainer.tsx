@@ -4,9 +4,12 @@ import { AlbumCreateForm, Modal, PlaylistCreateForm, SearchBar, TracksCreateForm
 import { useSearchParams } from "react-router-dom";
 import { breakpoints } from "../../styles/breakpoints";
 import { useUserMusicContext } from "../../context/UserMusicContext";
-import { HiPlus } from "react-icons/hi";
+import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { useModal } from "../../hooks/useModal";
 import { useUserContext } from "../../context";
+import { AddDropdownMenu } from "../dropdownMenu/AddDropdownMenu";
+import { useHover } from "../../hooks/useHover";
+
 
 const LazyPlaylistCards: LazyExoticComponent<ComponentType<any>> = lazy(() => {
   return new Promise((resolve) => {
@@ -34,11 +37,13 @@ const LazyTrackCards: LazyExoticComponent<ComponentType<any>> = lazy(() => {
 export const LibraryMainContainer = () => {
   const { playlistsAll, albums, tracks, playlistsCreated } = useUserMusicContext();
   const { userData } = useUserContext();
-  const { handleUserPlaylistsCreated, handleUserPlaylistsLiked, handleUserAlbums, handleUserTracks } = useUserMusicContext();
   const [isOpenModal1, openModal1, closeModal1] = useModal(false);
   const [isOpenModal2, openModal2, closeModal2] = useModal(false);
   const [isOpenModal3, openModal3, closeModal3] = useModal(false);
   const [zoneSelected, setZoneSelected] = useState("playlists");
+  const [isDropdownVisible, handleProfileHover, handleProfileLeave] = useHover();
+  const [isDropdownVisible2, handleProfileHover2, handleProfileLeave2] = useHover();
+  const [isDropdownVisible3, handleProfileHover3, handleProfileLeave3] = useHover();
   const handleChangeZoneSelected = (selection: string) => {
     setZoneSelected(selection);
   };
@@ -67,29 +72,48 @@ export const LibraryMainContainer = () => {
 
         <section className="zone-selector">
           <span className={`selections ${zoneSelected === "playlists" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("playlists")}>
-            Playlists           
+            Playlists
           </span>
 
-          <span className={`selections ${zoneSelected === "myPlaylists" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("myPlaylists")}>
+          <span className={`selections ${zoneSelected === "myPlaylists" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("myPlaylists")}
+          >
             My Playlists
-            <button onClick={openModal1} className="button-icon tooltip" type="button">
-              <span className="tooltiptext">Add</span>
-              <HiPlus />
-            </button>
+            <li  className='button-icon'
+              onMouseEnter={handleProfileHover} // Mostrar el menú cuando se hace hover
+              onMouseLeave={handleProfileLeave} // Ocultar el menú cuando se deja de hacer hover
+            >
+            <IoEllipsisVerticalSharp />
+            <ul  className={`ul_second ${isDropdownVisible ? 'visible' : ''}`}>
+                  {isDropdownVisible && <AddDropdownMenu isDropdownVisible={isDropdownVisible}
+                 openModal1={openModal1}  />}
+                </ul>
+            </li>
           </span>
           <span className={`selections ${zoneSelected === "albums" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("albums")}>
             Albums
-            <button onClick={openModal2} className="button-icon tooltip" type="button">
-              <span className="tooltiptext">Add</span>
-              <HiPlus />
-            </button>
+            <li  className='button-icon'
+              onMouseEnter={handleProfileHover2} // Mostrar el menú cuando se hace hover
+              onMouseLeave={handleProfileLeave2} // Ocultar el menú cuando se deja de hacer hover
+            >
+            <IoEllipsisVerticalSharp />
+            <ul  className={`ul_second ${isDropdownVisible2 ? 'visible' : ''}`}>
+                  {isDropdownVisible2 && <AddDropdownMenu isDropdownVisible={isDropdownVisible2}
+                 openModal1={openModal2}  />}
+                </ul>
+            </li>
           </span>
           <span className={`selections ${zoneSelected === "tracks" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("tracks")}>
             Tracks
-            <button onClick={openModal3} className="button-icon tooltip" type="button">
-              <span className="tooltiptext">Add</span>
-              <HiPlus />
-            </button>
+            <li  className='button-icon'
+              onMouseEnter={handleProfileHover3} // Mostrar el menú cuando se hace hover
+              onMouseLeave={handleProfileLeave3} // Ocultar el menú cuando se deja de hacer hover
+            >
+            <IoEllipsisVerticalSharp />
+            <ul  className={`ul_second ${isDropdownVisible3 ? 'visible' : ''}`}>
+                  {isDropdownVisible3 && <AddDropdownMenu isDropdownVisible={isDropdownVisible3}
+                 openModal1={openModal3}  />}
+                </ul>
+            </li>
           </span>
         </section>
         <section className="zone-cards">
@@ -165,6 +189,10 @@ const LibraryMainContainerStyles = styled.main`
     gap: 1rem;
   }
   .button-icon {
+    position: relative;
+    display: inline-block;
+    position: relative;
+    font-size: 1.2rem;
     background-color: transparent;
     border: none;
     transition: all 0.2s linear;
@@ -177,12 +205,12 @@ const LibraryMainContainerStyles = styled.main`
       color: rgba(255, 255, 255, 1);
     }
   }
-  .tooltip {
+  /* .tooltip {
  position: relative;
  display: inline-block;
-}
+} */
 
-.tooltip .tooltiptext {
+/* .tooltip .tooltiptext {
  visibility: hidden;
  width: 3em;
  background-color: rgba(0, 0, 0, 0.253);
@@ -195,9 +223,9 @@ const LibraryMainContainerStyles = styled.main`
  z-index: 1;
  top: 25%;
  left: 110%;
-}
+} */
 
-.tooltip .tooltiptext::after {
+/* .tooltip .tooltiptext::after {
  content: "";
  position: absolute;
  top: 50%;
@@ -210,6 +238,24 @@ const LibraryMainContainerStyles = styled.main`
 
 .tooltip:hover .tooltiptext {
  visibility: visible;
+} */
+
+.ul_second {
+    position: absolute;
+    left: 1.8rem;
+    opacity: 0;
+    /* Empieza con opacidad 0 para la transición */
+    transform: translateY(-50px);
+    /* Empieza un poco arriba para la transición */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    /* Transiciones suaves en el menú desplegable */
+}
+
+.ul_second.visible {
+    opacity: 1;
+    /* Cambia la opacidad a 1 cuando es visible */
+    transform: translateY(0);
+    /* Vuelve a la posición original cuando es visible */
 }
 
   @media (${breakpoints.min}px <= width <= ${breakpoints.mobileMax}px) {
@@ -252,3 +298,4 @@ const LibraryMainContainerStyles = styled.main`
     }
   }
 `;
+
