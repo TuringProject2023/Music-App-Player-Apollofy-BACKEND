@@ -9,7 +9,12 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     // Check if all required fields are provided
     if (!name || !email) {
-      return res.status(400).send({ status: "error", error: "Name and email are required fields." });
+      return res
+        .status(400)
+        .send({
+          status: "error",
+          error: "Name and email are required fields.",
+        });
     }
     // Check if the email already exists in the database
     const emailExist = await prisma.user.findUnique({
@@ -47,10 +52,18 @@ export const createUser = async (req: Request, res: Response) => {
           },
         },
       });
-      return res.status(201).send({ message: "User created successfully!", user: newUser });
+      return res
+        .status(201)
+        .send({ message: "User created successfully!", user: newUser });
     } else {
       // If the email already exists, return the data of the existing user
-      return res.status(200).send({ status: "success", message: "User already exists.", user: emailExist });
+      return res
+        .status(200)
+        .send({
+          status: "success",
+          message: "User already exists.",
+          user: emailExist,
+        });
     }
   } catch (err) {
     console.error(err);
@@ -84,7 +97,6 @@ export const getUserByEmailFunction = async (email: string) => {
     });
 
     return userById?.id;
-
   } catch (err) {
     console.error(err);
     return "Error while finding userEmail/Id";
@@ -95,7 +107,9 @@ export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const allUsers = await prisma.user.findMany();
 
-    return res.status(201).send({ message: "User created successfully!", user: allUsers });
+    return res
+      .status(201)
+      .send({ message: "User created successfully!", user: allUsers });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
@@ -114,10 +128,19 @@ export const updateUserById = async (req: Request, res: Response) => {
 
     if ("tempFilePath" in imageVerefication) {
       const upload = await uploadImage(imageVerefication.tempFilePath);
-      await fs.unlink(imageVerefication.tempFilePath);
-      const updateUser = await prisma.user.update({ where: { id: userId }, data: { userName, userEmail, userImage: upload.secure_url } });
 
-      return res.status(201).send({ status: "success", message: "User updated successfully!", user: updateUser });
+      const updateUser = await prisma.user.update({
+        where: { id: userId },
+        data: { userName, userEmail, userImage: upload.secure_url },
+      });
+
+      return res
+        .status(201)
+        .send({
+          status: "success",
+          message: "User updated successfully!",
+          user: updateUser,
+        });
     }
   } catch (err) {
     console.error(err);
@@ -128,23 +151,29 @@ export const updateUserById = async (req: Request, res: Response) => {
 export const updateUserLikedByEmail = async (req: Request, res: Response) => {
   const { userEmail } = req.params;
   const { tracksId, albumId, playlistLikedId } = req.body;
-  const tracksIdArr = tracksId.split(',').filter(Boolean);
-  const albumIdArr = albumId.split(',').filter(Boolean);
-  const playlistLikedIdArr = playlistLikedId.split(',').filter(Boolean);
+  const tracksIdArr = tracksId.split(",").filter(Boolean);
+  const albumIdArr = albumId.split(",").filter(Boolean);
+  const playlistLikedIdArr = playlistLikedId.split(",").filter(Boolean);
 
   try {
     const updateUser = await prisma.user.update({
       where: {
-        userEmail: userEmail
+        userEmail: userEmail,
       },
       data: {
         tracksId: tracksIdArr,
         albumId: albumIdArr,
         playlistLikedId: playlistLikedIdArr,
-      }
+      },
     });
 
-    return res.status(201).send({ status: "success", message: "User updated successfully!", user: updateUser });
+    return res
+      .status(201)
+      .send({
+        status: "success",
+        message: "User updated successfully!",
+        user: updateUser,
+      });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Internal server error" });
@@ -183,7 +212,10 @@ export const getTracksByUserEmail = async (req: Request, res: Response) => {
   }
 };
 
-export const getPlaylistCreatedByUserEmail = async (req: Request, res: Response) => {
+export const getPlaylistCreatedByUserEmail = async (
+  req: Request,
+  res: Response
+) => {
   const { userEmail } = req.params;
 
   try {
@@ -196,10 +228,10 @@ export const getPlaylistCreatedByUserEmail = async (req: Request, res: Response)
               select: {
                 genreName: true,
                 id: true,
-              }
+              },
             },
-          }
-        }
+          },
+        },
       },
     });
 
@@ -226,7 +258,10 @@ export const getAlbumByUserEmail = async (req: Request, res: Response) => {
   }
 };
 
-export const getPlaylistLikedByUserEmail = async (req: Request, res: Response) => {
+export const getPlaylistLikedByUserEmail = async (
+  req: Request,
+  res: Response
+) => {
   const { userEmail } = req.params;
 
   try {
@@ -239,11 +274,11 @@ export const getPlaylistLikedByUserEmail = async (req: Request, res: Response) =
               select: {
                 genreName: true,
                 id: true,
-              }
+              },
             },
             track: true,
-          }
-        }
+          },
+        },
       },
     });
 
