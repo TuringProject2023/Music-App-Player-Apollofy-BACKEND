@@ -78,41 +78,41 @@ export const LibraryMainContainer = () => {
           <span className={`selections ${zoneSelected === "myPlaylists" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("myPlaylists")}
           >
             My Playlists
-            <li  className='button-icon'
+            <li className='button-icon'
               onMouseEnter={handleProfileHover} // Mostrar el menú cuando se hace hover
               onMouseLeave={handleProfileLeave} // Ocultar el menú cuando se deja de hacer hover
             >
-            <IoEllipsisVerticalSharp />
-            <ul  className={`ul_second ${isDropdownVisible ? 'visible' : ''}`}>
-                  {isDropdownVisible && <AddDropdownMenu isDropdownVisible={isDropdownVisible}
-                 openModal1={openModal1}  />}
-                </ul>
+              <IoEllipsisVerticalSharp />
+              <ul className={`ul_second ${isDropdownVisible ? 'visible' : ''}`}>
+                {isDropdownVisible && <AddDropdownMenu isDropdownVisible={isDropdownVisible}
+                  openModal1={openModal1} />}
+              </ul>
             </li>
           </span>
           <span className={`selections ${zoneSelected === "albums" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("albums")}>
             Albums
-            <li  className='button-icon'
+            <li className='button-icon'
               onMouseEnter={handleProfileHover2} // Mostrar el menú cuando se hace hover
               onMouseLeave={handleProfileLeave2} // Ocultar el menú cuando se deja de hacer hover
             >
-            <IoEllipsisVerticalSharp />
-            <ul  className={`ul_second ${isDropdownVisible2 ? 'visible' : ''}`}>
-                  {isDropdownVisible2 && <AddDropdownMenu isDropdownVisible={isDropdownVisible2}
-                 openModal1={openModal2}  />}
-                </ul>
+              <IoEllipsisVerticalSharp />
+              <ul className={`ul_second ${isDropdownVisible2 ? 'visible' : ''}`}>
+                {isDropdownVisible2 && <AddDropdownMenu isDropdownVisible={isDropdownVisible2}
+                  openModal1={openModal2} />}
+              </ul>
             </li>
           </span>
           <span className={`selections ${zoneSelected === "tracks" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("tracks")}>
             Tracks
-            <li  className='button-icon'
+            <li className='button-icon'
               onMouseEnter={handleProfileHover3} // Mostrar el menú cuando se hace hover
               onMouseLeave={handleProfileLeave3} // Ocultar el menú cuando se deja de hacer hover
             >
-            <IoEllipsisVerticalSharp />
-            <ul  className={`ul_second ${isDropdownVisible3 ? 'visible' : ''}`}>
-                  {isDropdownVisible3 && <AddDropdownMenu isDropdownVisible={isDropdownVisible3}
-                 openModal1={openModal3}  />}
-                </ul>
+              <IoEllipsisVerticalSharp />
+              <ul className={`ul_second ${isDropdownVisible3 ? 'visible' : ''}`}>
+                {isDropdownVisible3 && <AddDropdownMenu isDropdownVisible={isDropdownVisible3}
+                  openModal1={openModal3} />}
+              </ul>
             </li>
           </span>
         </section>
@@ -242,10 +242,10 @@ const LibraryMainContainerStyles = styled.main`
 
 .ul_second {
     position: absolute;
-    left: 1.8rem;
-    opacity: 0;
+    left: 2.5rem;
+    top: 0rem;
     /* Empieza con opacidad 0 para la transición */
-    transform: translateY(-50px);
+    transform: translateY(20px);
     /* Empieza un poco arriba para la transición */
     transition: opacity 0.5s ease, transform 0.5s ease;
     /* Transiciones suaves en el menú desplegable */
