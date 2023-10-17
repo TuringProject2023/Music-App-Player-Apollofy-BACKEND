@@ -40,7 +40,7 @@ export const TracksContainer = ({ query }: ProprQuery) => {
     <TracksContainerStyles>
       <h2 className="tracksTitle">Songs</h2>
       {tracks && (
-        <Swiper navigation pagination slidesPerView={3} spaceBetween={10} className="mySwiper">
+        <Swiper navigation pagination slidesPerView={3} spaceBetween={22} className="mySwiper">
           {tracks &&
             tracks
               .filter(({ trackName }: any) => {

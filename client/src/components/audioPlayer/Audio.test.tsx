@@ -2,8 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { AudioPlayerComponent } from './AudioPlayer';
 import { QueuePlayerProvider } from '../../context/QueuePlayerContext';
 import { UserMusicProvider } from '../../context/UserMusicContext';
-// import matchers from '@testing-library/jest-dom/matchers';
-// expect.extend(matchers);
+
+import matchers from '@testing-library/jest-dom/matchers';
+expect.extend(matchers);
 
 
 test('Verify that play, previous and skip buttons exists', () => {
@@ -22,6 +23,17 @@ test('Verify that play, previous and skip buttons exists', () => {
     expect(previousButton).toBeDefined();
     expect(skipButton).toBeDefined();
 })
+
+
+
+vi.mock('../../context/QueuePlayerContext', () => {
+    useViQueuePlayerContext: () => ({
+        currentTrack: {
+            trackUrl: 'https://samplelib.com/sample-mp3.html'
+        }
+    })
+})
+
 
 test('Verify that pause renders after clicking play button', () => {
     render(
