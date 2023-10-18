@@ -124,6 +124,9 @@ export const updateUserById = async (req: Request, res: Response) => {
     if (!req.files?.userImage) {
       return res.status(400).send({ error: "Image is missing" });
     }
+    if (!userName || !userEmail) {
+      return res.status(400).send({ error: "name and email are required fields" });
+    }
     
     const imageVerefication = req.files.userImage;
     

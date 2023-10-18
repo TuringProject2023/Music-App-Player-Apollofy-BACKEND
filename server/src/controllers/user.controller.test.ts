@@ -3,11 +3,11 @@ import { updateUserById, createUser } from "./user.controller";
 import { Request, Response } from "express";
 
 
-// jest.mock('../utils/cloudinary', () => ({
-//   uploadImage: jest.fn(() => {
-//     return Promise.resolve({ secure_url: 'https://example.com/mock-image-url.jpg' })
-//   })
-// }))
+jest.mock('../utils/cloudinary', () => ({
+  uploadImage: jest.fn(() => {
+    return Promise.resolve({ secure_url: 'https://example.com/mock-image-url.jpg' })
+  })
+}))
 
 
 
@@ -56,8 +56,6 @@ describe("updateUserById function", () => {
     const { userId } = req.params;
     const { userName, userEmail } = req.body;
 
-    const uploadImageSpy = jest.spyOn(require('../utils/cloudinary'), 'uploadImage');
-    uploadImageSpy.mockImplementation(() => Promise.resolve({ secure_url: 'mocked-url' }));
 
     await prismaMock.user.update({
       where: { id: userId },
@@ -70,7 +68,6 @@ describe("updateUserById function", () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.send).toHaveBeenCalledWith({ error: "Image is missing" });
 
-    uploadImageSpy.mockRestore()
   });
   it("should update user data if all data is provided and return a status 201", async () => {
     const req = {
@@ -94,8 +91,7 @@ describe("updateUserById function", () => {
     } as unknown as Response;
     const { userId } = req.params;
     const { userName, userEmail } = req.body;
-    const uploadImageSpy = jest.spyOn(require('../utils/cloudinary'), 'uploadImage');
-    uploadImageSpy.mockImplementation(() => Promise.resolve({ secure_url: 'mocked-url' }));
+
     const updateUser = await prismaMock.user.update({
       where: { id: userId },
       data: { userName, userEmail, userImage: 'mocked-url' },
@@ -103,14 +99,16 @@ describe("updateUserById function", () => {
     // Llama a la función updateUserById
     await updateUserById(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(201);
     expect(res.send).toHaveBeenCalledWith({
       status: "success", message: "User updated successfully!",
       user: updateUser
     });
-    uploadImageSpy.mockRestore();
+    expect(res.status).toHaveBeenCalledWith(201);
   });
-
+  afterEach(() => {
+    jest.restoreAllMocks(); // Restablece todos los mocks
+    jest.clearAllMocks(); // Limpia los registros de llamadas
+  });
 })
 
 
