@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { prismaMock } from "../mocks/prisma.mock";
-import { updateUserById, createUser } from './user.controller';
-import { uploadImage } from "../utils/cloudinary";
+import { updateUserById } from './user.controller';
 
 jest.mock('../utils/cloudinary', () => ({
   uploadImage: jest.fn(() => {
-    return Promise.resolve({ secure: 'https://example.com/mock-image-url.jpg' })
+    return Promise.resolve({ secure_url: 'https://example.com/mock-image-url.jpg' })
   })
 }))
 
