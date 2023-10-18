@@ -3,6 +3,13 @@ import { updateUserById, createUser } from "./user.controller";
 import { Request, Response } from "express";
 
 
+// jest.mock('../utils/cloudinary', () => ({
+//   uploadImage: jest.fn(() => {
+//     return Promise.resolve({ secure_url: 'https://example.com/mock-image-url.jpg' })
+//   })
+// }))
+
+
 
 const userUpdated = {
   id: "1",
@@ -107,3 +114,59 @@ describe("updateUserById function", () => {
 })
 
 
+// USER CONTROLLER --------------------------------------------------------------------
+
+// describe('updateUserById Controller', () => {
+
+//   test('should return 400 status when image is missing', async () => {
+//     const req = {
+//       params: { userId: '1' },
+//       body: {
+//         userName: 'Jorge',
+//         userEmail: 'jorget@test.com'
+//       },
+//       files: {}
+//     }
+
+//     const res = {
+//       status: jest.fn().mockReturnThis(),
+//       json: jest.fn()
+//     }
+
+//     await updateUserById(req as any, res as any);
+
+//     expect(res.status).toHaveBeenCalledWith(400);
+
+//   });
+
+//   test('should return 201 status when all the variables are sended', async () => {
+//     const req = {
+//       params: { userId: '1' },
+//       body: {
+//         userName: 'Jorge',
+//         userEmail: 'jorget@test.com'
+//       },
+//       files: {
+//         userImage: {
+//           tempFilePath: 'https://chipiti.com/prueba.png'
+//         }
+//       }
+//     }
+//     const res = {
+//       status: jest.fn().mockReturnThis(),
+//       send: jest.fn(),
+//       json: jest.fn()
+//     }
+
+//     const pruebaUsuario = prismaMock.user.update.mockResolvedValue(userUpdated)
+
+//     await updateUserById(req as any, res as any);
+
+//     expect(res.status).toHaveBeenCalledWith(201);
+//     expect(res.send).toHaveBeenCalledWith({
+//       status: 'success',
+//       message: "User updated successfully!",
+//       user: userUpdated,
+//     })
+//   });
+// })
