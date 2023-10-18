@@ -119,31 +119,25 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const updateUserById = async (req: Request, res: Response) => {
   const { userId } = req.params;
   const { userName, userEmail } = req.body;
-
   try {
+  
     if (!req.files?.userImage) {
-      return res.status(400).json({ error: "Image is missing" });
+      return res.status(400).send({ error: "Image is missing" });
     }
-    const imageVerefication = req.files?.userImage;
-
+    
+    const imageVerefication = req.files.userImage;
+    
     if ("tempFilePath" in imageVerefication) {
       const upload = await uploadImage(imageVerefication.tempFilePath);
-
+      
       const updateUser = await prisma.user.update({
         where: { id: userId },
-        data: { userName, userEmail, userImage: upload.secure_url },
+        data: { userName, userEmail, userImage: upload?.secure_url },
       });
 
-      return res
-        .status(201)
-        .send({
-          status: "success",
-          message: "User updated successfully!",
-          user: updateUser,
-        });
-    }
+      return res.status(201).send({status: "success",message: "User updated successfully!",
+      user: updateUser,})}
   } catch (err) {
-    console.error(err);
     return res.status(500).send({ error: "Internal server error" });
   }
 };
