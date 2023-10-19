@@ -111,7 +111,7 @@ describe("updateUserById function", () => {
   });
 })
 describe("createUser function. Check if the email already exists in the database if the user does not exist in the database create a new user ", () => {
-  it("should return a status 400 when the user's name or email is missing from the request", async () => {
+  test("should return a status 400 when the user's name or email is missing from the request", async () => {
     const req = {
       params: {
         userId: "1",
@@ -143,7 +143,7 @@ describe("createUser function. Check if the email already exists in the database
     });
 
   });
-  it("if the user does not exist in the database, create a new user and return a status 201", async () => {
+  test("if the user does not exist in the database, create a new user and return a status 201", async () => {
     const req = {
       body: {
         name: "Jorge",
@@ -182,12 +182,10 @@ describe("createUser function. Check if the email already exists in the database
     });
   });
   afterEach(() => {
-    jest.restoreAllMocks(); // Restablece todos los mocks
-    jest.clearAllMocks(); // Limpia los registros de llamadas
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 })
-
-
 
 
 // describe('updateUserById Controller', () => {
