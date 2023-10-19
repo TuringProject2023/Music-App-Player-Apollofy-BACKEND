@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
 import { prismaMock } from "../mocks/prisma.mock";
-import { updateUserById } from './user.controller';
+import { updateUserById, createUser } from "./user.controller";
+import { Request, Response } from "express";
+
 
 jest.mock('../utils/cloudinary', () => ({
   uploadImage: jest.fn(() => {
@@ -8,29 +9,12 @@ jest.mock('../utils/cloudinary', () => ({
   })
 }))
 
-interface User {
-  id: string;
-  userName: string;
-  userEmail: string;
-  userImage: string;
-  userCreatedAt: object;
-  userUpdatedAt: object;
-  playlistLikedId: string[];
-  playlistLiked: string[];
-  tracksId: string[];
-  tracks: string[];
-  postId: string[];
-  post: string[];
-  albumId: string[];
-  album: string[];
-  playlistCreatedId: string[];
-  playlistCreated: string[];
-}
+
 const userUpdated = {
   id: "1",
   userName: "Jorge",
   userEmail: "jorget@test.com",
-  userImage: "sdadasd.pgn",
+  userImage: "prueba.png",
   userCreatedAt: new Date(Date.now()),
   userUpdatedAt: new Date(Date.now()),
   playlistLikedId: [""],
@@ -46,20 +30,15 @@ const userUpdated = {
 };
 
 
-// USER CONTROLLER --------------------------------------------------------------------
+describe("updateUserById function", () => {
 
-describe('updateUserById Controller', () => {
-
-  test('should return 400 status when image is missing', async () => {
+  test("should return a status 400 when the user's image is missing from the request", async () => {
     const req = {
-      params: { userId: '1' },
-      body: {
-        userName: 'Jorge',
-        userEmail: 'jorget@test.com'
+      params: {
+        userId: "1",
       },
       files: {}
     } as unknown as Request
-
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -75,8 +54,8 @@ describe('updateUserById Controller', () => {
     const req = {
       params: { userId: '1' },
       body: {
-        userName: 'Jorge',
-        userEmail: 'jorget@test.com'
+        userName: "test name",
+        userEmail: "test@test.com",
       },
       files: {
         userImage: {
@@ -94,11 +73,48 @@ describe('updateUserById Controller', () => {
 
     await updateUserById(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(201);
+  });
+
+  test("should update user data if all data is provided and return a status 201", async () => {
+    const req = {
+      params: {
+        userId: "65040a1584459ac683af9373",
+      },
+      body: {
+        userName: "Jorge",
+        userEmail: "jorget@test.com",
+      },
+      files: {
+        userImage: {
+          name: 'perfil mejorado cv.jpg',
+          tempFilePath: 'uploads/tmp-1-1697627083817',
+        },
+      },
+    } as unknown as Request;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    } as unknown as Response;
+
+    const { userId } = req.params;
+    const { userName, userEmail } = req.body;
+
+    const updateUser = await prismaMock.user.update({
+      where: { id: userId },
+      data: { userName, userEmail, userImage: 'mocked-url' },
+    });
+    // Llama a la función updateUserById
+    await updateUserById(req, res);
+
     expect(res.send).toHaveBeenCalledWith({
-      status: 'success',
-      message: "User updated successfully!",
-      user: userUpdated,
-    })
+      status: "success", message: "User updated successfully!",
+      user: updateUser
+    });
+    expect(res.status).toHaveBeenCalledWith(201);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks(); // Restablece todos los mocks
+    jest.clearAllMocks(); // Limpia los registros de llamadas
   });
 })
