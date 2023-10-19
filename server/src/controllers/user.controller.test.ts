@@ -58,17 +58,17 @@ describe('updateUserById Controller', () => {
         userEmail: 'jorget@test.com'
       },
       files: {}
-    }
+    } as unknown as Request
 
     const res = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    }
+      json: jest.fn(),
+      send: jest.fn()
+    } as unknown as Response
 
     await updateUserById(req as any, res as any);
 
     expect(res.status).toHaveBeenCalledWith(400);
-
   });
 
   test('should return 201 status when all the variables are sended', async () => {
@@ -83,16 +83,16 @@ describe('updateUserById Controller', () => {
           tempFilePath: 'https://chipiti.com/prueba.png'
         }
       }
-    }
+    } as unknown as Request
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
       json: jest.fn()
-    }
+    } as unknown as Response
 
-    const pruebaUsuario = prismaMock.user.update.mockResolvedValue(userUpdated)
+    prismaMock.user.update.mockResolvedValue(userUpdated);
 
-    await updateUserById(req as any, res as any);
+    await updateUserById(req, res);
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.send).toHaveBeenCalledWith({

@@ -20,13 +20,16 @@ export const createTrack = async (req: Request, res: Response): Promise<Response
     const imageVerefication = req.files?.trackImage;
     const audioFile = req.files?.trackUrl;
 
-    if ("tempFilePath" in imageVerefication) {
-      const imageUpload = await uploadImage(imageVerefication.tempFilePath);
-      await fs.unlink(imageVerefication.tempFilePath);
-
-      if ("tempFilePath" in audioFile) {
-        const audioUpload = await uploadAudio(audioFile.tempFilePath);
-        await fs.unlink(audioFile.tempFilePath);
+    if ("tempFilePath" in audioFile) {
+      const audioUpload = await uploadAudio(audioFile.tempFilePath);
+      await fs.unlink(audioFile.tempFilePath, (err) => {
+        if (err) console.error(err);
+      });
+      if ("tempFilePath" in imageVerefication) {
+        const imageUpload = await uploadImage(imageVerefication.tempFilePath);
+        await fs.unlink(imageVerefication.tempFilePath, (err) => {
+          if (err) console.error(err);
+        });
 
         const newTrack = await prisma.track.create({
           data: {
@@ -73,7 +76,7 @@ export const getTrackById = async (req: Request, res: Response): Promise<Respons
       where: {
         id: trackId,
       },
-      include:{
+      include: {
         artist: true,
         genre: true,
         album: true
