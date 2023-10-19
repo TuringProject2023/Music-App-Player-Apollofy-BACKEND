@@ -74,7 +74,7 @@ describe("createPlaylist function. ", () => {
 
         await createPlaylist(req, res);
         expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.send).toHaveBeenCalledWith({"newPlaylistLiked": simulatedUserData});
+        expect(res.send).toHaveBeenCalledWith({ 'newPlaylistLiked':simulatedUserData});
     });
     afterEach(() => {
         jest.restoreAllMocks(); // Restablece todos los mocks

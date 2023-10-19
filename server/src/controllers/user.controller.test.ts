@@ -3,6 +3,7 @@ import { updateUserById, createUser } from "./user.controller";
 import { Request, Response } from "express";
 
 let uploadImageMock;
+
 beforeEach(() => {
   uploadImageMock = jest.spyOn(require('../utils/cloudinary'), 'uploadImage');
   uploadImageMock.mockImplementation(() => Promise.resolve({ secure_url: 'mocked-url' }));
@@ -153,7 +154,7 @@ describe("createUser function. Check if the email already exists in the database
       body: {
         name: "Jorge",
         email: "jorget@test.com",
-        picture: "test",
+        picture: "user-image.jpg",
       },
     } as unknown as Request;
     const res = {
@@ -161,30 +162,29 @@ describe("createUser function. Check if the email already exists in the database
       send: jest.fn(),
     } as unknown as Response;
     const { email, name, picture  } = req.body;
+    const simulatedUserData = {
+      id: '1',
+      userEmail: email,
+      userName: name,
+      userImage: picture,
+      userCreatedAt: new Date(),
+      userUpdatedAt: new Date(),
+      playlistLikedId: ['1', '2'],
+      tracksId: ['3', '4'],
+      postId: ['5', '6'],
+      albumId: ['7', '8'],
+      playlistCreatedId: ['9', '10'],
+    };
 
-    const newUser = await prismaMock.user.create({
-      data: { userName: name, userEmail: email, userImage: picture },
-      include: {
-        playlistCreated: {
-          select: {
-            playlistName: true,
-            track: {
-              select: {
-                trackName: true,
-                trackUrl: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    prismaMock.user.create.mockResolvedValue(simulatedUserData);
+
 
     await createUser(req, res);
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.send).toHaveBeenCalledWith({
       message: "User created successfully!",
-      user: newUser,
+      user:simulatedUserData
     });
   });
   afterEach(() => {
