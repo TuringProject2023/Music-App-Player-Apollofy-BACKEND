@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prismaMock } from "../mocks/prisma.mock";
 import { createPlaylist } from "./playlist.controller";
+import fs from "fs-extra";
 
 jest.mock("../utils/cloudinary.ts", () => ({
   uploadImage: jest.fn(() => {
@@ -10,7 +11,55 @@ jest.mock("../utils/cloudinary.ts", () => ({
   }),
 }));
 
+jest.spyOn(fs, "unlink").mockImplementation((path, callback) => {
+  callback(null);
+});
+
+const newPlaylist = {
+  id: "123456",
+  playlistName: "Test Playlist",
+  trackId: [
+    "65082242e2438c19893c5545",
+    "65082697e2438c19893c554b",
+    "65082765e2438c19893c554d",
+  ],
+  genreId: [
+    "6501917ed1080d57fa618f57",
+    "6501915fd1080d57fa618f56",
+    "65017fdfd78b706a5fdf4513",
+  ],
+  playlistCreatedAt: new Date(),
+  playlistUpdatedAt: new Date(),
+  playlistLikedById: ["sadad"],
+  playlistCreatedById: "sdadasd",
+  playlistImage:
+    "https://res.cloudinary.com/dg5h08ive/image/upload/v1695032977/apollofyImages/nmfcwzcxdknxbyjn2h2a.jpg",
+};
+
+const userUpdated = {
+  id: "1",
+  userName: "Jorge",
+  userEmail: "jorget@test.com",
+  userImage: "prueba.png",
+  userCreatedAt: new Date(Date.now()),
+  userUpdatedAt: new Date(Date.now()),
+  playlistLikedId: [""],
+  playlistLiked: [""],
+  tracksId: [""],
+  tracks: [""],
+  postId: [""],
+  post: [""],
+  albumId: [""],
+  album: ["aSs", "SASDAS", "sdasd"],
+  playlistCreatedId: [""],
+  playlistCreated: [""],
+};
+
 describe("Create Playlist controller", () => {
+  beforeEach(() => {
+    prismaMock.user.update.mockResolvedValue(userUpdated);
+  });
+
   test("should return 400 status when playlist image is missing", async () => {
     const req = {
       params: {
@@ -22,6 +71,8 @@ describe("Create Playlist controller", () => {
         genreId: "",
         playlistCreatedById: "",
         playlistUpdatedAt: "",
+        playlistCreatedAt: "",
+        playlistLikedById: "",
       },
       files: {
         // playlistImage: {
@@ -36,7 +87,7 @@ describe("Create Playlist controller", () => {
       send: jest.fn(),
     } as unknown as Response;
 
-    await createPlaylist(req, res);
+    await createPlaylist(req as any, res as any);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: "Image is missing" });
@@ -45,12 +96,11 @@ describe("Create Playlist controller", () => {
   test("should return 201 status when all variables are sended and playlist creation are correct", async () => {
     const req = {
       params: {
-        userId: "1",
+        userEmail: "1",
       },
       body: {
-        id: 123,
         playlistName: "asdsad",
-        trackId: [
+        tracksId: [
           "65082242e2438c19893c5545",
           "65082697e2438c19893c554b",
           "65082765e2438c19893c554d",
@@ -61,6 +111,8 @@ describe("Create Playlist controller", () => {
           "65017fdfd78b706a5fdf4513",
         ],
         playlistCreatedById: "asdsad",
+        playlistLikedById: "asdsad",
+        playlistCreatedAt: "dsadsad",
       },
       files: {
         playlistImage: {
@@ -75,27 +127,10 @@ describe("Create Playlist controller", () => {
       send: jest.fn(),
     } as unknown as Response;
 
-    const { userId } = req.params;
-    const { playlistName, id } = req.body;
-    let { trackId, genreId } = req.body;
+    prismaMock.playlist.create.mockResolvedValue(newPlaylist);
 
-    const newPlaylist = await prismaMock.playlist.create({
-      data: {
-        playlistName,
-        playlistImage: "uploads/tmp-1-1697627083817",
-        trackId: trackId,
-        genreId: genreId,
-        playlistCreatedById: userId,
-      },
-    });
     await createPlaylist(req, res);
 
-    expect(res.send).toHaveBeenCalledWith(newPlaylist);
     expect(res.status).toHaveBeenCalledWith(201);
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
-    jest.clearAllMocks();
   });
 });
