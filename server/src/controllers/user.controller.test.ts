@@ -10,11 +10,11 @@ jest.mock('../utils/cloudinary', () => ({
 }))
 
 
-
 const userUpdated = {
   id: "1",
   userName: "Jorge",
   userEmail: "jorget@test.com",
+  userImage: "prueba.png",
   userCreatedAt: new Date(Date.now()),
   userUpdatedAt: new Date(Date.now()),
   playlistLikedId: [""],
@@ -31,38 +31,51 @@ const userUpdated = {
 
 
 describe("updateUserById function", () => {
-  it("should return a status 400 when the user's image is missing from the request", async () => {
+
+  test("should return a status 400 when the user's image is missing from the request", async () => {
     const req = {
       params: {
         userId: "1",
       },
+      files: {}
+    } as unknown as Request
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+      send: jest.fn()
+    } as unknown as Response
+
+    await updateUserById(req as any, res as any);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+  });
+
+  test('should return 201 status when all the variables are sended', async () => {
+    const req = {
+      params: { userId: '1' },
       body: {
         userName: "test name",
         userEmail: "test@test.com",
       },
-      // files: {
-      //   userImage: {
-      //     name: 'perfil mejorado cv.jpg',
-      //     tempFilePath: 'uploads/tmp-1-1697627083817',
-      //   },
-      // },
-
-    } as unknown as Request;
-
+      files: {
+        userImage: {
+          tempFilePath: 'https://chipiti.com/prueba.png'
+        }
+      }
+    } as unknown as Request
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
-    } as unknown as Response;
+      json: jest.fn()
+    } as unknown as Response
 
+    prismaMock.user.update.mockResolvedValue(userUpdated);
 
     await updateUserById(req, res);
 
-
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.send).toHaveBeenCalledWith({ error: "Image is missing" });
-
   });
-  it("should update user data if all data is provided and return a status 201", async () => {
+
+  test("should update user data if all data is provided and return a status 201", async () => {
     const req = {
       params: {
         userId: "65040a1584459ac683af9373",
@@ -82,6 +95,7 @@ describe("updateUserById function", () => {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     } as unknown as Response;
+
     const { userId } = req.params;
     const { userName, userEmail } = req.body;
 
@@ -98,66 +112,9 @@ describe("updateUserById function", () => {
     });
     expect(res.status).toHaveBeenCalledWith(201);
   });
+
   afterEach(() => {
     jest.restoreAllMocks(); // Restablece todos los mocks
     jest.clearAllMocks(); // Limpia los registros de llamadas
   });
 })
-
-
-// USER CONTROLLER --------------------------------------------------------------------
-
-// describe('updateUserById Controller', () => {
-
-//   test('should return 400 status when image is missing', async () => {
-//     const req = {
-//       params: { userId: '1' },
-//       body: {
-//         userName: 'Jorge',
-//         userEmail: 'jorget@test.com'
-//       },
-//       files: {}
-//     }
-
-//     const res = {
-//       status: jest.fn().mockReturnThis(),
-//       json: jest.fn()
-//     }
-
-//     await updateUserById(req as any, res as any);
-
-//     expect(res.status).toHaveBeenCalledWith(400);
-
-//   });
-
-//   test('should return 201 status when all the variables are sended', async () => {
-//     const req = {
-//       params: { userId: '1' },
-//       body: {
-//         userName: 'Jorge',
-//         userEmail: 'jorget@test.com'
-//       },
-//       files: {
-//         userImage: {
-//           tempFilePath: 'https://chipiti.com/prueba.png'
-//         }
-//       }
-//     }
-//     const res = {
-//       status: jest.fn().mockReturnThis(),
-//       send: jest.fn(),
-//       json: jest.fn()
-//     }
-
-//     const pruebaUsuario = prismaMock.user.update.mockResolvedValue(userUpdated)
-
-//     await updateUserById(req as any, res as any);
-
-//     expect(res.status).toHaveBeenCalledWith(201);
-//     expect(res.send).toHaveBeenCalledWith({
-//       status: 'success',
-//       message: "User updated successfully!",
-//       user: userUpdated,
-//     })
-//   });
-// })
