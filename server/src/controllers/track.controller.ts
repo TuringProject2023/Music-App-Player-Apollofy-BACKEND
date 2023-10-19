@@ -120,6 +120,9 @@ export const updateTrackById = async (req: Request, res: Response): Promise<Resp
     if (!req.files?.trackImage) {
       return res.status(400).json({ error: "Image is missing" });
     }
+    if (!req.files?.trackUrl) {
+      return res.status(400).json({ error: "audio is missing" });
+    }
     const imageVerefication = req.files?.trackImage;
     const audioFile = req.files?.trackUrl;
 
