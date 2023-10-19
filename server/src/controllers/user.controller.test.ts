@@ -53,15 +53,8 @@ describe("updateUserById function", () => {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     } as unknown as Response;
-    const { userId } = req.params;
-    const { userName, userEmail } = req.body;
 
 
-    await prismaMock.user.update({
-      where: { id: userId },
-      data: { userName, userEmail, userImage: 'mocked-url' },
-    });
-    // Llama a la función updateUserById
     await updateUserById(req, res);
 
 
