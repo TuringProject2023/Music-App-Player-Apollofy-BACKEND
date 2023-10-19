@@ -16,8 +16,10 @@ beforeEach(() => {
 describe("updateUserById function", () => {
   test("should return a status 400 when the user's image is missing from the request", async () => {
     const req = {
-      params: {
-        userId: "1",
+      params: { userId: '1' },
+      body: {
+        userName: "test name",
+        userEmail: "test@test.com",
       },
       files: {}
     } as unknown as Request
