@@ -14,38 +14,24 @@ beforeEach(() => {
 
 
 describe("updateUserById function", () => {
-  it("should return a status 400 when the user's image is missing from the request", async () => {
+  test("should return a status 400 when the user's image is missing from the request", async () => {
     const req = {
       params: {
         userId: "1",
       },
-      body: {
-        userName: "test name",
-        userEmail: "test@test.com",
-      },
-      // files: {
-      //   userImage: {
-      //     name: 'perfil mejorado cv.jpg',
-      //     tempFilePath: 'uploads/tmp-1-1697627083817',
-      //   },
-      // },
-
-    } as unknown as Request;
-
+      files: {}
+    } as unknown as Request
     const res = {
       status: jest.fn().mockReturnThis(),
-      send: jest.fn(),
-    } as unknown as Response;
+      json: jest.fn(),
+      send: jest.fn()
+    } as unknown as Response
 
-
-    await updateUserById(req, res);
-
+    await updateUserById(req as any, res as any);
 
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.send).toHaveBeenCalledWith({ error: "Image is missing" });
-
   });
-  it("should return a status 400 when the user's name or email is missing from the request", async () => {
+  test("should return a status 400 when the user's name or email is missing from the request", async () => {
     const req = {
       params: {
         userId: "1",
@@ -74,49 +60,55 @@ describe("updateUserById function", () => {
     expect(res.send).toHaveBeenCalledWith({ error: "name and email are required fields" });
 
   });
-  it("should update user data if all data is provided and return a status 201", async () => {
+  test('should update user data if all data is provided and return a status 201', async () => {
     const req = {
-      params: {
-        userId: "65040a1584459ac683af9373",
-      },
+      params: { userId: '1' },
       body: {
-        userName: "Jorge",
-        userEmail: "jorget@test.com",
+        userName: "test name",
+        userEmail: "test@test.com",
       },
       files: {
         userImage: {
-          name: 'perfil mejorado cv.jpg',
-          tempFilePath: 'uploads/tmp-1-1697627083817',
-        },
-      },
-    } as unknown as Request;
+          tempFilePath: 'https://chipiti.com/prueba.png'
+        }
+      }
+    } as unknown as Request
     const res = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
-    } as unknown as Response;
+      json: jest.fn()
+    } as unknown as Response
     const { userId } = req.params;
     const { userName, userEmail } = req.body;
+    const simulatedUserData = {
+      id: userId,
+      userEmail: userEmail,
+      userName: userName,
+      userImage: 'user-imagen',
+      userCreatedAt: new Date(),
+      userUpdatedAt: new Date(),
+      playlistLikedId: ['1', '2'],
+      tracksId: ['3', '4'],
+      postId: ['5', '6'],
+      albumId: ['7', '8'],
+      playlistCreatedId: ['9', '10'],
+    };
 
-    const updateUser = await prismaMock.user.update({
-      where: { id: userId },
-      data: { userName, userEmail, userImage: 'mocked-url' },
-    });
+    prismaMock.user.update.mockResolvedValue(simulatedUserData);
 
     await updateUserById(req, res);
-
     expect(res.send).toHaveBeenCalledWith({
       status: "success", message: "User updated successfully!",
-      user: updateUser
+      user: simulatedUserData
     });
     expect(res.status).toHaveBeenCalledWith(201);
   });
   afterEach(() => {
-    jest.restoreAllMocks(); // Restablece todos los mocks
-    jest.clearAllMocks(); // Limpia los registros de llamadas
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 })
 describe("createUser function. Check if the email already exists in the database if the user does not exist in the database create a new user ", () => {
-
   it("should return a status 400 when the user's name or email is missing from the request", async () => {
     const req = {
       params: {

@@ -1,6 +1,5 @@
 import { prismaMock } from "../mocks/prisma.mock";
 import { createPlaylist } from "./playlist.controller";
-import { getUserByEmailFunction } from "./user.controller";
 import { Request, Response } from "express";
 
 let uploadImageMock;
