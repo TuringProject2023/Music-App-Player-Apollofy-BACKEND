@@ -2,13 +2,11 @@ import { prismaMock } from "../mocks/prisma.mock";
 import { updateUserById, createUser } from "./user.controller";
 import { Request, Response } from "express";
 
-
 jest.mock('../utils/cloudinary', () => ({
   uploadImage: jest.fn(() => {
     return Promise.resolve({ secure_url: 'https://example.com/mock-image-url.jpg' })
   })
 }))
-
 
 const userUpdated = {
   id: "1",
@@ -36,6 +34,10 @@ describe("updateUserById function", () => {
     const req = {
       params: {
         userId: "1",
+      },
+      body: {
+        userName: "test name",
+        userEmail: "test@test.com",
       },
       files: {}
     } as unknown as Request
@@ -72,6 +74,8 @@ describe("updateUserById function", () => {
     prismaMock.user.update.mockResolvedValue(userUpdated);
 
     await updateUserById(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(201);
 
   });
 
