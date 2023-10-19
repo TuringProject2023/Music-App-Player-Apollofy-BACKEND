@@ -2,32 +2,14 @@ import { prismaMock } from "../mocks/prisma.mock";
 import { updateUserById, createUser } from "./user.controller";
 import { Request, Response } from "express";
 
-
-jest.mock('../utils/cloudinary', () => ({
-  uploadImage: jest.fn(() => {
-    return Promise.resolve({ secure_url: 'https://example.com/mock-image-url.jpg' })
-  })
-}))
-
+let uploadImageMock;
+beforeEach(() => {
+  uploadImageMock = jest.spyOn(require('../utils/cloudinary'), 'uploadImage');
+  uploadImageMock.mockImplementation(() => Promise.resolve({ secure_url: 'mocked-url' }));
+});
 
 
-const userUpdated = {
-  id: "1",
-  userName: "Jorge",
-  userEmail: "jorget@test.com",
-  userCreatedAt: new Date(Date.now()),
-  userUpdatedAt: new Date(Date.now()),
-  playlistLikedId: [""],
-  playlistLiked: [""],
-  tracksId: [""],
-  tracks: [""],
-  postId: [""],
-  post: [""],
-  albumId: [""],
-  album: ["aSs", "SASDAS", "sdasd"],
-  playlistCreatedId: [""],
-  playlistCreated: [""],
-};
+// USER CONTROLLER ---------------------------------------------
 
 
 describe("updateUserById function", () => {
@@ -62,6 +44,35 @@ describe("updateUserById function", () => {
     expect(res.send).toHaveBeenCalledWith({ error: "Image is missing" });
 
   });
+  it("should return a status 400 when the user's name or email is missing from the request", async () => {
+    const req = {
+      params: {
+        userId: "1",
+      },
+      body: {
+        userName: "test name",
+        // userEmail: "test@test.com",
+      },
+      files: {
+        userImage: {
+          name: 'perfil mejorado cv.jpg',
+          tempFilePath: 'uploads/tmp-1-1697627083817',
+        },
+      },
+
+    } as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    } as unknown as Response;
+
+    await updateUserById(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({ error: "name and email are required fields" });
+
+  });
   it("should update user data if all data is provided and return a status 201", async () => {
     const req = {
       params: {
@@ -89,7 +100,7 @@ describe("updateUserById function", () => {
       where: { id: userId },
       data: { userName, userEmail, userImage: 'mocked-url' },
     });
-    // Llama a la función updateUserById
+
     await updateUserById(req, res);
 
     expect(res.send).toHaveBeenCalledWith({
@@ -103,9 +114,87 @@ describe("updateUserById function", () => {
     jest.clearAllMocks(); // Limpia los registros de llamadas
   });
 })
+describe("createUser function. Check if the email already exists in the database if the user does not exist in the database create a new user ", () => {
+
+  it("should return a status 400 when the user's name or email is missing from the request", async () => {
+    const req = {
+      params: {
+        userId: "1",
+      },
+      body: {
+        userName: "test name",
+        // userEmail: "test@test.com",
+      },
+      files: {
+        userImage: {
+          name: 'perfil mejorado cv.jpg',
+          tempFilePath: 'uploads/tmp-1-1697627083817',
+        },
+      },
+
+    } as unknown as Request;
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    } as unknown as Response;
+
+    await createUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({
+      status: "error",
+      error: "Name and email are required fields.",
+    });
+
+  });
+  it("if the user does not exist in the database, create a new user and return a status 201", async () => {
+    const req = {
+      body: {
+        name: "Jorge",
+        email: "jorget@test.com",
+        picture: "test",
+      },
+    } as unknown as Request;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    } as unknown as Response;
+    const { email, name, picture  } = req.body;
+
+    const newUser = await prismaMock.user.create({
+      data: { userName: name, userEmail: email, userImage: picture },
+      include: {
+        playlistCreated: {
+          select: {
+            playlistName: true,
+            track: {
+              select: {
+                trackName: true,
+                trackUrl: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    await createUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.send).toHaveBeenCalledWith({
+      message: "User created successfully!",
+      user: newUser,
+    });
+  });
+  afterEach(() => {
+    jest.restoreAllMocks(); // Restablece todos los mocks
+    jest.clearAllMocks(); // Limpia los registros de llamadas
+  });
+})
 
 
-// USER CONTROLLER --------------------------------------------------------------------
+
 
 // describe('updateUserById Controller', () => {
 

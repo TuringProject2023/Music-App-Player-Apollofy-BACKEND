@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../db/clientPrisma";
 import { getUserByEmailFunction } from "./user.controller";
-
 import { uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
 
@@ -13,19 +12,20 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
     const userId = await getUserByEmailFunction(userEmail)
     const { playlistName } = req.body;
     let { trackId, genreId } = req.body;
+console.log('params',req.params)
 
     if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
     if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
 
     try {
-        
+
         if (!req.files?.playlistImage) {
             return res.status(400).json({ error: "Image is missing" });
         }
         const imageVerefication = req.files?.playlistImage;
         if ("tempFilePath" in imageVerefication) {
             const upload = await uploadImage(imageVerefication.tempFilePath);
-            await fs.unlink(imageVerefication.tempFilePath);
+            // await fs.unlink(imageVerefication.tempFilePath);
             const newPlaylist = await prisma.playlist.create({
                 data: {
                     playlistName,
@@ -33,12 +33,11 @@ export const createPlaylist = async (req: Request, res: Response): Promise<Respo
                     trackId: trackId,
                     genreId: genreId,
                     playlistCreatedById: userId,
-                    
                 },
             });
 
             const newPlaylistId = newPlaylist.id;
-
+console.log(newPlaylistId)
             if (newPlaylistId) {
                 const newPlaylistLiked = await prisma.user.update({
                     where: {
