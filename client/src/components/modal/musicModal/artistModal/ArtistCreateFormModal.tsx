@@ -166,7 +166,7 @@ export const ArtistCreateForm: FC<userFormModal> = ({ closeModal }) => {
 const ArtistsFormContainer = styled.section`
   max-width: 500px;
   width: 100%;
-  background: linear-gradient(to right, hsl(300, 100%, 10%), #000);
+  background: hsl(300, 100%, 10%);
   padding: 25px;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);

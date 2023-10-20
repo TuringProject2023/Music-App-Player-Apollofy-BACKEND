@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { PLAYER } from '../../../config/routes/paths';
+import { PLAYER, PLAYLISTS } from '../../../config/routes/paths';
 import styled from 'styled-components';
 import { breakpoints } from '../../../styles/breakpoints';
 
@@ -27,11 +27,11 @@ interface ArtistProps {
 }
 
 
-const PlaylistsForLibrary = ({ id, playlistName, playlistImage, trackId, artist, genre }: PlaylistProps) => {
+const PlaylistsForLibrary = ({ id, playlistName, playlistImage, artist, genre }: PlaylistProps) => {
 
   return (
     <PlaylistsForLibraryStyles key={id}>
-      <Link to={`${PLAYER}/${trackId[0]}`} className="cardForTrack">
+      <Link to={`${PLAYLISTS}/${id}`} className="cardForTrack">
         <div className="cardForTrack__header">
           <img alt={playlistName} className="cardForTrack__header__img" src={playlistImage} />
         </div>

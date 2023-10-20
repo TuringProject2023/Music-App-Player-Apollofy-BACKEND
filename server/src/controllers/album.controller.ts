@@ -68,6 +68,51 @@ export const getAlbumById = async (req: Request, res: Response): Promise<Respons
 };
 
 
+export const updateAlbumAddTrack = async (req: Request, res: Response): Promise<Response> => {
+    const { albumId } = req.params;
+    let { trackId } = req.body;
+    console.log("trackId", trackId)
+  
+    // Verifica si trackId es una cadena y conviértela a un array
+    if (typeof trackId === "string") {
+      trackId = trackId.split(",");
+    } else if (!Array.isArray(trackId)) {
+      trackId = []; // Si trackId no es un array válido, inicialízalo como un array vacío
+    }
+  
+    try {
+      const albumById = await prisma.album.findUnique({
+        where: {
+          id: albumId
+        }
+      });
+  
+      if (!albumById) {
+        return res.status(404).json({ error: 'Album not found.' });
+      }
+  
+      // Combina los IDs de pistas existentes con los nuevos
+      const updatedTrackIds = [...albumById.trackId, ...trackId];
+  
+      const updateAlbum = await prisma.album.update({
+        where: {
+          id: albumId
+        },
+        data: {
+          trackId: updatedTrackIds
+        },
+      });
+  
+      return res.status(200).send({ message: 'Album updated successfully', updateAlbum });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send({ error: 'Internal server error' });
+    }
+  };
+  
+  
+
+
 export const updateAlbum = async (req: Request, res: Response): Promise<Response> => {
     const { albumId } = req.params //TOFIX posibilidad de modificar solo el creador del album
     const { albumName, albumCreatedAt } = req.body

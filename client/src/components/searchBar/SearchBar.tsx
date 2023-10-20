@@ -7,8 +7,16 @@ import { Boop } from "../../animations/boopAnimation";
 import { useAuth0 } from "@auth0/auth0-react";
 import { PROFILE } from "../../config/routes/paths";
 import { useUserContext } from "../../context";
+import { SetURLSearchParams } from "react-router-dom";
 
-export const SearchBar = ({ setSearchParams, searchParams, handleChangeParams, query }) => {
+interface QueryProps {
+  searchParams: URLSearchParams | undefined;
+  setSearchParams: SetURLSearchParams | undefined;
+  handleChangeParams:  (e: React.ChangeEvent<HTMLInputElement>) => void ;
+  query: string | undefined;
+}
+
+export const SearchBar = ({ handleChangeParams, query }: QueryProps) => {
   const { logout, user, isAuthenticated } = useAuth0();
   const { userData } = useUserContext();
 
@@ -30,7 +38,7 @@ export const SearchBar = ({ setSearchParams, searchParams, handleChangeParams, q
         {isAuthenticated ? (
           <>
             <Button handleClick={() => logout()}>Logout</Button>
-            <h4>{userData?.userName ? userData?.userName : user?.given_name}</h4>
+            <h4 className="header__username">{userData?.userName ? userData?.userName : user?.given_name}</h4>
             <Boop rotation={20} timing={200}>
               <Link to={PROFILE}>
                 <RxAvatar />
@@ -47,62 +55,60 @@ export const SearchBar = ({ setSearchParams, searchParams, handleChangeParams, q
   );
 };
 
-
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const SearchBarContainer = styled.header`
-    height: 10%;
-    width: 100%;
+  grid-area: 1 / 1 / 2 / 6;
+  width: 100%;
 
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
 
-    border: 1px solid rgba(66, 66, 66, 0.4);
-    border-radius: 0.25rem;
+  border: 1px solid rgba(66, 66, 66, 0.4);
+  border-radius: 0.25rem;
 
-    & svg{
-        font-size: 1.5rem;
-    color:  rgba(255, 255, 255, 1);
+  & svg {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 1);
     cursor: pointer;
-    }
-    
-    @media (height < 500px) {
-        grid-column: 1 / -1;
-        position: relative;
-        display: flex;
-        align-items: flex-start;
-        width: 100%;
-    }
-`;
+  }
 
-
-export const SearchBarLeft = styled.div`
+  @media (height < 500px) {
+    grid-column: 1 / -1;
     position: relative;
     display: flex;
-    align-items: center;
-    flex: 0.8;
-    min-width: 3.5rem;
-    border-radius: 1rem;
+    align-items: flex-start;
+    width: 100%;
+  }
+`;
 
-& input {
+export const SearchBarLeft = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0.8;
+  min-width: 3.5rem;
+  border-radius: 1rem;
+
+  & input {
     width: 100%;
     height: 3rem;
     padding-left: 3rem;
-    padding-right:1rem;
+    padding-right: 1rem;
     border: 1px solid rgba(66, 66, 66, 0.4);
     border-radius: 1.5rem;
-}
-& svg{
-color: rgb(135,146,148);
-    cursor:pointer;
-}
-@media (height < 500px) {
+  }
+  & svg {
+    color: rgb(135, 146, 148);
+    cursor: pointer;
+  }
+  @media (height < 500px) {
     position: relative;
     display: flex;
     align-items: start;
     width: 100%;
-}
+  }
 `;
 
 export const SearchBarIcon = styled.div`
@@ -113,34 +119,37 @@ export const SearchBarIcon = styled.div`
 `;
 
 export const SearchBarRight = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    min-width: 3.5rem;
-    border-radius: 1rem;
-    padding: 10px;
- h4 {
-    font-size: clamp(.8rem, 2.1rem, 2.5rem);
-    color: rgb(135,146,148);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 3.5rem;
+  border-radius: 1rem;
+  padding: 10px;
+  h4 {
+    font-size: clamp(0.8rem, 2.1rem, 2.5rem);
+    color: rgb(135, 146, 148);
+    transition: 0.3s ease-in-out;
+  }
+  h4:hover {
+    color: #c9356c;
+  }
+  & svg {
+    font-size: clamp(0.8rem, 2.3rem, 3rem);
+    color: rgba(255, 255, 255, 1);
     cursor: pointer;
     transition: 0.3s ease-in-out;
- }
- h4:hover{
+  }
+  svg:hover {
     color: #c9356c;
- }
- & svg {
-    font-size: clamp(.8rem, 2.3rem, 3rem);
-    color:  rgba(255, 255, 255, 1);
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
-}
-svg:hover{
-    color: #c9356c;
-}
-@media (height < 500px) {
-    display:none;
-}
+  }
+  @media (height < 500px) {
+    display: none;
+    
+  }
+  @media (width < 500px) {
+    
+    .header__username{
+      display: none;
+    }
+  }
 `;
-
-
-

@@ -6,8 +6,10 @@ import { breakpoints } from "../../styles/breakpoints";
 import { useUserMusicContext } from "../../context/UserMusicContext";
 import { BiSolidPlaylist } from "react-icons/bi";
 import { useQueuePlayerContext } from "../../context/QueuePlayerContext";
+import { TrackProps } from '../mainLibrary/cards/TracksForLibrary';
 
-const LazyCards: LazyExoticComponent<ComponentType<any>> = lazy(() => {
+
+const LazyCards: LazyExoticComponent<ComponentType<TrackProps>> = lazy(() => {
   return new Promise((resolve) => {
     setTimeout(() => {
       return resolve(import("../mainLibrary/cards/TracksForLibrary"));
@@ -17,7 +19,7 @@ const LazyCards: LazyExoticComponent<ComponentType<any>> = lazy(() => {
 
 export const PlaylistMainContainer = () => {
   const { id } = useParams();
-  const { albums, tracks, playlistsAll } = useUserMusicContext();
+  const { playlistsAll } = useUserMusicContext();
   const { handleListChange } = useQueuePlayerContext();
 
   const selectedPlaylist = playlistsAll.find((playlist) => playlist.id === id);
@@ -32,7 +34,7 @@ export const PlaylistMainContainer = () => {
   return (
     <>
       <PlaylistMainContainerStyles>
-        <SearchBar setSearchParams={undefined} searchParams={undefined} handleChangeParams={undefined} query={undefined} />
+        <SearchBar setSearchParams={undefined} searchParams={undefined} handleChangeParams={handleChangeParams} query={query} />
 
         <section className="titleDiv">
           <h2 className="titleDiv__h2">
@@ -40,8 +42,8 @@ export const PlaylistMainContainer = () => {
           </h2>
         </section>
         <section className="zone-cards">
-          {selectedPlaylist?.track.map(({ id, trackName, trackUrl, trackImage, trackCreatedAt, artist }) => (
-            <LazyCards key={id} id={id} trackName={trackName} trackUrl={trackUrl} trackImage={trackImage} trackCreatedAt={trackCreatedAt} artist={artist} />
+          {selectedPlaylist?.track.map(({ id, trackName, trackUrl, trackImage, trackCreatedAt, artist, trackCreatedById, trackLikedById, trackUpdatedAt, albumId, artistId, genre, genreId }) => (
+            <LazyCards key={id} id={id} trackName={trackName} trackUrl={trackUrl} trackImage={trackImage} trackCreatedAt={trackCreatedAt} artist={artist} albumId={albumId} artistId={artistId} genre={ genre} genreId={genreId} trackCreatedById={trackCreatedById}  trackId="" trackLikedById={trackLikedById} trackUpdatedAt={trackUpdatedAt}  />
           ))}
         </section>
       </PlaylistMainContainerStyles>

@@ -1,9 +1,10 @@
 import { lazy, Suspense, LazyExoticComponent, ComponentType } from "react";
 import SwiperCore from "swiper";
-import { Navigation, Pagination } from "swiper/modules";
+import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
+import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
@@ -31,10 +32,20 @@ export const PlaylistContainerHome = ({ query }: ProprQuery) => {
   const { playlistsAll } = useUserMusicContext();
 
   return (
-    <TracksContainerStyles>
+    <PlaylistContainerStyles>
       <h2 className="playlistTitle">Playlists</h2>
       {playlistsAll && (
-        <Swiper navigation slidesPerView={3} spaceBetween={22} className="mySwiper">
+        <Swiper 
+        navigation
+          slidesPerView={3}
+          spaceBetween={30}
+          effect={"coverflow"}
+          grabCursor={true}
+          centeredSlides={true}
+          loop={true}
+          coverflowEffect={{ rotate: 0, stretch: 0, depth: 100, modifier: 2.5 }}
+          modules={[EffectCoverflow, Pagination, Navigation]}
+          className="mySwiper">
           {playlistsAll &&
             playlistsAll
               .filter(({ playlistName }) => {
@@ -53,15 +64,16 @@ export const PlaylistContainerHome = ({ query }: ProprQuery) => {
               ))}
         </Swiper>
       )}
-    </TracksContainerStyles>
+    </PlaylistContainerStyles>
   );
 };
 
-const TracksContainerStyles = styled.div`
+const PlaylistContainerStyles = styled.div`
+  grid-area: 2 / 1 / 5 / 6;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  height: 100vh;
+  flex-wrap: nowrap;
+  height: 100%;
 
   .playlistTitle {
     font-size: 35px;
@@ -71,18 +83,25 @@ const TracksContainerStyles = styled.div`
     opacity: 0.9;
   }
   .mySwiper {
-    height: 70%;
+    position: relative;
+    height: 100%;
     width: 100%;
     .swiper-wrapper {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      padding: 1.5rem;
+      padding: 0 0.5rem;
       gap: 1rem;
       .swiper-slide {
         margin: 0;
         padding: 0;
         margin-right: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
       }
     }
     .swiper-pagination-bullet {
@@ -111,294 +130,286 @@ const TracksContainerStyles = styled.div`
     .swiper-pagination {
       bottom: 0px;
     }
+    .swiper-slide-shadow-right{
+      background-image: none;
+    }
+    .swiper-slide-shadow-left{
+      background-image: none;
+    }
   }
-@media (${breakpoints.min}px <= width <= ${breakpoints.mobileMax}px) {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 100vh;
+  @media (${breakpoints.min}px <= width <= ${breakpoints.mobileMax}px) {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 
-  .playlistTitle {
-    font-size: 20px;
-    color: white;
-    align-items: flex-start;
-    margin-left: 1.5rem;
-    opacity: 0.9;
-  }
-  .mySwiper {
-    height: 85%;
-    width: 100%;
-    .swiper-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 1.5rem;
-      gap: 1rem;
-      .swiper-slide {
-        margin: 0;
-        padding: 0;
-        margin-right: 0 !important;
+    .playlistTitle {
+      font-size: 20px;
+      color: white;
+      align-items: flex-start;
+      margin-left: 1.5rem;
+      opacity: 0.9;
+    }
+    .mySwiper {
+      width: 100%;
+      .swiper-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1rem;
+        .swiper-slide {
+          margin: 0;
+          padding: 0;
+          margin-right: 0 !important;
+        }
+      }
+      .swiper-pagination-bullet {
+        width: 20px;
+        height: 10px;
+        border-radius: 10px;
+        transition: all 0.3s;
+        background-color: #ffffff;
+        left: 0;
+      }
+      .swiper-pagination-bullet-active {
+        background: #f8f7f9;
+        width: 30px;
+        height: 10px;
+      }
+      .swiper-button-prev,
+      .swiper-button-next {
+        width: 30px;
+        height: 10px;
+        padding-top: 2rem;
+      }
+      .swiper-button-prev:hover,
+      .swiper-button-next:hover {
+        color: #9d0b28;
+      }
+      .swiper-pagination {
+        display: none;
+        bottom: 0px;
       }
     }
-    .swiper-pagination-bullet {
-      width: 20px;
-      height: 10px;
-      border-radius: 10px;
-      transition: all 0.3s;
-      background-color: #ffffff;
-      left: 0;
-    }
-    .swiper-pagination-bullet-active {
-      background: #f8f7f9;
-      width: 30px;
-      height: 10px;
-    }
-    .swiper-button-prev,
-    .swiper-button-next {
-      width: 30px;
-      height: 10px;
-      padding-top: 2rem;
-    }
-    .swiper-button-prev:hover,
-    .swiper-button-next:hover {
-      color: #9d0b28;
-    }
-    .swiper-pagination {
-      display: none;
-      bottom: 0px;
-    }
   }
-}
-		
-@media (${breakpoints.mobileMax}px < width <= ${breakpoints.tabletMax}px) {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 100vh;
 
-  .playlistTitle {
-    font-size: 20px;
-    color: white;
-    align-items: flex-start;
-    margin-left: 1.5rem;
-    opacity: 0.9;
-  }
-  .mySwiper {
-    height: 85%;
-    width: 100%;
-    .swiper-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 1.5rem;
-      gap: 1rem;
-      .swiper-slide {
-        margin: 0;
-        padding: 0;
-        margin-right: 0 !important;
+  @media (${breakpoints.mobileMax}px < width <= ${breakpoints.tabletMax}px) {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    .playlistTitle {
+      font-size: 20px;
+      color: white;
+      align-items: flex-start;
+      margin-left: 1.5rem;
+      opacity: 0.9;
+    }
+    .mySwiper {
+      width: 100%;
+      .swiper-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1rem;
+        .swiper-slide {
+          margin: 0;
+          padding: 0;
+          margin-right: 0 !important;
+        }
+      }
+      .swiper-pagination-bullet {
+        width: 20px;
+        height: 10px;
+        border-radius: 10px;
+        transition: all 0.3s;
+        background-color: #ffffff;
+        left: 0;
+      }
+      .swiper-pagination-bullet-active {
+        background: #f8f7f9;
+        width: 30px;
+        height: 10px;
+      }
+      .swiper-button-prev,
+      .swiper-button-next {
+        width: 30px;
+        height: 10px;
+        padding-top: 2rem;
+      }
+      .swiper-button-prev:hover,
+      .swiper-button-next:hover {
+        color: #9d0b28;
+      }
+      .swiper-pagination {
+        display: none;
+        bottom: 0px;
       }
     }
-    .swiper-pagination-bullet {
-      width: 20px;
-      height: 10px;
-      border-radius: 10px;
-      transition: all 0.3s;
-      background-color: #ffffff;
-      left: 0;
-    }
-    .swiper-pagination-bullet-active {
-      background: #f8f7f9;
-      width: 30px;
-      height: 10px;
-    }
-    .swiper-button-prev,
-    .swiper-button-next {
-      width: 30px;
-      height: 10px;
-      padding-top: 2rem;
-    }
-    .swiper-button-prev:hover,
-    .swiper-button-next:hover {
-      color: #9d0b28;
-    }
-    .swiper-pagination {
-      display: none;
-      bottom: 0px;
-    }
   }
-}
 
-@media (${breakpoints.tabletMax}px < width <= ${breakpoints.laptopsMax}px) {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 100vh;
+  @media (${breakpoints.tabletMax}px < width <= ${breakpoints.laptopsMax}px) {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 
-  .playlistTitle {
-    font-size: 20px;
-    color: white;
-    align-items: flex-start;
-    margin-left: 1.5rem;
-    opacity: 0.9;
-  }
-  .mySwiper {
-    height: 70%;
-    width: 100%;
-    .swiper-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 1.5rem;
-      gap: 1rem;
-      .swiper-slide {
-        margin: 0;
-        padding: 0;
-        margin-right: 0 !important;
+    .playlistTitle {
+      font-size: 20px;
+      color: white;
+      align-items: flex-start;
+      margin-left: 1.5rem;
+      opacity: 0.9;
+    }
+    .mySwiper {
+      height: 100%;
+      width: 100%;
+      .swiper-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1rem;
+        .swiper-slide {
+          margin: 0;
+          padding: 0;
+          margin-right: 0 !important;
+        }
+      }
+      .swiper-pagination-bullet {
+        width: 20px;
+        height: 10px;
+        border-radius: 10px;
+        transition: all 0.3s;
+        background-color: #ffffff;
+        left: 0;
+      }
+      .swiper-pagination-bullet-active {
+        background: #f8f7f9;
+        width: 30px;
+        height: 10px;
+      }
+      .swiper-button-prev,
+      .swiper-button-next {
+        width: 30px;
+        height: 10px;
+        padding-top: 2rem;
+      }
+      .swiper-button-prev:hover,
+      .swiper-button-next:hover {
+        color: #9d0b28;
+      }
+      .swiper-pagination {
+        display: none;
+        bottom: 0px;
       }
     }
-    .swiper-pagination-bullet {
-      width: 20px;
-      height: 10px;
-      border-radius: 10px;
-      transition: all 0.3s;
-      background-color: #ffffff;
-      left: 0;
-    }
-    .swiper-pagination-bullet-active {
-      background: #f8f7f9;
-      width: 30px;
-      height: 10px;
-    }
-    .swiper-button-prev,
-    .swiper-button-next {
-      width: 30px;
-      height: 10px;
-      padding-top: 2rem;
-    }
-    .swiper-button-prev:hover,
-    .swiper-button-next:hover {
-      color: #9d0b28;
-    }
-    .swiper-pagination {
-      display: none;
-      bottom: 0px;
-    }
   }
-}
 
-@media (${breakpoints.laptopsMax}px < width <= ${breakpoints.desktopMax}px) {
+  @media (${breakpoints.laptopsMax}px < width <= ${breakpoints.desktopMax}px) {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 100vh;
-
-  .playlistTitle {
-    font-size: 25px;
-    color: white;
-    align-items: flex-start;
-    margin-left: 1.5rem;
-    opacity: 0.9;
-  }
-  .mySwiper {
-    height: 70%;
-    width: 100%;
-    .swiper-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 1.5rem;
-      gap: 1rem;
-      .swiper-slide {
-        margin: 0;
-        padding: 0;
-        margin-right: 0 !important;
+    .playlistTitle {
+      font-size: 25px;
+      color: white;
+      align-items: flex-start;
+      margin-left: 1.5rem;
+      opacity: 0.9;
+    }
+    .mySwiper {
+      height: 100%;
+      width: 100%;
+      .swiper-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1rem;
+        .swiper-slide {
+          margin: 0;
+          padding: 0;
+          margin-right: 0 !important;
+        }
+      }
+      .swiper-pagination-bullet {
+        width: 20px;
+        height: 10px;
+        border-radius: 10px;
+        transition: all 0.3s;
+        background-color: #ffffff;
+        left: 0;
+      }
+      .swiper-pagination-bullet-active {
+        background: #f8f7f9;
+        width: 30px;
+        height: 10px;
+      }
+      .swiper-button-prev,
+      .swiper-button-next {
+        width: 30px;
+        height: 10px;
+        padding-top: 2rem;
+      }
+      .swiper-button-prev:hover,
+      .swiper-button-next:hover {
+        color: #9d0b28;
+      }
+      .swiper-pagination {
+        bottom: 0px;
       }
     }
-    .swiper-pagination-bullet {
-      width: 20px;
-      height: 10px;
-      border-radius: 10px;
-      transition: all 0.3s;
-      background-color: #ffffff;
-      left: 0;
-    }
-    .swiper-pagination-bullet-active {
-      background: #f8f7f9;
-      width: 30px;
-      height: 10px;
-    }
-    .swiper-button-prev,
-    .swiper-button-next {
-      width: 30px;
-      height: 10px;
-      padding-top: 2rem;
-    }
-    .swiper-button-prev:hover,
-    .swiper-button-next:hover {
-      color: #9d0b28;
-    }
-    .swiper-pagination {
-      bottom: 0px;
-    }
   }
-}
 
-@media (width > ${breakpoints.desktopMax}px) {
+  @media (width > ${breakpoints.desktopMax}px) {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 100vh;
-
-  .playlistTitle {
-    font-size: 25px;
-    color: white;
-    align-items: flex-start;
-    margin-left: 1.5rem;
-    opacity: 0.9;
-  }
-  .mySwiper {
-    height: 70%;
-    width: 100%;
-    .swiper-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 1.5rem;
-      gap: 1rem;
-      .swiper-slide {
-        margin: 0;
-        padding: 0;
-        margin-right: 0 !important;
+    .playlistTitle {
+      font-size: 25px;
+      color: white;
+      align-items: flex-start;
+      margin-left: 1.5rem;
+      opacity: 0.9;
+    }
+    .mySwiper {
+      height: 100%;
+      width: 100%;
+      .swiper-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1rem;
+        .swiper-slide {
+          margin: 0;
+          padding: 0;
+          margin-right: 0 !important;
+        }
+      }
+      .swiper-pagination-bullet {
+        width: 20px;
+        height: 10px;
+        border-radius: 10px;
+        transition: all 0.3s;
+        background-color: #ffffff;
+        left: 0;
+      }
+      .swiper-pagination-bullet-active {
+        background: #f8f7f9;
+        width: 30px;
+        height: 10px;
+      }
+      .swiper-button-prev,
+      .swiper-button-next {
+        width: 30px;
+        height: 10px;
+        padding-top: 2rem;
+      }
+      .swiper-button-prev:hover,
+      .swiper-button-next:hover {
+        color: #9d0b28;
+      }
+      .swiper-pagination {
+        bottom: 0px;
       }
     }
-    .swiper-pagination-bullet {
-      width: 20px;
-      height: 10px;
-      border-radius: 10px;
-      transition: all 0.3s;
-      background-color: #ffffff;
-      left: 0;
-    }
-    .swiper-pagination-bullet-active {
-      background: #f8f7f9;
-      width: 30px;
-      height: 10px;
-    }
-    .swiper-button-prev,
-    .swiper-button-next {
-      width: 30px;
-      height: 10px;
-      padding-top: 2rem;
-    }
-    .swiper-button-prev:hover,
-    .swiper-button-next:hover {
-      color: #9d0b28;
-    }
-    .swiper-pagination {
-      bottom: 0px;
-    }
   }
-}
 `;

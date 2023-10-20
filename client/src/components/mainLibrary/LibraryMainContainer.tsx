@@ -6,10 +6,8 @@ import { breakpoints } from "../../styles/breakpoints";
 import { useUserMusicContext } from "../../context/UserMusicContext";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { useModal } from "../../hooks/useModal";
-import { useUserContext } from "../../context";
 import { AddDropdownMenu } from "../dropdownMenu/AddDropdownMenu";
 import { useHover } from "../../hooks/useHover";
-
 
 const LazyPlaylistCards: LazyExoticComponent<ComponentType<any>> = lazy(() => {
   return new Promise((resolve) => {
@@ -33,10 +31,8 @@ const LazyTrackCards: LazyExoticComponent<ComponentType<any>> = lazy(() => {
   });
 });
 
-
 export const LibraryMainContainer = () => {
   const { playlistsAll, albums, tracks, playlistsCreated } = useUserMusicContext();
-  const { userData } = useUserContext();
   const [isOpenModal1, openModal1, closeModal1] = useModal(false);
   const [isOpenModal2, openModal2, closeModal2] = useModal(false);
   const [isOpenModal3, openModal3, closeModal3] = useModal(false);
@@ -54,10 +50,8 @@ export const LibraryMainContainer = () => {
     setSearchParams({ q: target.value });
   };
 
-
   return (
     <>
-
       <Modal isOpen={isOpenModal1} closeModal={closeModal1}>
         <PlaylistCreateForm closeModal={closeModal1} />
       </Modal>
@@ -68,74 +62,104 @@ export const LibraryMainContainer = () => {
         <TracksCreateForm closeModal={closeModal3} />
       </Modal>
       <LibraryMainContainerStyles>
-        <SearchBar setSearchParams={undefined} searchParams={undefined} handleChangeParams={undefined} query={undefined} />
+        <SearchBar searchParams={searchParams} setSearchParams={setSearchParams} query={query} handleChangeParams={handleChangeParams} />
 
         <section className="zone-selector">
           <span className={`selections ${zoneSelected === "playlists" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("playlists")}>
             Playlists
           </span>
 
-          <span className={`selections ${zoneSelected === "myPlaylists" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("myPlaylists")}
-          >
-            My Playlists
-            <li className='button-icon'
+          <span className={`selections ${zoneSelected === "myPlaylists" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("myPlaylists")}>
+            <li
+              className="button-icon"
               onMouseEnter={handleProfileHover} // Mostrar el menú cuando se hace hover
               onMouseLeave={handleProfileLeave} // Ocultar el menú cuando se deja de hacer hover
             >
               <IoEllipsisVerticalSharp />
-              <ul className={`ul_second ${isDropdownVisible ? 'visible' : ''}`}>
-                {isDropdownVisible && <AddDropdownMenu isDropdownVisible={isDropdownVisible}
-                  openModal1={openModal1} />}
-              </ul>
+              <ul className={`ul_second ${isDropdownVisible ? "visible" : ""}`}>{isDropdownVisible && <AddDropdownMenu isDropdownVisible={isDropdownVisible} openModal1={openModal1} />}</ul>
             </li>
+            My Playlists
           </span>
           <span className={`selections ${zoneSelected === "albums" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("albums")}>
-            Albums
-            <li className='button-icon'
+            <li
+              className="button-icon"
               onMouseEnter={handleProfileHover2} // Mostrar el menú cuando se hace hover
               onMouseLeave={handleProfileLeave2} // Ocultar el menú cuando se deja de hacer hover
             >
               <IoEllipsisVerticalSharp />
-              <ul className={`ul_second ${isDropdownVisible2 ? 'visible' : ''}`}>
-                {isDropdownVisible2 && <AddDropdownMenu isDropdownVisible={isDropdownVisible2}
-                  openModal1={openModal2} />}
-              </ul>
+              <ul className={`ul_second ${isDropdownVisible2 ? "visible" : ""}`}>{isDropdownVisible2 && <AddDropdownMenu isDropdownVisible={isDropdownVisible2} openModal1={openModal2} />}</ul>
             </li>
+            Albums
           </span>
           <span className={`selections ${zoneSelected === "tracks" ? "selection-active" : ""}`} onClick={() => handleChangeZoneSelected("tracks")}>
-            Tracks
-            <li className='button-icon'
+            <li
+              className="button-icon"
               onMouseEnter={handleProfileHover3} // Mostrar el menú cuando se hace hover
               onMouseLeave={handleProfileLeave3} // Ocultar el menú cuando se deja de hacer hover
             >
               <IoEllipsisVerticalSharp />
-              <ul className={`ul_second ${isDropdownVisible3 ? 'visible' : ''}`}>
-                {isDropdownVisible3 && <AddDropdownMenu isDropdownVisible={isDropdownVisible3}
-                  openModal1={openModal3} />}
-              </ul>
+              <ul className={`ul_second ${isDropdownVisible3 ? "visible" : ""}`}>{isDropdownVisible3 && <AddDropdownMenu isDropdownVisible={isDropdownVisible3} openModal1={openModal3} />}</ul>
             </li>
+            Tracks
           </span>
         </section>
         <section className="zone-cards">
           {zoneSelected === "playlists" &&
             playlistsAll &&
             playlistsAll
-              .filter((playlist) => userData?.playlistLikedId.includes(playlist.id))
+              .filter(({ playlistName }) => {
+                if (!query) return true;
+                if (query) {
+                  const nameLowerCase = playlistName.toLowerCase();
+                  return nameLowerCase.includes(query.toLowerCase());
+                }
+              })
               .map(({ id, playlistName, playlistImage, playlistCreatedById, trackId, artist, genre }) => (
-                <LazyPlaylistCards key={id} id={id} playlistName={playlistName} playlistImage={playlistImage} playlistCreatedById={playlistCreatedById} trackId={trackId} artist={artist} genre={genre} />
+                <LazyPlaylistCards
+                  key={id}
+                  id={id}
+                  playlistName={playlistName}
+                  playlistImage={playlistImage}
+                  playlistCreatedById={playlistCreatedById}
+                  trackId={trackId}
+                  artist={artist}
+                  genre={genre}
+                />
               ))}
 
           {zoneSelected === "myPlaylists" &&
             playlistsCreated &&
             playlistsCreated
+              .filter(({ playlistName }) => {
+                if (!query) return true;
+                if (query) {
+                  const nameLowerCase = playlistName.toLowerCase();
+                  return nameLowerCase.includes(query.toLowerCase());
+                }
+              })
               .map(({ id, playlistName, playlistImage, playlistCreatedById, trackId, artist, genre }) => (
-                <LazyPlaylistCards key={id} id={id} playlistName={playlistName} playlistImage={playlistImage} playlistCreatedById={playlistCreatedById} trackId={trackId} artist={artist} genre={genre} />
+                <LazyPlaylistCards
+                  key={id}
+                  id={id}
+                  playlistName={playlistName}
+                  playlistImage={playlistImage}
+                  playlistCreatedById={playlistCreatedById}
+                  trackId={trackId}
+                  artist={artist}
+                  genre={genre}
+                />
               ))}
 
           {zoneSelected === "albums" &&
             albums &&
             albums
-              .filter((album) => userData?.albumId.includes(album.id))
+              .filter(({ albumName }) => {
+                if (!query) return true;
+                if (query) {
+                  const nameLowerCase = albumName.toLowerCase();
+                  return nameLowerCase.includes(query.toLowerCase());
+                }
+              })
               .map(({ id, albumName, albumImage, albumCreatedAt, artist, trackId, artistId, genre }) => (
                 <LazyAlbumCards key={id} id={id} albumName={albumName} albumImage={albumImage} albumCreatedAt={albumCreatedAt} artist={artist} trackId={trackId} artistId={artistId} genre={genre} />
               ))}
@@ -143,9 +167,31 @@ export const LibraryMainContainer = () => {
           {zoneSelected === "tracks" &&
             tracks &&
             tracks
-              .filter((track) => userData?.tracksId.includes(track.id))
+              .filter(({ trackName }) => {
+                if (!query) return true;
+                if (query) {
+                  const nameLowerCase = trackName.toLowerCase();
+                  return nameLowerCase.includes(query.toLowerCase());
+                }
+              })
               .map(({ id, trackName, trackUrl, trackImage, trackCreatedAt, artist, genreId, genre, artistId, albumId }) => (
-                <LazyTrackCards key={id} id={id} trackName={trackName} trackUrl={trackUrl} trackImage={trackImage} trackCreatedAt={trackCreatedAt} artist={artist} trackUpdatedAt={""} trackLikedById={[]} trackCreatedById={[]} genre={genre} genreId={genreId} artistId={artistId} albumId={albumId} trackId={id} />
+                <LazyTrackCards
+                  key={id}
+                  id={id}
+                  trackName={trackName}
+                  trackUrl={trackUrl}
+                  trackImage={trackImage}
+                  trackCreatedAt={trackCreatedAt}
+                  artist={artist}
+                  trackUpdatedAt={""}
+                  trackLikedById={[]}
+                  trackCreatedById={[]}
+                  genre={genre}
+                  genreId={genreId}
+                  artistId={artistId}
+                  albumId={albumId}
+                  trackId={id}
+                />
               ))}
         </section>
       </LibraryMainContainerStyles>
@@ -205,58 +251,31 @@ const LibraryMainContainerStyles = styled.main`
       color: rgba(255, 255, 255, 1);
     }
   }
-  /* .tooltip {
- position: relative;
- display: inline-block;
-} */
 
-/* .tooltip .tooltiptext {
- visibility: hidden;
- width: 3em;
- background-color: rgba(0, 0, 0, 0.253);
- color: #fff;
- text-align: center;
- border-radius: 6px;
- font-size: 1.5rem;
- padding: 5px 0;
- position: absolute;
- z-index: 1;
- top: 25%;
- left: 110%;
-} */
 
-/* .tooltip .tooltiptext::after {
- content: "";
- position: absolute;
- top: 50%;
- right: 100%;
- margin-top: -5px;
- border-width: 5px;
- border-style: solid;
- border-color: transparent rgba(0, 0, 0, 0.253) transparent transparent;
-}
-
-.tooltip:hover .tooltiptext {
- visibility: visible;
-} */
 
 .ul_second {
-    position: absolute;
-    left: 2.5rem;
-    top: 0rem;
-    /* Empieza con opacidad 0 para la transición */
-    transform: translateY(20px);
-    /* Empieza un poco arriba para la transición */
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    /* Transiciones suaves en el menú desplegable */
+  position: absolute;
+  left: -9rem;
+  top: 0rem;
+  opacity: 0; /* Inicialmente oculto */
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Transiciones suaves en el menú desplegable */
+}
+
+/* Añade un retraso de 0.5s al ocultar el menú desplegable */
+.ul_second:not(.visible) {
+  transition: opacity 0.3s ease 0.5s, transform 0.3s ease 0.5s;
 }
 
 .ul_second.visible {
-    opacity: 1;
-    /* Cambia la opacidad a 1 cuando es visible */
-    transform: translateY(0);
-    /* Vuelve a la posición original cuando es visible */
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: 0.3s;
 }
+
+
+
 
   @media (${breakpoints.min}px <= width <= ${breakpoints.mobileMax}px) {
     grid-area: 1 / 1 / 5 / 7;
@@ -264,6 +283,24 @@ const LibraryMainContainerStyles = styled.main`
     .zone-selector {
       font-size: 3vw;
     }
+    /* .ul_second {
+      position: absolute;
+      right: 2.5rem;
+      top: 0.5rem;
+      
+      transform: translateY(20px);
+     
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      
+    }
+
+    .ul_second.visible {
+      opacity: 1;
+     
+      transition-duration: 0.5s;
+      transform: translateY(0);
+      
+    } */
   }
 
   @media (${breakpoints.mobileMax}px < width <= ${breakpoints.tabletMax}px) {
@@ -298,4 +335,3 @@ const LibraryMainContainerStyles = styled.main`
     }
   }
 `;
-

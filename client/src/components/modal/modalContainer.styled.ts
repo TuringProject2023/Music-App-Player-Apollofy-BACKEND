@@ -29,6 +29,7 @@ export const ModalContainer = styled.article`
       background-color: rgba(250, 250, 250, 0.75);
       border: 1px solid rgba(0, 0, 0, 0.75);
       transition: all 0.2s ease-in-out;
+      border-radius: 5px;
 
       &:hover{
         background-color: rgba(250, 250, 250, 1);

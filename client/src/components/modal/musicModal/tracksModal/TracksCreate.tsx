@@ -206,7 +206,7 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
 const TracksFormContainer = styled.section`
   max-width: 500px;
   width: 100%;
-  background: linear-gradient(to right ,hsl(300, 100%, 10%), #000);
+  background:hsl(300, 100%, 10%);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -255,12 +255,17 @@ const TracksFormContainer = styled.section`
         width: 100%;
         outline: none;
         font-size: 1rem;
-        color: #2b1c1c;
+        color: rgba(255, 255, 255, 1);
+        
         /* margin-top: 5px; */
         border: 1px solid #ee4e34;
         border-radius: 6px;
         padding: 0 15px;
-        background: #fcedda;
+        background: linear-gradient(to right ,#e85973,rgb(39, 40, 46));
+
+      }
+      ::placeholder{
+        color: rgba(255, 255, 255, 1);
       }
     }
     &__gender_box {

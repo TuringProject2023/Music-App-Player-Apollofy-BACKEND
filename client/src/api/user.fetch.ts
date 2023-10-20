@@ -279,6 +279,27 @@ export const createAlbum = async (formData: FormData,userId:string, getToken: Ge
     throw error;
   }
 };
+export const updateAlbumAddTrack = async (trackId: string,albumId:string,) => {
+  try {
+    const formData = new FormData();
+    formData.append('trackId', trackId);
+    const response = await fetch(`${urlAlbum}/patch/${albumId}`, {
+      method: "PATCH",
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
+      body: formData,
+    });    
+    const data = await response.json();
+    console.log(data)
+    console.log("llega hasta aqui")
+    
+    return data;
+  } catch (error) {
+    console.error("error in the track post request:", error);
+    throw error;
+  }
+};
 
 export const toggleLikedPlaylist = async (userEmail: string, getToken: GetTokenFunction) => {
   try {

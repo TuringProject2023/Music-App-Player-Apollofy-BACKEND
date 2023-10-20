@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { useState, FC } from "react";
-import { AlertMessageSuccess, LoaderForm } from "../../..";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { useUserMusicContext } from "../../../../context/UserMusicContext";
+import { useGenresContext, useUserContext, useUserMusicContext } from "../../../context";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { MultiSelect } from "react-multi-select-component";
-import { useGenresContext, useUserContext } from "../../../../context";
+import { Controller } from "react-spring";
+import { LoaderForm, AlertMessageSuccess } from "../..";
 
 interface userFormModal {
   closeModal: () => void;
@@ -24,12 +24,24 @@ interface Option {
   value: string;
 }
 
-export const AlbumCreateForm: FC<userFormModal> = ({ closeModal }) => {
-  const { createNewAlbum, tracks, artists } = useUserMusicContext();
+export const ModalUpdateAlbum: FC<userFormModal> = ({ closeModal }) => {
+  const { albums tracks, artists } = useUserMusicContext();
   const { allGenres } = useGenresContext();
   const { userData } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [albumUpdated, setAlbumUpdated] = useState(false);
+
+  const updateNewAlbum = async (formData: FormData, userId: string): Promise<Response> => {
+    try {
+      const response = await createAlbum(formData, userId, getAccessTokenSilently);
+      setAlbumUpdated(response);
+      return response;
+    } catch (error) {
+      console.error("Error getting albums:", error);
+      throw error;
+    }
+  };
 
   const form = useForm({
     defaultValues: {

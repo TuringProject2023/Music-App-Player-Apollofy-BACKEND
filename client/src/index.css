@@ -1,7 +1,9 @@
 :root {
   /* Text colors */
-  --color-text-pink:  hsl(349, 76%, 63%);
+  --color-text-pink:  rgb(232, 89, 115);
+  --color-text-pink-hover:  rgba(232, 89, 115, 0.76);
   --color-text-gray:  rgb(134, 129, 134);
+  --color-text-gray-hover:  rgba(134, 129, 134, 0.712);
 
   /* Background colors */
   --color-background-main: linear-gradient(hsl(300, 100%, 10%), #000);

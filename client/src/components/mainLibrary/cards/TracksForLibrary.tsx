@@ -5,7 +5,7 @@ import { breakpoints } from "../../../styles/breakpoints";
 import { useQueuePlayerContext } from "../../../context/QueuePlayerContext";
 import { DropdownMenu } from "../../modal/modalUpdateTracks/DropdownMenu";
 
-interface TrackProps {
+export interface TrackProps {
   id: string;
   trackName: string;
   trackImage: string;

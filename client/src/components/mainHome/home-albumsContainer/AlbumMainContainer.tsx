@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
+
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
@@ -13,37 +14,31 @@ SwiperCore.use([Navigation, Pagination]);
 import styled from "styled-components";
 
 import HomeSkeleton from "../../../assets/skeleton/homeSkeleton";
+
 import { useUserMusicContext } from "../../../context";
 import { breakpoints } from "../../../styles/breakpoints";
-import { Track } from "../../cards/CardForTrack";
 
-const LazyCardTrackHome: LazyExoticComponent<ComponentType<Track>> = lazy(() => {
+const LazyCardAlbumHome: LazyExoticComponent<ComponentType<any>> = lazy(() => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      return resolve(import("../../cards/CardForTrack"));
+      return resolve(import("../../cards/CardForAlbum"));
     }, 2000);
   });
 });
 
-interface CardProps {
-  id: string;
-  trackName: string;
-  trackUrl: string;
-  trackImage: string;
-}
-
 type ProprQuery = {
   query: string;
 };
-export const TracksContainer = ({ query }: ProprQuery) => {
-  const { tracks } = useUserMusicContext();
-  
+
+export const AlbumContainer = ({ query }: ProprQuery) => {
+  const { albums } = useUserMusicContext();
+
   return (
-    <TracksContainerStyles>
-      <h2 className="tracksTitle">Songs</h2>
-      {tracks && (
-        <Swiper
-          navigation
+    <AlbumsContainerStyles>
+      <h2 className="albumsTitle">Albums</h2>
+      {albums && (
+        <Swiper 
+        navigation
           slidesPerView={3}
           spaceBetween={30}
           effect={"coverflow"}
@@ -53,36 +48,37 @@ export const TracksContainer = ({ query }: ProprQuery) => {
           coverflowEffect={{ rotate: 0, stretch: 0, depth: 100, modifier: 2.5 }}
           modules={[EffectCoverflow, Pagination, Navigation]}
           className="mySwiper">
-          {tracks &&
-            tracks
-              .filter(({ trackName }) => {
+          {albums &&
+            albums
+              .filter(({ albumName }) => {
                 if (!query) return true;
                 if (query) {
-                  const nameLowerCase = trackName.toLowerCase();
+                  const nameLowerCase = albumName.toLowerCase();
                   return nameLowerCase.includes(query.toLowerCase());
                 }
               })
-              .map(({ id, trackName, trackUrl, trackImage }: CardProps) => (
+              .map(({ id, albumName, albumImage, trackId }) => (
                 <SwiperSlide key={id}>
                   <Suspense key={id} fallback={<HomeSkeleton />}>
-                    <LazyCardTrackHome id={id} trackImage={trackImage} trackName={trackName} trackUrl={trackUrl} artist={[]} userData={""}   />
+                    <LazyCardAlbumHome id={id} albumImage={albumImage} albumName={albumName} trackId={trackId} />
                   </Suspense>
                 </SwiperSlide>
               ))}
         </Swiper>
       )}
-    </TracksContainerStyles>
+    </AlbumsContainerStyles>
   );
 };
 
-const TracksContainerStyles = styled.div`
-  grid-area: 8 / 1 / 11 / 6;
+const AlbumsContainerStyles = styled.div`
+  grid-area: 5 / 1 / 8 / 6;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   height: 100%;
+  /* gap: 1rem; */
 
-  .tracksTitle {
+  .albumsTitle {
     font-size: 35px;
     color: white;
     align-items: flex-start;
@@ -90,15 +86,14 @@ const TracksContainerStyles = styled.div`
     opacity: 0.9;
   }
   .mySwiper {
-    position: relative;
     height: 100%;
     width: 100%;
     .swiper-wrapper {
-      position: relative;
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      padding: 0.5rem;
+      padding: 0 0.5rem;
+      
       gap: 1rem;
       .swiper-slide {
         margin: 0;
@@ -107,8 +102,6 @@ const TracksContainerStyles = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        height: 100%;
       }
     }
     .swiper-pagination-bullet {
@@ -148,23 +141,27 @@ const TracksContainerStyles = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    height: 100%;
 
-    .tracksTitle {
+    .albumsTitle {
       font-size: 20px;
+      color: white;
+      align-items: flex-start;
+      margin-left: 1.5rem;
+      opacity: 0.9;
     }
     .mySwiper {
-      height: 90%;
+      height: 85%;
       width: 100%;
       .swiper-wrapper {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 0.5rem;
+        
         gap: 1rem;
         .swiper-slide {
           margin: 0;
           padding: 0;
-          /* margin-top: 5 !important; */
           margin-right: 0 !important;
         }
       }
@@ -202,8 +199,9 @@ const TracksContainerStyles = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    height: 100%;
 
-    .tracksTitle {
+    .albumsTitle {
       font-size: 20px;
       color: white;
       align-items: flex-start;
@@ -211,18 +209,17 @@ const TracksContainerStyles = styled.div`
       opacity: 0.9;
     }
     .mySwiper {
-      height: 80%;
+      height: 90%;
       width: 100%;
       .swiper-wrapper {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 0.5rem;
+        
         gap: 1rem;
         .swiper-slide {
           margin: 0;
           padding: 0;
-          /* margin-top: 5 !important; */
           margin-right: 0 !important;
         }
       }
@@ -260,8 +257,9 @@ const TracksContainerStyles = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    height: 100%;
 
-    .tracksTitle {
+    .albumsTitle {
       font-size: 20px;
       color: white;
       align-items: flex-start;
@@ -275,12 +273,11 @@ const TracksContainerStyles = styled.div`
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 0.5rem;
+        
         gap: 1rem;
         .swiper-slide {
           margin: 0;
           padding: 0;
-          /* margin-top: 5 !important; */
           margin-right: 0 !important;
         }
       }
@@ -318,8 +315,9 @@ const TracksContainerStyles = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    height: 100%;
 
-    .tracksTitle {
+    .albumsTitle {
       font-size: 25px;
       color: white;
       align-items: flex-start;
@@ -333,7 +331,7 @@ const TracksContainerStyles = styled.div`
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 0.5rem;
+        
         gap: 1rem;
         .swiper-slide {
           margin: 0;
@@ -374,8 +372,9 @@ const TracksContainerStyles = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    height: 100%;
 
-    .tracksTitle {
+    .albumsTitle {
       font-size: 25px;
       color: white;
       align-items: flex-start;
@@ -389,12 +388,11 @@ const TracksContainerStyles = styled.div`
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 0.5rem;
+        
         gap: 1rem;
         .swiper-slide {
           margin: 0;
           padding: 0;
-          /* margin-top: 5 !important; */
           margin-right: 0 !important;
         }
       }
@@ -405,9 +403,6 @@ const TracksContainerStyles = styled.div`
         transition: all 0.3s;
         background-color: #ffffff;
         left: 0;
-        /* bottom: 300px; */
-        /* width: 100%; */
-        /* top: 300px; */
       }
       .swiper-pagination-bullet-active {
         background: #f8f7f9;

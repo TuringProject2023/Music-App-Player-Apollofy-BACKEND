@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { PLAYER } from "../../../config/routes/paths";
+import { ALBUM } from "../../../config/routes/paths";
 import styled from "styled-components";
 import { breakpoints } from "../../../styles/breakpoints";
 
@@ -30,8 +30,8 @@ interface ArtistProps {
 const AlbumForLibrary = ({ id, albumName, albumImage, albumCreatedAt, artist, trackId, genre }: AlbumProps) => {
 
   return (
-    <PlaylistsForLibraryStyles key={id}>
-      <Link to={`${PLAYER}/${trackId[0]}`} className="cardForTrack">
+    <AlbumForLibraryStyles key={id}>
+      <Link to={`${ALBUM}/${id}`} className="cardForTrack">
         <div className="cardForTrack__header">
           <img alt={albumName} className="cardForTrack__header_img" src={albumImage} />
         </div>
@@ -44,11 +44,11 @@ const AlbumForLibrary = ({ id, albumName, albumImage, albumCreatedAt, artist, tr
           <h4 className="cardForTrack__body_title-genreName">{genre ? genre.map((genre) => genre.genreName).join(", ") : null}</h4>
         </div>
       </Link>
-    </PlaylistsForLibraryStyles>
+    </AlbumForLibraryStyles>
   );
 };
 
-const PlaylistsForLibraryStyles = styled.div`
+const AlbumForLibraryStyles = styled.div`
   display: flex;
   padding: 0.25rem;
   gap: 1rem;

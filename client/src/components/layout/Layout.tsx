@@ -13,7 +13,7 @@ const Layout = () => {
     <>
       <GlobalPrivatePageStyles>
         <SideBar />
-
+   
         <Outlet />
 
         <Footer />
