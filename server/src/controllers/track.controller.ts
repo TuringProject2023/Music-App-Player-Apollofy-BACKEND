@@ -128,11 +128,15 @@ export const updateTrackById = async (req: Request, res: Response): Promise<Resp
 
     if ("tempFilePath" in imageVerefication) {
       const imageUpload = await uploadImage(imageVerefication.tempFilePath);
-      await fs.unlink(imageVerefication.tempFilePath);
+      await fs.unlink(imageVerefication.tempFilePath, (err) => {
+        if (err) console.error(err);
+      });
 
       if ("tempFilePath" in audioFile) {
-        const audioUpload = await uploadImage(audioFile.tempFilePath);
-        await fs.unlink(audioFile.tempFilePath);
+        const audioUpload = await uploadAudio(audioFile.tempFilePath);
+        await fs.unlink(audioFile.tempFilePath, (err) => {
+          if (err) console.error(err);
+        });
         const updateTrack = await prisma.track.update({
           where: {
             id: trackId,

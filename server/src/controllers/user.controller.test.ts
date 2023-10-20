@@ -2,15 +2,12 @@ import { prismaMock } from "../mocks/prisma.mock";
 import { updateUserById, createUser } from "./user.controller";
 import { Request, Response } from "express";
 
-let uploadImageMock;
 
+let uploadImageMock;
 beforeEach(() => {
   uploadImageMock = jest.spyOn(require('../utils/cloudinary'), 'uploadImage');
   uploadImageMock.mockImplementation(() => Promise.resolve({ secure_url: 'mocked-url' }));
 });
-
-
-// USER CONTROLLER ---------------------------------------------
 
 
 describe("updateUserById function", () => {
@@ -155,7 +152,7 @@ describe("createUser function. Check if the email already exists in the database
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     } as unknown as Response;
-    const { email, name, picture  } = req.body;
+    const { email, name, picture } = req.body;
     const simulatedUserData = {
       id: '1',
       userEmail: email,
@@ -178,7 +175,7 @@ describe("createUser function. Check if the email already exists in the database
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.send).toHaveBeenCalledWith({
       message: "User created successfully!",
-      user:simulatedUserData
+      user: simulatedUserData
     });
   });
   afterEach(() => {

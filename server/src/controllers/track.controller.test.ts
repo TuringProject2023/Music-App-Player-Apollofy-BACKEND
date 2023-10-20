@@ -3,7 +3,6 @@ import { prismaMock } from "../mocks/prisma.mock";
 import fs from 'fs-extra'
 import { createTrack, updateTrackById } from './track.controller'
 
-
 jest.mock('../utils/cloudinary', () => ({
     uploadImage: jest.fn(() => {
         return Promise.resolve({ secure_url: 'https://example.com/mock-image-url.jpg' })
@@ -12,7 +11,6 @@ jest.mock('../utils/cloudinary', () => ({
         return Promise.resolve({ secure_url: 'https://example.com/mock-track-url.mp3' })
     }),
 }))
-
 jest.spyOn(fs, 'unlink').mockImplementation((path, callback) => {
     callback(null);
 })
@@ -29,6 +27,7 @@ const newTrack = {
     albumId: ["65082618e2438c19893c5549"],
     genreId: ["65017fdfd78b706a5fdf4513"]
 }
+
 
 describe('createTrack Controller', () => {
 
@@ -142,14 +141,13 @@ describe('updateTrack Controller', () => {
 
     })
 
-    test('should return 201 status when all variables are sended and track creation are correct', async () => {
+    test('should return 200 status when all variables are sended and track creation are correct', async () => {
         const req = {
             params: {
-                userId: '1'
+                trackId: '1'
             },
             body: {
                 trackName: 'asdf',
-                trackCreatedAt: 'asdf',
                 genreId: 'asdf',
                 artistId: 'asdf',
                 albumId: 'asdf'
@@ -170,14 +168,15 @@ describe('updateTrack Controller', () => {
             send: jest.fn()
         } as unknown as Response
 
-        prismaMock.track.create.mockResolvedValue(newTrack)
+        const updateTrack = newTrack
+        prismaMock.track.update.mockResolvedValue(updateTrack)
 
-        await createTrack(req, res);
+        await updateTrackById(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.status).toHaveBeenCalledWith(200);
         expect(res.send).toHaveBeenCalledWith({
-            message: 'Track created successfully',
-            newTrack
+            message: "Track updated successfully",
+            updateTrack
         });
     })
 
