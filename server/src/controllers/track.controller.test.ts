@@ -134,9 +134,9 @@ describe('updateTrack Controller', () => {
 
         await updateTrackById(req as any, res as any);
 
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.send).toHaveBeenCalledWith({
-            message: 'File not found'
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            error: 'audio is missing'
         });
 
     })

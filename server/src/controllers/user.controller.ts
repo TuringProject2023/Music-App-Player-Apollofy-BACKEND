@@ -96,7 +96,7 @@ export const getUserByEmailFunction = async (email: string) => {
       include: {},
     });
 
-    return userById?.id;
+  return userById?.id ;
   } catch (err) {
     console.error(err);
     return "Error while finding userEmail/Id";
