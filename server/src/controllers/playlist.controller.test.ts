@@ -5,17 +5,17 @@ import { Request, Response } from "express";
 let uploadImageMock;
 
 const simulatedUserData = {
-    id: '1', // Simulando un ID específico
+    id: '1',
     userEmail: 'example@example.com',
     userName: 'John Doe',
     userImage: 'user-image.jpg',
     userCreatedAt: new Date(),
     userUpdatedAt: new Date(),
-    playlistLikedId: ['1', '2'], // IDs de playlists que le gustan al usuario
-    tracksId: ['3', '4'], // IDs de las pistas del usuario
-    postId: ['5', '6'], // IDs de las publicaciones del usuario
-    albumId: ['7', '8'], // IDs de los álbumes del usuario
-    playlistCreatedId: ['9', '10'], // IDs de playlists creadas por el usuario
+    playlistLikedId: ['1', '2'],
+    tracksId: ['3', '4'],
+    postId: ['5', '6'],
+    albumId: ['7', '8'],
+    playlistCreatedId: ['9', '10'],
   };
 beforeEach(() => {
     uploadImageMock = jest.spyOn(require('../utils/cloudinary'), 'uploadImage');
@@ -76,7 +76,7 @@ describe("createPlaylist function. ", () => {
         expect(res.send).toHaveBeenCalledWith({ 'newPlaylistLiked':simulatedUserData});
     });
     afterEach(() => {
-        jest.restoreAllMocks(); // Restablece todos los mocks
-        jest.clearAllMocks(); // Limpia los registros de llamadas
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
     });
 })
