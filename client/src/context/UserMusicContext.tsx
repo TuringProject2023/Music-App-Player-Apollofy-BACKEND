@@ -28,7 +28,7 @@ interface UserMusicContextType {
   createUserTracks: (userId: string, trackData: FormData) => Promise<Response>;
   modifyTrack: (trackId: string, trackData: FormData) => Promise<Response>;
   modifyAlbum: (formData: FormData, albumId: string) => Promise<Response>;
-  handleDeleteAlbum: (albumId: string, userId: string) => Promise<void>;
+  handleDeleteAlbum: (albumId: string, userId: string) => Promise<unknown>;
   createNewArtist: (formData: FormData) => Promise<Response>;
   createNewAlbum: (formData: FormData, userId: string) => Promise<Response>;
   createNewPlaylist: (userEmail: string, formData: FormData) => Promise<Response>;
@@ -254,9 +254,8 @@ export const UserMusicProvider: FC<{ children: ReactNode }> = ({ children }) => 
   const handleDeleteAlbum = async (albumId: string, userId: string): Promise<void> => {
     try {
       const responseDelete = await albumDelete(albumId, userId, getAccessTokenSilently);
-      // setAlbums((prevAlbums) => prevAlbums.filter((album) => album.id !== albumId));
+      setAlbums((prevAlbums) => prevAlbums.filter((album) => album.id !== albumId));
       // const response = await userTracksGet(getAccessTokenSilently);
-      setAlbums(responseDelete);
       return responseDelete;
     } catch (error) {
       console.error("Error getting tracks:", error);

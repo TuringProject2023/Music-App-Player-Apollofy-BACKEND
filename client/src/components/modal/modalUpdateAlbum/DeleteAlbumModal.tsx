@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { AlertMessageSuccess, } from "../..";
 import { useUserContext } from "../../../context";
 import { useUserMusicContext } from "../../../context";
+import { toast } from 'react-toastify';
 
 interface ModalConfirmationProps {
   onClose: () => void;
@@ -21,7 +22,31 @@ export const DeleteAlbumModal: FC<ModalConfirmationProps> = ({ onClose, id }) =>
      
       const response =  await handleDeleteAlbum(id, userData?.id ?? "" );
       // await handleUserTracks(userData?.userEmail ?? "");
-
+      // toast.promise(response,  {
+      //   pending: {
+      //     render(){
+      //       return "I'm loading"
+      //     },
+      //     icon: false,
+      //   },
+      //   success: {
+      //     render({data}){
+      //       return `Hello ${data}`
+      //     },
+      //     // other options
+      //     icon: "🟢",
+      //   },
+      //   error: {
+      //     render({data}){
+      //       return `Hello ${data}`
+      //     },
+      //     // other options
+      //     icon: "",
+      //   }
+      // })
+      setTimeout(() => {        
+        onClose();
+      }, 1500);
       return response
     } catch (error) {
       console.error("Error delete user:", error);

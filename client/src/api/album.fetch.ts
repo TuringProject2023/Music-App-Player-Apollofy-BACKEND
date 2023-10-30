@@ -82,7 +82,7 @@ export const updateAlbumAddTrack = async (trackId: string, albumId: string) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const albumDelete = async (albumId: string, userId: string, getToken: GetTokenFunction): Promise<any> => {
+export const albumDelete = async (albumId: string, userId: string, getToken: GetTokenFunction): Promise<unknown> => {
   try {
     const token = await getToken();
     const response = await fetch(`${urlAlbum}/${albumId}/${userId}`, {
