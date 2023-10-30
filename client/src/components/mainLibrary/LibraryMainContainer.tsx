@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LazyExoticComponent, ComponentType, lazy, useState } from "react";
 import styled from "styled-components";
 import { AlbumCreateForm, Modal, PlaylistCreateForm, SearchBar, TracksCreateForm } from "..";
@@ -8,7 +9,7 @@ import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { useModal } from "../../hooks/useModal";
 import { AddDropdownMenu } from "../dropdownMenu/AddDropdownMenu";
 import { useHover } from "../../hooks/useHover";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 const LazyPlaylistCards: LazyExoticComponent<ComponentType<any>> = lazy(() => {

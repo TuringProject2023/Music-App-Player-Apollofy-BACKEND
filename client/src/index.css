@@ -15,7 +15,12 @@
   --swiper-theme-color:#f9637e;
 
   --background-button-shade-color: hsl(349, 45%, 48%);
-  --background-button-color: hsl(349, 76%, 63%);
+  --background-button-color: hsl(349, 76%, 63%); 
+
+  --background-button-cancel-color: rgb(67, 177, 122);
+  --background-button-cancel-shade-color: rgb(54, 92, 54); 
+  --background-button-delete-color: hsl(349, 76%, 63%);
+  --background-button-delete-shade-color: hsl(349, 76%, 63%); 
 }
 
 

@@ -7,7 +7,7 @@ import { BiSolidPlaylist } from "react-icons/bi";
 import { useState } from "react";
 import { breakpoints } from "../../styles/breakpoints";
 import { useUserContext, useUserMusicContext } from "../../context";
-import { updateAlbumAddTrack } from "../../api/album.fetch";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export interface Track {
   id: string;
@@ -26,12 +26,12 @@ interface ArtistProps {
 }
 
 const CardForTrack = ({ id, trackName, trackImage }: Track) => {
-  const { tracks, artists, albums } = useUserMusicContext();
+  const { tracks, artists, albums, modifyAlbumAddingTrack } = useUserMusicContext();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const { handleCurrentTrackById, handleNewTrackInList } = useQueuePlayerContext();
   const { userData, handleUserData } = useUserContext();
-  // const { getAccessTokenSilently } = useAuth0();
+  
 
   const [isLiked, setIsLiked] = useState(userData?.tracksId.includes(id));
 
@@ -49,13 +49,11 @@ const CardForTrack = ({ id, trackName, trackImage }: Track) => {
   // console.log(getAccessTokenSilently)
 
   const handleUpdateAlbumAddingTrack = async (albumId: string) => {
-    console.log("entra en la funcion AddingTrack");
+    
     try {
-      const response = await updateAlbumAddTrack(id, albumId);
-      console.log("albumId", albumId);
-      console.log("trackId", id);
-      console.log(response)
-      return response;
+      await modifyAlbumAddingTrack(id, albumId);
+      
+      
     } catch (error) {
       console.log(error);
     }
@@ -204,7 +202,7 @@ const CardForTrackStyles = styled.div`
         margin-top: -5px;
         border: 1px solid rgba(0, 0, 0, 1);
         border-radius: 10px;
-        background-color: var(--color-text-gray);
+        background-color: #0d1117;
         width: 300px;
         height: 150px;
         z-index: 20;
@@ -224,9 +222,12 @@ const CardForTrackStyles = styled.div`
             justify-content: flex-start;
             width: 100%;
             height: 33%;
-            color: black;
+            color: #eeeded;
             border: 1px solid rgba(0, 0, 0, 0.8);
             padding-left: 1rem;
+            &:hover {
+              background-color: #21262c;
+            }
             &-span {
               position: relative;
               display: flex;

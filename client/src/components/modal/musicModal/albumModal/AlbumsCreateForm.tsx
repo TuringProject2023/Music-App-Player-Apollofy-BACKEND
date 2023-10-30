@@ -115,7 +115,7 @@ export const AlbumCreateForm: FC<userFormModal> = ({ closeModal }) => {
             {...register("albumCreatedAt", {
               required: "Date is required",
             })}
-            placeholder="Enter full Name"
+            placeholder="Enter year created"
             type="text"
             id="albumCreatedAt"
           />
@@ -399,7 +399,7 @@ const AlbumFormContainer = styled.section`
   }
 `;
 export const ButtonAdd = styled.button`
-  background: var(--background-button-shade-color);
+ background: var(--background-button-shade-color);
   width: 100%;
   border-radius: 12px;
   border: none;

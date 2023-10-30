@@ -55,11 +55,11 @@ const CardForAlbumStyles = styled.div`
   height: 18rem;
 
   box-shadow: 12px 13px 15px 6px rgba(0, 0, 0, 0.8), 29px 36px 15px -3px rgba(0, 0, 0, 0.1);
-  background-color: rgba(50, 50, 50, 0.4);
+  background-color: rgba(50, 50, 50, 1);
   border: 1px solid rgba(66, 66, 66, 0.4);
   transition: all 0.3s;
   &:hover {
-    background-color: rgba(100, 100, 100, 0.4);
+    background-color: rgba(100, 100, 100, 1);
     cursor: pointer;
   }
 
@@ -156,11 +156,11 @@ const CardForAlbumStyles = styled.div`
     /* margin: 10px; */
 
     box-shadow: 12px 13px 15px 6px rgba(0, 0, 0, 0.8), 29px 36px 15px -3px rgba(0, 0, 0, 0.1);
-    background-color: rgba(50, 50, 50, 0.4);
+    background-color: rgba(50, 50, 50, 1);
     border: 1px solid rgba(66, 66, 66, 0.4);
     transition: all 0.3s;
     &:hover {
-      background-color: rgba(100, 100, 100, 0.4);
+      background-color: rgba(100, 100, 100, 1);
       cursor: pointer;
     }
 
@@ -252,11 +252,11 @@ const CardForAlbumStyles = styled.div`
     /* margin: 10px; */
 
     box-shadow: 12px 13px 15px 6px rgba(0, 0, 0, 0.8), 29px 36px 15px -3px rgba(0, 0, 0, 0.1);
-    background-color: rgba(50, 50, 50, 0.4);
+    background-color: rgba(50, 50, 50, 1);
     border: 1px solid rgba(66, 66, 66, 0.4);
     transition: all 0.3s;
     &:hover {
-      background-color: rgba(100, 100, 100, 0.4);
+      background-color: rgba(100, 100, 100, 1);
       cursor: pointer;
     }
 
@@ -348,11 +348,11 @@ const CardForAlbumStyles = styled.div`
     /* margin: 10px; */
 
     box-shadow: 12px 13px 15px 6px rgba(0, 0, 0, 0.8), 29px 36px 15px -3px rgba(0, 0, 0, 0.1);
-    background-color: rgba(50, 50, 50, 0.4);
+    background-color: rgba(50, 50, 50, 1);
     border: 1px solid rgba(66, 66, 66, 0.4);
     transition: all 0.3s;
     &:hover {
-      background-color: rgba(100, 100, 100, 0.4);
+      background-color: rgba(100, 100, 100, 1);
       cursor: pointer;
     }
 
@@ -437,11 +437,11 @@ const CardForAlbumStyles = styled.div`
     /* margin: 10px; */
 
     box-shadow: 12px 13px 15px 6px rgba(0, 0, 0, 0.8), 29px 36px 15px -3px rgba(0, 0, 0, 0.1);
-    background-color: rgba(50, 50, 50, 0.4);
+    background-color: rgba(50, 50, 50, 1);
     border: 1px solid rgba(66, 66, 66, 0.4);
     transition: all 0.3s;
     &:hover {
-      background-color: rgba(100, 100, 100, 0.4);
+      background-color: rgba(100, 100, 100, 1);
       cursor: pointer;
     }
 
@@ -523,14 +523,16 @@ const CardForAlbumStyles = styled.div`
 
     padding: 0.25rem;
     gap: 1rem;
-    /* margin: 10px; */
+    
+    width: 45rem;
+    height: 20rem;
 
     box-shadow: 12px 13px 15px 6px rgba(0, 0, 0, 0.8), 29px 36px 15px -3px rgba(0, 0, 0, 0.1);
-    background-color: rgba(50, 50, 50, 0.4);
+    background-color: rgba(50, 50, 50, 1);
     border: 1px solid rgba(66, 66, 66, 0.4);
     transition: all 0.3s;
     &:hover {
-      background-color: rgba(100, 100, 100, 0.4);
+      background-color: rgba(100, 100, 100, 1);
       cursor: pointer;
     }
 

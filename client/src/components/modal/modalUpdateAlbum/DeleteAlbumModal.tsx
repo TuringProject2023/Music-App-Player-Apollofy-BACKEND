@@ -1,56 +1,26 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { AlertMessageSuccess, } from "../..";
 import { useUserContext } from "../../../context";
 import { useUserMusicContext } from "../../../context";
-import { toast } from 'react-toastify';
 
 interface ModalConfirmationProps {
   onClose: () => void;
   id: string;
 }
 
-
 export const DeleteAlbumModal: FC<ModalConfirmationProps> = ({ onClose, id }) => {
   const { userData } = useUserContext();
-  const {  handleDeleteAlbum } = useUserMusicContext();
-  
+  const { handleDeleteAlbum } = useUserMusicContext();
 
   const handleDelete = async () => {
-    
     try {
-     
-      const response =  await handleDeleteAlbum(id, userData?.id ?? "" );
-      // await handleUserTracks(userData?.userEmail ?? "");
-      // toast.promise(response,  {
-      //   pending: {
-      //     render(){
-      //       return "I'm loading"
-      //     },
-      //     icon: false,
-      //   },
-      //   success: {
-      //     render({data}){
-      //       return `Hello ${data}`
-      //     },
-      //     // other options
-      //     icon: "🟢",
-      //   },
-      //   error: {
-      //     render({data}){
-      //       return `Hello ${data}`
-      //     },
-      //     // other options
-      //     icon: "",
-      //   }
-      // })
-      setTimeout(() => {        
+      const response = await handleDeleteAlbum(id, userData?.id ?? "");
+      setTimeout(() => {
         onClose();
       }, 1500);
-      return response
+      return response;
     } catch (error) {
       console.error("Error delete user:", error);
-      
     }
   };
 
@@ -60,12 +30,20 @@ export const DeleteAlbumModal: FC<ModalConfirmationProps> = ({ onClose, id }) =>
         <h2>Confirm Delete</h2>
         <p>Are you sure you want to delete the album?</p>
         <div className="button_container">
-          <button type="button" className="cancel_button" onClick={onClose}>
-            Cancel
-          </button>
-          <button type="button" className="confirm_button" onClick={() => handleDelete()}>
-            Delete
-          </button>
+          
+          <ButtonCancel onClick={onClose} >
+          <span className="shadow"></span>
+          <span className="front">
+            <strong className="font-size" >Cancel</strong>
+          </span>
+        </ButtonCancel>
+          
+          <ButtonDelete onClick={() => handleDelete()} >
+          <span className="shadow"></span>
+          <span className="front">
+            <strong className="font-size" >Delete</strong>
+          </span>
+        </ButtonDelete>
         </div>
       </div>
     </AlbumDeleteContainer>
@@ -73,7 +51,7 @@ export const DeleteAlbumModal: FC<ModalConfirmationProps> = ({ onClose, id }) =>
 };
 
 const AlbumDeleteContainer = styled.div`
-  background: var(--color-background-main);
+  background: hsl(300, 100%, 10%);
   border-radius: 8px;
 
   & .modal_content {
@@ -95,9 +73,10 @@ const AlbumDeleteContainer = styled.div`
 
     /* Estilos de los botones */
     & .button_container {
-      padding: 15px 0;
+      padding: 15px 20px;
       display: flex;
       justify-content: space-around;
+      gap: 1rem;
     }
 
     & .confirm_button,
@@ -129,5 +108,93 @@ const AlbumDeleteContainer = styled.div`
     & .cancel_button:hover {
       background-color: #077107;
     }
+  }
+`;
+
+export const ButtonCancel = styled.button`
+ background: var(--background-button-cancel-shade-color);
+  width: 100%;
+  border-radius: 12px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline-offset: 4px;
+  font-size: 4rem;
+  padding-top: 0.5rem;
+  .edge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    background: linear-gradient(to left, hsl(340deg 100% 16%) 0%, hsl(340deg 100% 32%) 8%, hsl(340deg 100% 32%) 92%, hsl(340deg 100% 16%) 100%);
+  }
+  .front {
+    display: block;
+    position: relative;
+    padding: 8px 25px;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    color: #fafafa;
+    background: var(--background-button-cancel-color);
+    will-change: transform;
+    transform: translateY(-4px);
+    transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+  }
+  &:hover {
+    filter: brightness(110%);
+  }
+  &:hover .front {
+    transform: translateY(-6px);
+    transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+  }
+  &:active .front {
+    transform: translateY(-2px);
+    transition: transform 34ms;
+  }
+`;
+
+const ButtonDelete = styled.button`
+ background: var(--background-button-shade-color);
+  width: 100%;
+  border-radius: 12px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline-offset: 4px;
+  font-size: 4rem;
+  padding-top: 0.5rem;
+  .edge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    background: linear-gradient(to left, hsl(340deg 100% 16%) 0%, hsl(340deg 100% 32%) 8%, hsl(340deg 100% 32%) 92%, hsl(340deg 100% 16%) 100%);
+  }
+  .front {
+    display: block;
+    position: relative;
+    padding: 8px 25px;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    color: #fafafa;
+    background: var(--background-button-color);
+    will-change: transform;
+    transform: translateY(-4px);
+    transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+  }
+  &:hover {
+    filter: brightness(110%);
+  }
+  &:hover .front {
+    transform: translateY(-6px);
+    transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+  }
+  &:active .front {
+    transform: translateY(-2px);
+    transition: transform 34ms;
   }
 `;

@@ -4,7 +4,7 @@ import { userPlaylistsCreatedGet, userPlaylistsLikedGet, userAlbumsGet, userTrac
 import { useAuth0 } from "@auth0/auth0-react";
 import { createPlaylist, getAllPlaylist } from "../api/playlist.fetch";
 import { trackDelete, trackPatch } from "../api/track.service";
-import { albumDelete, createAlbum, updateAlbumById } from "../api/album.fetch";
+import { albumDelete, createAlbum, updateAlbumAddTrack, updateAlbumById } from "../api/album.fetch";
 
 interface UserMusicContextType {
   playlistsCreated: PlaylistInterface[];
@@ -28,6 +28,7 @@ interface UserMusicContextType {
   createUserTracks: (userId: string, trackData: FormData) => Promise<Response>;
   modifyTrack: (trackId: string, trackData: FormData) => Promise<Response>;
   modifyAlbum: (formData: FormData, albumId: string) => Promise<Response>;
+  modifyAlbumAddingTrack: (trackId: string, albumId: string) => Promise<Response>;
   handleDeleteAlbum: (albumId: string, userId: string) => Promise<unknown>;
   createNewArtist: (formData: FormData) => Promise<Response>;
   createNewAlbum: (formData: FormData, userId: string) => Promise<Response>;
@@ -251,7 +252,17 @@ export const UserMusicProvider: FC<{ children: ReactNode }> = ({ children }) => 
       throw error;
     }
   };
-  const handleDeleteAlbum = async (albumId: string, userId: string): Promise<void> => {
+  const modifyAlbumAddingTrack = async ( trackId: string, albumId: string): Promise<Response> => {
+    try {
+      const response = await updateAlbumAddTrack(trackId, albumId, getAccessTokenSilently);
+      setAlbums(response);
+      return response;
+    } catch (error) {
+      console.error("Error getting album:", error);
+      throw error;
+    }
+  };
+  const handleDeleteAlbum = async (albumId: string, userId: string): Promise<unknown> => {
     try {
       const responseDelete = await albumDelete(albumId, userId, getAccessTokenSilently);
       setAlbums((prevAlbums) => prevAlbums.filter((album) => album.id !== albumId));
@@ -329,6 +340,7 @@ export const UserMusicProvider: FC<{ children: ReactNode }> = ({ children }) => 
         createUserTracks,
         modifyTrack,
         modifyAlbum,
+        modifyAlbumAddingTrack,
         handleDeleteAlbum,
         createNewArtist,
         getArtists,
