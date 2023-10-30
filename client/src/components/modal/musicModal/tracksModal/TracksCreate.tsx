@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useGenresContext, useUserContext } from "../../../../context";
 import { useUserMusicContext } from "../../../../context/UserMusicContext";
 import { MultiSelect } from "react-multi-select-component";
+import { readData } from "../../../../utils/readData";
 
 interface userFormModal {
   closeModal: () => void;
@@ -26,7 +27,7 @@ interface Option {
 }
 
 export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
-  const { userData, } = useUserContext();
+  const { userData } = useUserContext();
   const { allGenres } = useGenresContext();
   const { createUserTracks, albums, artists } = useUserMusicContext();
   const [isLoading, setIsLoading] = useState(false);
@@ -39,13 +40,12 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
       genreId: [],
       artistId: [],
       albumId: [],
-      trackCreatedAt: '',
+      trackCreatedAt: "",
     },
   });
 
   const { register, handleSubmit, formState, control } = form;
   const { errors } = formState;
-
 
   const onSubmit = async (newTrackData: CreateTrackType) => {
     try {
@@ -54,7 +54,11 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
       formData.append("trackName", newTrackData.trackName);
       formData.append("trackCreatedAt", newTrackData.trackCreatedAt);
       formData.append("trackUrl", newTrackData.trackUrl[0]);
-      formData.append("trackImage", newTrackData.trackImage[0]);
+      if (newTrackData.trackImage) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const imageTrack: any = await readData(newTrackData.trackImage[0]);
+        formData.append("trackImage", imageTrack);
+      }
 
       if (Array.isArray(newTrackData.artistId)) {
         for (const artist of newTrackData.artistId as unknown as Option[]) {
@@ -72,14 +76,13 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
           formData.append("genreId", genre.value);
         }
       }
-      await createUserTracks(userData?.id ?? '', formData);
+      await createUserTracks(userData?.id ?? "", formData);
 
       setIsSuccess(true);
       setTimeout(() => {
         setIsSuccess(false);
-        closeModal()
-      }, 2000)
-
+        closeModal();
+      }, 2000);
     } catch (error) {
       console.error("Error saving track:", error);
     } finally {
@@ -106,14 +109,16 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
             id="trackName"
           />
           {errors.trackName && <span className="error_input">{errors.trackName.message}</span>}
-          <label className="form__input_box-label" htmlFor='trackCreatedAt'>Creation date</label>
+          <label className="form__input_box-label" htmlFor="trackCreatedAt">
+            Creation date
+          </label>
           <input
-            {...register('trackCreatedAt', {
-              required: 'Date is required',
+            {...register("trackCreatedAt", {
+              required: "Date is required",
             })}
-            placeholder='Enter full Name'
-            type='text'
-            id='trackCreatedAt'
+            placeholder="Enter full Name"
+            type="text"
+            id="trackCreatedAt"
           />
           {errors.trackCreatedAt && <span className="error_input">{errors.trackCreatedAt.message}</span>}
         </div>
@@ -127,10 +132,9 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
                 labelledBy="Select Genre"
                 {...field}
                 overrideStrings={{
-                  selectSomeItems: 'Select Genre',
+                  selectSomeItems: "Select Genre",
                 }}
               />
-
             )}
           />
           {errors.genreId && <span className="error_input">At least one genre is required</span>}
@@ -143,7 +147,7 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
                 labelledBy="Select Artist"
                 {...field}
                 overrideStrings={{
-                  selectSomeItems: 'Select Artist',
+                  selectSomeItems: "Select Artist",
                 }}
               />
             )}
@@ -157,10 +161,9 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
                 labelledBy="Select Album"
                 {...field}
                 overrideStrings={{
-                  selectSomeItems: 'Select Album',
+                  selectSomeItems: "Select Album",
                 }}
               />
-
             )}
           />
           {errors.genreId && <span className="error_input">At least one genre is required</span>}
@@ -195,7 +198,7 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
         <ButtonAdd>
           <span className="shadow"></span>
           <span className="front">
-            <strong className='font-size'>ADD Track</strong>
+            <strong className="font-size">ADD Track</strong>
           </span>
         </ButtonAdd>
       </form>
@@ -206,7 +209,7 @@ export const TracksCreateForm: FC<userFormModal> = ({ closeModal }) => {
 const TracksFormContainer = styled.section`
   max-width: 500px;
   width: 100%;
-  background:hsl(300, 100%, 10%);
+  background: hsl(300, 100%, 10%);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -223,7 +226,7 @@ const TracksFormContainer = styled.section`
     &__input_box {
       width: 100%;
       display: grid;
-     gap: 0.2rem;
+      gap: 0.2rem;
       &-label {
         color: #f5f4e8;
         font-size: 1.2rem;
@@ -256,22 +259,21 @@ const TracksFormContainer = styled.section`
         outline: none;
         font-size: 1rem;
         color: rgba(255, 255, 255, 1);
-        
+
         /* margin-top: 5px; */
         border: 1px solid #ee4e34;
         border-radius: 6px;
         padding: 0 15px;
-        background: linear-gradient(to right ,#e85973,rgb(39, 40, 46));
-
+        background: linear-gradient(to right, #e85973, rgb(39, 40, 46));
       }
-      ::placeholder{
+      ::placeholder {
         color: rgba(255, 255, 255, 1);
       }
     }
     &__gender_box {
       color: #f5f4e8;
       & select {
-        z-index:999;
+        z-index: 999;
         font-size: 1.3rem;
         font-weight: 700;
         cursor: pointer;
@@ -332,11 +334,11 @@ const TracksFormContainer = styled.section`
   }
 
   .label_file {
-  padding-top: 0.5rem;
-  font-weight: bold;
-  display: block;
-  cursor: pointer;
-}
+    padding-top: 0.5rem;
+    font-weight: bold;
+    display: block;
+    cursor: pointer;
+  }
 
   .select_box select {
     height: 100%;
@@ -348,27 +350,27 @@ const TracksFormContainer = styled.section`
     background: #fcedda;
   }
   .rmsc {
-  --rmsc-main: #4285f4;
-  --rmsc-hover: #dbe1e7;
-  --rmsc-selected: #275f01c8;
-  --rmsc-border: #ccc;
-  --rmsc-gray: #000000;
-  --rmsc-bg:  rgb(134, 129, 134);
-  --rmsc-p: 0.5rem; /* Spacing */
-  --rmsc-radius: 4px; /* Radius */
-  --rmsc-h: 38px; /* Height */
-}
+    --rmsc-main: #4285f4;
+    --rmsc-hover: #dbe1e7;
+    --rmsc-selected: #275f01c8;
+    --rmsc-border: #ccc;
+    --rmsc-gray: #000000;
+    --rmsc-bg: rgb(134, 129, 134);
+    --rmsc-p: 0.5rem; /* Spacing */
+    --rmsc-radius: 4px; /* Radius */
+    --rmsc-h: 38px; /* Height */
+  }
 
-.rmsc .dropdown-heading {
-  padding:  var(--rmsc-p);
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: var(--rmsc-h);
-  cursor: pointer;
-  outline: 0;
-}
-.rmsc .dropdown-heading .dropdown-heading-value {
+  .rmsc .dropdown-heading {
+    padding: var(--rmsc-p);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--rmsc-h);
+    cursor: pointer;
+    outline: 0;
+  }
+  .rmsc .dropdown-heading .dropdown-heading-value {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -377,80 +379,66 @@ const TracksFormContainer = styled.section`
     color: hsl(0, 0%, 100%);
     font-weight: 700;
     font-size: 1.3rem;
-}
+  }
 
-.rmsc .dropdown-container {
-  z-index:1;
+  .rmsc .dropdown-container {
+    z-index: 1;
     outline: 0;
     margin: 1rem 0;
     background-color: var(--rmsc-bg);
     border: 1px solid var(--rmsc-border);
     border-radius: var(--rmsc-radius);
-}
-.rmsc .dropdown-content {
+  }
+  .rmsc .dropdown-content {
     color: hsl(0, 100%, 0.7843137254901961%);
     font-size: 1.2rem;
     font-weight: 600;
     position: relative;
     border: 1px solid var(--rmsc-border);
     border-radius: var(--rmsc-radius);
-}
-  
+  }
 `;
 
 const ButtonAdd = styled.button`
-background: var( --background-button-shade-color);
-width: 100%;
+  background: var(--background-button-shade-color);
+  width: 100%;
   border-radius: 12px;
   border: none;
   padding: 0;
   cursor: pointer;
   outline-offset: 4px;
-  font-size:4rem;
+  font-size: 4rem;
   padding-top: 0.5rem;
-.edge {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-   background: linear-gradient(
-    to left,
-    hsl(340deg 100% 16%) 0%,
-    hsl(340deg 100% 32%) 8%,
-    hsl(340deg 100% 32%) 92%,
-    hsl(340deg 100% 16%) 100%
-  );
-}
-.front {
-  display: block;
-  position: relative;
-  padding: 8px 25px;
-  border-radius: 12px;
-  font-size: 1.5rem;
-  color: #fafafa;
-  background:var(--background-button-color);
-  will-change: transform;
-  transform: translateY(-4px);
-  transition:
-    transform
-    600ms
-    cubic-bezier(.3, .7, .4, 1);
-}
-&:hover {
-  filter: brightness(110%);
-
-}
-&:hover .front {
-  transform: translateY(-6px);
-  transition:
-    transform
-    250ms
-    cubic-bezier(.3, .7, .4, 1.5);
-}
-&:active .front {
-  transform: translateY(-2px);
-  transition: transform 34ms;
-}
-`
+  .edge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    background: linear-gradient(to left, hsl(340deg 100% 16%) 0%, hsl(340deg 100% 32%) 8%, hsl(340deg 100% 32%) 92%, hsl(340deg 100% 16%) 100%);
+  }
+  .front {
+    display: block;
+    position: relative;
+    padding: 8px 25px;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    color: #fafafa;
+    background: var(--background-button-color);
+    will-change: transform;
+    transform: translateY(-4px);
+    transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+  }
+  &:hover {
+    filter: brightness(110%);
+  }
+  &:hover .front {
+    transform: translateY(-6px);
+    transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+  }
+  &:active .front {
+    transform: translateY(-2px);
+    transition: transform 34ms;
+  }
+`;

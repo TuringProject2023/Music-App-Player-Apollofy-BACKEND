@@ -1,7 +1,6 @@
 import {useRef, useEffect, startTransition, lazy, Suspense, LazyExoticComponent, ComponentType} from 'react';
 import {useNavigate} from 'react-router';
 import {Button} from '../buttonsLogin/Button';
-import InputForm from '../inputsform/InputForm';
 import {LoginContainer} from './loginContainer.styles';
 import {useState, ChangeEventHandler, MouseEventHandler} from 'react';
 import {UserFormState} from '../../types/authContext';

@@ -5,6 +5,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useUserMusicContext } from "../../../../context/UserMusicContext";
 import { MultiSelect } from "react-multi-select-component";
 import { useGenresContext, useUserContext } from "../../../../context";
+import { readData } from "../../../../utils/readData";
 
 interface userFormModal {
   closeModal: () => void;
@@ -49,7 +50,10 @@ export const PlaylistCreateForm: FC<userFormModal> = ({ closeModal }) => {
       const formData = new FormData();
       formData.append("playlistName", newPlaylistData.playlistName);
       formData.append("playlistCreatedById", newPlaylistData.playlistCreatedById);
-      formData.append("playlistImage", newPlaylistData.playlistImage[0]);
+      if (newPlaylistData.playlistImage[0]){
+        const imagePlaylist:any = await readData(newPlaylistData.playlistImage[0])
+        formData.append("playlistImage", imagePlaylist);
+      }
 
       if (Array.isArray(newPlaylistData.trackId)) {
         for (const track of newPlaylistData.trackId as unknown as Option[]) {

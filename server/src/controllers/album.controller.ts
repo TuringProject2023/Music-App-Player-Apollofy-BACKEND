@@ -4,24 +4,26 @@ import { uploadImage } from "../utils/cloudinary";
 import fs from "fs-extra";
 
 
-export const createAlbum = async (req: Request, res: Response): Promise<Response> => {
-    const { albumName, albumCreatedAt } = req.body
-    let { trackId, genreId,artistId } = req.body
+export const createAlbum = async (req: Request, res: Response) => {
+    const {userId} = req.params
+    const {  albumName, albumCreatedAt, albumImage } = req.body
+    let { trackId, genreId,artistId  } = req.body
 
     if (typeof trackId === "string") { trackId = Array.from(trackId.split(",")); }
     if (typeof genreId === "string") { genreId = Array.from(genreId.split(",")); }
     if (typeof artistId === "string") { artistId = Array.from(artistId.split(",")); }
 
     try {
-        if (!req.files?.albumImage) {
+        if (!albumImage) {
             return res.status(400).json({ error: "Image is missing" });
           }
-        const imageVerefication = req.files?.albumImage;
+        
 
-        if ("tempFilePath" in imageVerefication) {
-            const upload = await uploadImage(imageVerefication.tempFilePath);
-            await fs.unlink(imageVerefication.tempFilePath);
+        if (albumImage) {
+            const upload = await uploadImage(albumImage);
+            // await fs.unlink(imageVerefication.tempFilePath);
             const newAlbum = await prisma.album.create({
+                
                 data: {
                     albumName,
                     albumImage: upload.secure_url,
@@ -29,15 +31,31 @@ export const createAlbum = async (req: Request, res: Response): Promise<Response
                     trackId: trackId,
                     genreId: genreId,
                     artistId: artistId,
+                    albumCreatedById: userId,
                     
+                },
+                
+            })
+            const albumId = newAlbum.id
+            const updateUser =  await prisma.user.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    albumId: {
+                        push : albumId
+                    }
                 }
             })
+
             
             return res.status(201).send(newAlbum);
         }
-        return res.status(404).send({ message: 'tempFilePath property not found' });
+        // return res.status(404).send({ message: 'tempFilePath property not found' });
+
     } catch (err) {
-        console.error(err); 
+       
+        
         return res.status(500).send({ error: 'Internal server error' });
     }
 };
@@ -199,20 +217,37 @@ export const toggleAlbumById = async (req: Request, res: Response): Promise<Resp
 
 
 export const deleteAlbumById = async (req: Request, res: Response): Promise<Response> => {
-    const { AlbumId } = req.params
-
-
+    const { albumId, userId } = req.params
+console.log(req.params)
+ console.log(albumId)
     try {
-        if (!AlbumId) {
+        if (!albumId) {
             return res.status(404).json({ error: 'Missing requiered AlbumId.' })
         }
+        // const paramAlbumAndUser = `${AlbumId}/${userId}`
         const deletedAlbum = await prisma.album.delete({
             where: {
-                id: AlbumId,
+                id: albumId,
+            }
+        })
+        const user = await prisma.user.findFirst({
+            where: {
+                id: userId
+            }
+        })
+        const updatedAlbumId = user?.albumId.filter(id => id !== albumId);
+        const updateAlbumCreatedByUser = await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                albumId: {
+                    set: updatedAlbumId
+                }
             }
         })
 
-        return res.status(200).send({ message: 'Album deleted successfully', deletedAlbum });
+        return res.status(204).send({ message: 'Album deleted successfully and User update', deletedAlbum });
 
     } catch (err) {
         console.error(err);

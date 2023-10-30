@@ -1,3 +1,4 @@
+
 export const VITE_API: string = import.meta.env.VITE_API_URL
 
 export const urlPlaylist = `${VITE_API}playlist`;

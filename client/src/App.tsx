@@ -15,6 +15,7 @@ function App() {
 					<GenresProvider>
 						<QueuePlayerProvider>
 							<Router />
+							
 						</QueuePlayerProvider>
 					</GenresProvider>
 				</UserProvider>

@@ -1,6 +1,5 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-//import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { LandingPage, LoginPage, RegisterPage, StartingPage } from "../pages/index";
 import "../App.css";
 import RouteSkeletor from "../assets/skeleton/routeSkeletor.tsx";

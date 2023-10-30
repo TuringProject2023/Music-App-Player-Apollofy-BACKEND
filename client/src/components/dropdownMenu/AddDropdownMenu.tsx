@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import { HiPlus } from "react-icons/hi";
 interface DropdownMenuProps {
   openModal1: () => void;
   isDropdownVisible: boolean;

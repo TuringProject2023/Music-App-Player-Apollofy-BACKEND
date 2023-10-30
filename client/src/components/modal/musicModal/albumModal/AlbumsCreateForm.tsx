@@ -5,6 +5,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useUserMusicContext } from "../../../../context/UserMusicContext";
 import { MultiSelect } from "react-multi-select-component";
 import { useGenresContext, useUserContext } from "../../../../context";
+import { readData } from "../../../../utils/readData";
 
 interface userFormModal {
   closeModal: () => void;
@@ -50,7 +51,11 @@ export const AlbumCreateForm: FC<userFormModal> = ({ closeModal }) => {
       setIsLoading(true);
       const formData = new FormData();
       formData.append("albumName", newAlbumData.albumName);
-      formData.append("albumImage", newAlbumData.albumImage[0]);
+      if(newAlbumData.albumImage[0]){
+        const imageAlbum:any = await readData(newAlbumData.albumImage[0])
+        formData.append("albumImage", imageAlbum);
+
+      }
       formData.append("albumCreatedAt", newAlbumData.albumCreatedAt);
       if (Array.isArray(newAlbumData.artistId)) {
         for (const artist of newAlbumData.artistId as unknown as Option[]) {

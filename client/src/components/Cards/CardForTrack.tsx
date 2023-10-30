@@ -7,8 +7,7 @@ import { BiSolidPlaylist } from "react-icons/bi";
 import { useState } from "react";
 import { breakpoints } from "../../styles/breakpoints";
 import { useUserContext, useUserMusicContext } from "../../context";
-import { updateAlbumAddTrack } from "../../api/user.fetch";
-import { useAuth0 } from "@auth0/auth0-react";
+import { updateAlbumAddTrack } from "../../api/album.fetch";
 
 export interface Track {
   id: string;

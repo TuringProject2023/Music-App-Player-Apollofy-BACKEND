@@ -17,7 +17,8 @@ export const Boop = ({ children, ...boopConfig }) => {
 
   export const BoopSu = ({ rotation = 0, timing = 150, children }) => {
     const [isBooped, setIsBooped] = useState(false);
-    const style = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const style: any = {
       display: 'inline-block',
       backfaceVisibility: 'hidden',
       transform: isBooped

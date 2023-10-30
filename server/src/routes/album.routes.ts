@@ -5,12 +5,12 @@ import { createAlbum, deleteAlbumById, getAlbumById, getAllAlbum, updateAlbum, u
 const albumRoutes = Router();
 
 albumRoutes
-    .post('/', createAlbum)
+    .post('/:userId', createAlbum)
     .get('/:albumId', getAlbumById)
     .get('/', getAllAlbum)
     .put('/:albumId', updateAlbum)
     .patch('/patch/:albumId', updateAlbumAddTrack)
-    .delete('/:albumId', deleteAlbumById)
+    .delete('/:albumId/:userId', deleteAlbumById)
 
 
 export default albumRoutes;

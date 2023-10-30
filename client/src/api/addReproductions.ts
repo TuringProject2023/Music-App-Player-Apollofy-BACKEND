@@ -1,17 +1,18 @@
+import { urlTrack } from "../global";
 import { Track } from "../types/data";
-import { urlTracks } from "../context";
+
 
 
 export const addReproductions = async (trackId: number) => {
 
     try {
-        const response = await fetch(`${urlTracks}/${trackId}`);
+        const response = await fetch(`${urlTrack}/${trackId}`);
         const track: Track = await response.json();
         const modifiedTrack = {
             ...track,
             reproductions: track.reproductions + 1
         };
-        await fetch(`${urlTracks}/${trackId}`, {
+        await fetch(`${urlTrack}/${trackId}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json'

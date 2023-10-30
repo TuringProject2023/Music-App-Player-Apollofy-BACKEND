@@ -5,6 +5,7 @@ import { useGenresContext } from "../../../context";
 import { useUserMusicContext } from "../../../context/UserMusicContext";
 import { MultiSelect } from "react-multi-select-component";
 import { AlertMessageSuccess, ButtonAdd, LoaderForm } from "../..";
+import { readData } from "../../../utils/readData";
 
 interface trackFormModal {
   closeModal2: () => void;
@@ -61,7 +62,13 @@ export const ModifyTrackModal: FC<trackFormModal> = ({ closeModal2, id, trackNam
       formData.append("trackName", modifyTrackData.trackName);
       formData.append("trackCreatedAt", modifyTrackData.trackCreatedAt);
       formData.append("trackUrl", modifyTrackData.trackUrl[0]);
-      formData.append("trackImage", modifyTrackData.trackImage[0]);
+
+      if (modifyTrackData.trackImage[0]) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const imageTrack: any = await readData(modifyTrackData.trackImage[0]);
+        formData.append("trackImage", imageTrack);
+      }
+      // formData.append("trackImage", modifyTrackData.trackImage[0]);
 
       if (Array.isArray(modifyTrackData.artistId)) {
         for (const artist of modifyTrackData.artistId as unknown as Option[]) {

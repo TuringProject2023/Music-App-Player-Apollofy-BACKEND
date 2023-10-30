@@ -8,6 +8,8 @@ import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { useModal } from "../../hooks/useModal";
 import { AddDropdownMenu } from "../dropdownMenu/AddDropdownMenu";
 import { useHover } from "../../hooks/useHover";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const LazyPlaylistCards: LazyExoticComponent<ComponentType<any>> = lazy(() => {
   return new Promise((resolve) => {
@@ -50,6 +52,7 @@ export const LibraryMainContainer = () => {
     setSearchParams({ q: target.value });
   };
 
+  
   return (
     <>
       <Modal isOpen={isOpenModal1} closeModal={closeModal1}>
@@ -61,6 +64,9 @@ export const LibraryMainContainer = () => {
       <Modal isOpen={isOpenModal3} closeModal={closeModal3}>
         <TracksCreateForm closeModal={closeModal3} />
       </Modal>
+      <div className="toasterContainer">
+        <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
+      </div>
       <LibraryMainContainerStyles>
         <SearchBar searchParams={searchParams} setSearchParams={setSearchParams} query={query} handleChangeParams={handleChangeParams} />
 
@@ -210,6 +216,22 @@ const LibraryMainContainerStyles = styled.main`
   background: linear-gradient(#340034, #000);
   border-radius: 0.25rem;
 
+  .toasterContainer {
+    position: fixed;
+    top: 10%; /* Centra verticalmente */
+    left: 50%; /* Centra horizontalmente */
+    transform: translate(-50%, -50%); /* Ajusta el centro */
+    font-family: system-ui, "Segoe UI", "Open Sans", "Helvetica Neue", sans-serif;
+    width: 320px;
+    padding: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    background: #84d65a;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px -3px #111;
+  }
   .zone-selector {
     display: flex;
     width: 100%;
@@ -252,30 +274,25 @@ const LibraryMainContainerStyles = styled.main`
     }
   }
 
+  .ul_second {
+    position: absolute;
+    left: -9rem;
+    top: 0rem;
+    opacity: 0; /* Inicialmente oculto */
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Transiciones suaves en el menú desplegable */
+  }
 
+  /* Añade un retraso de 0.5s al ocultar el menú desplegable */
+  .ul_second:not(.visible) {
+    transition: opacity 0.3s ease 0.5s, transform 0.3s ease 0.5s;
+  }
 
-.ul_second {
-  position: absolute;
-  left: -9rem;
-  top: 0rem;
-  opacity: 0; /* Inicialmente oculto */
-  transform: translateY(20px);
-  transition: opacity 0.3s ease, transform 0.3s ease; /* Transiciones suaves en el menú desplegable */
-}
-
-/* Añade un retraso de 0.5s al ocultar el menú desplegable */
-.ul_second:not(.visible) {
-  transition: opacity 0.3s ease 0.5s, transform 0.3s ease 0.5s;
-}
-
-.ul_second.visible {
-  opacity: 1;
-  transform: translateY(0);
-  transition-duration: 0.3s;
-}
-
-
-
+  .ul_second.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: 0.3s;
+  }
 
   @media (${breakpoints.min}px <= width <= ${breakpoints.mobileMax}px) {
     grid-area: 1 / 1 / 5 / 7;

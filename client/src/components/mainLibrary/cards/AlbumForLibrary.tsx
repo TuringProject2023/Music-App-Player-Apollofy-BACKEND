@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ALBUM } from "../../../config/routes/paths";
 import styled from "styled-components";
 import { breakpoints } from "../../../styles/breakpoints";
+import { DropDownMenuAlbum } from "../..";
 
 interface AlbumProps {
   id: string;
@@ -10,13 +11,28 @@ interface AlbumProps {
   albumCreatedAt: string;
   artistId: string[];
   artist: ArtistProps[];
-  genre: GenresProps[];
+  genre: [{ genreName: string }];
+  genreId: string[];
+  track: TrackProps[];
   trackId: string[];
 }
-interface GenresProps {
+export interface TrackProps {
   id: string;
-  genreName: string;
+  trackName: string;
+  trackImage: string;
+  trackCreatedAt: string;
+  trackUpdatedAt: string;
+  trackId: string;
+  trackLikedById: string[];
+  trackCreatedById: string[];
+  genre: [{ genreName: string }];
+  genreId: string[];
+  artist: ArtistProps[];
+  artistId: string[];
+  trackUrl: string;
+  albumId: string;
 }
+
 interface ArtistProps {
   id: string;
   artistName: string;
@@ -27,29 +43,43 @@ interface ArtistProps {
   trackId: string[];
 }
 
-const AlbumForLibrary = ({ id, albumName, albumImage, albumCreatedAt, artist, trackId, genre }: AlbumProps) => {
-
+const AlbumForLibrary = ({ id, albumName, albumImage, albumCreatedAt, artist, artistId, trackId, track, genre, genreId }: AlbumProps) => {
   return (
     <AlbumForLibraryStyles key={id}>
-      <Link to={`${ALBUM}/${id}`} className="cardForTrack">
-        <div className="cardForTrack__header">
-          <img alt={albumName} className="cardForTrack__header_img" src={albumImage} />
+      <Link to={`${ALBUM}/${id}`} className="cardForAlbum">
+        <div className="cardForAlbum__header">
+          <img alt={albumName} className="cardForAlbum__header_img" src={albumImage} />
         </div>
-        <div className="cardForTrack__body">
-          <h3 className="cardForTrack__body_title-albumName">{albumName}</h3>
-          <div className="cardForTrack__body_title">
-            <h4 className="cardForTrack__body_title-artistName">{artist ? artist.map((art) => art.artistName).join(", ") : null}</h4>
-            <h4 className="cardForTrack__body_title-createdAt">{albumCreatedAt}</h4>
+        <div className="cardForAlbum__body">
+          <h3 className="cardForAlbum__body_title-albumName">{albumName}</h3>
+          <div className="cardForAlbum__body_title">
+            <h4 className="cardForAlbum__body_title-artistName">{artist ? artist.map((art) => art.artistName).join(", ") : null}</h4>
+            <h4 className="cardForAlbum__body_title-createdAt">{albumCreatedAt}</h4>
           </div>
-          <h4 className="cardForTrack__body_title-genreName">{genre ? genre.map((genre) => genre.genreName).join(", ") : null}</h4>
+          <h4 className="cardForAlbum__body_title-genreName">{genre ? genre.map((genre) => genre.genreName).join(", ") : null}</h4>
         </div>
       </Link>
+      <div className="cardForAlbum__burguerBtn">
+        <DropDownMenuAlbum
+          id={id}
+          albumName={albumName}
+          albumImage={albumImage}
+          albumCreatedAt={albumCreatedAt}
+          genre={genre}
+          genreId={genreId}
+          artistId={artistId}
+          artist={artist}
+          track={track}
+          trackId={trackId}
+        />
+      </div>
     </AlbumForLibraryStyles>
   );
 };
 
 const AlbumForLibraryStyles = styled.div`
   display: flex;
+  justify-content: space-between;
   padding: 0.25rem;
   gap: 1rem;
   background-color: rgba(50, 50, 50, 0.4);
@@ -63,7 +93,7 @@ const AlbumForLibraryStyles = styled.div`
     cursor: pointer;
   }
 
-  .cardForTrack {
+  .cardForAlbum {
     display: flex;
     min-height: 70px;
     gap: 1rem;
@@ -97,10 +127,22 @@ const AlbumForLibraryStyles = styled.div`
         }
       }
     }
+    &__burguerBtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding-right: 3rem;
+      & button {
+        & svg {
+          color: #fff;
+        }
+      }
+    }
   }
 
   @media (${breakpoints.min}px <= width <= ${breakpoints.mobileMax}px) {
-    .cardForTrack {
+    .cardForAlbum {
       &__header {
         width: 70px;
         height: 70px;
@@ -144,7 +186,7 @@ const AlbumForLibraryStyles = styled.div`
   }
 
   @media (${breakpoints.mobileMax}px < width <= ${breakpoints.tabletMax}px) {
-    .cardForTrack {
+    .cardForAlbum {
       &__header {
         width: 80px;
         height: 80px;
@@ -189,7 +231,7 @@ const AlbumForLibraryStyles = styled.div`
   }
 
   @media (${breakpoints.tabletMax}px < width <= ${breakpoints.laptopsMax}px) {
-    .cardForTrack {
+    .cardForAlbum {
       &__header {
         width: 80px;
         height: 80px;
@@ -220,12 +262,10 @@ const AlbumForLibraryStyles = styled.div`
           &-artistName {
             font-size: 1.5rem;
             color: var(--color-text-gray);
-            
           }
           &-createdAt {
             font-size: 1.5rem;
             color: rgba(255, 255, 255, 0.7);
-            
           }
           &-genreName {
             font-size: 1.5rem;
@@ -237,7 +277,7 @@ const AlbumForLibraryStyles = styled.div`
   }
 
   @media (${breakpoints.laptopsMax}px < width <= ${breakpoints.desktopMax}px) {
-    .cardForTrack {
+    .cardForAlbum {
       &__header {
         width: 110px;
         height: 110px;
@@ -282,7 +322,7 @@ const AlbumForLibraryStyles = styled.div`
   }
 
   @media (width > ${breakpoints.desktopMax}px) {
-    .cardForTrack {
+    .cardForAlbum {
       &__header {
         width: 120px;
         height: 120px;

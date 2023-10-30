@@ -1,12 +1,19 @@
 import styled from "styled-components";
 import { useState, FC } from "react";
 import { useGenresContext, useUserContext, useUserMusicContext } from "../../../context";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { MultiSelect } from "react-multi-select-component";
-import { Controller } from "react-spring";
 import { LoaderForm, AlertMessageSuccess } from "../..";
+import { readData } from "../../../utils/readData";
 
-interface userFormModal {
+interface albumFormModal {
+  id: string;
+  albumName: string;
+  albumImage: string;
+  albumCreatedAt: string;
+  genreId: string[];
+  artistId: string[];
+  trackId: string[];
   closeModal: () => void;
 }
 
@@ -24,65 +31,69 @@ interface Option {
   value: string;
 }
 
-export const ModalUpdateAlbum: FC<userFormModal> = ({ closeModal }) => {
-  const { albums tracks, artists } = useUserMusicContext();
+export const ModalUpdateAlbum: FC<albumFormModal> = ({id, closeModal, albumName, albumImage, albumCreatedAt, genreId, artistId, trackId }) => {
+  const { albums, tracks, artists, modifyAlbum } = useUserMusicContext();
   const { allGenres } = useGenresContext();
   const { userData } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [albumUpdated, setAlbumUpdated] = useState(false);
 
-  const updateNewAlbum = async (formData: FormData, userId: string): Promise<Response> => {
-    try {
-      const response = await createAlbum(formData, userId, getAccessTokenSilently);
-      setAlbumUpdated(response);
-      return response;
-    } catch (error) {
-      console.error("Error getting albums:", error);
-      throw error;
-    }
-  };
+  // const updateAlbum = async (formData: FormData): Promise<Response> => {
+  //   try {
+  //     const response = await modifyAlbum(formData, id);
+  //     setAlbumUpdated(response);
+  //     return response;
+  //   } catch (error) {
+  //     console.error("Error getting albums:", error);
+  //     throw error;
+  //   }
+  // };
 
   const form = useForm({
     defaultValues: {
-      albumName: "",
-      albumImage: "",
+      albumName: albumName,
+      albumImage: albumImage,
       genreId: [],
       artistId: [],
       trackId: [],
-      albumCreatedAt: "",
+      albumCreatedAt: albumCreatedAt,
     },
   });
 
   const { register, handleSubmit, formState, control } = form;
   const { errors } = formState;
 
-  const onSubmit: SubmitHandler<CreateAlbumType> = async (newAlbumData: CreateAlbumType) => {
+  const onSubmit: SubmitHandler<CreateAlbumType> = async (modifyAlbumData: CreateAlbumType) => {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("albumName", newAlbumData.albumName);
-      formData.append("albumImage", newAlbumData.albumImage[0]);
-      formData.append("albumCreatedAt", newAlbumData.albumCreatedAt);
-      if (Array.isArray(newAlbumData.artistId)) {
-        for (const artist of newAlbumData.artistId as unknown as Option[]) {
+      formData.append("albumName", modifyAlbumData.albumName);
+      if(modifyAlbumData.albumImage[0]){
+        const imageAlbum:any = await readData(modifyAlbumData.albumImage[0])
+        formData.append("albumImage", imageAlbum);
+      }
+      formData.append("albumImage", modifyAlbumData.albumImage[0]);
+      formData.append("albumCreatedAt", modifyAlbumData.albumCreatedAt);
+      if (Array.isArray(modifyAlbumData.artistId)) {
+        for (const artist of modifyAlbumData.artistId as unknown as Option[]) {
           formData.append("artistId", artist.value);
         }
       }
 
-      if (Array.isArray(newAlbumData.trackId)) {
-        for (const track of newAlbumData.trackId as unknown as Option[]) {
+      if (Array.isArray(modifyAlbumData.trackId)) {
+        for (const track of modifyAlbumData.trackId as unknown as Option[]) {
           formData.append("trackId", track.value);
         }
       }
 
-      if (Array.isArray(newAlbumData.genreId)) {
-        for (const genre of newAlbumData.genreId as unknown as Option[]) {
+      if (Array.isArray(modifyAlbumData.genreId)) {
+        for (const genre of modifyAlbumData.genreId as unknown as Option[]) {
           formData.append("genreId", genre.value);
         }
       }
 
-      await createNewAlbum(formData, userData?.id ?? "");
+      await modifyAlbum(formData, userData?.id ?? "");
 
       setIsSuccess(true);
       setTimeout(() => {
@@ -193,7 +204,7 @@ export const ModalUpdateAlbum: FC<userFormModal> = ({ closeModal }) => {
         <ButtonAdd>
           <span className="shadow"></span>
           <span className="front">
-            <strong className="font-size">ADD Album</strong>
+            <strong className="font-size">Update Album</strong>
           </span>
         </ButtonAdd>
       </form>
@@ -405,7 +416,7 @@ const AlbumFormContainer = styled.section`
     border-radius: var(--rmsc-radius);
   }
 `;
-export const ButtonAdd = styled.button`
+const ButtonAdd = styled.button`
   background: var(--background-button-shade-color);
   width: 100%;
   border-radius: 12px;

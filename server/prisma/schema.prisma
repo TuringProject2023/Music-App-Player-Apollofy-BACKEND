@@ -25,6 +25,8 @@ model User {
   post              Post[]     @relation(fields: [postId], references: [id])
   albumId           String[]   @db.ObjectId
   album             Album[]    @relation(fields: [albumId], references: [id])
+  albumCreatedId    String[]   @db.ObjectId
+  albumCreated      Album[]    @relation("albumCreatedBy")
   playlistCreatedId String[]   @db.ObjectId
   playlistCreated   Playlist[] @relation("createdBy")
 }
@@ -80,19 +82,22 @@ model Artist {
 }
 
 model Album {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  albumName      String
-  albumImage     String
-  albumCreatedAt String
-  artist         Artist[] @relation(fields: [artistId], references: [id])
-  artistId       String[] @db.ObjectId
-  genre          Genre[]  @relation(fields: [genreId], references: [id])
-  genreId        String[] @db.ObjectId
-  track          Track[]  @relation(fields: [trackId], references: [id])
-  trackId        String[] @db.ObjectId
-  user           User[]   @relation(fields: [albumLikedBy], references: [id])
-  albumLikedBy   String[] @db.ObjectId
-  post           Post[]
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  albumName        String
+  albumImage       String
+  albumCreatedAt   String
+  artist           Artist[] @relation(fields: [artistId], references: [id])
+  artistId         String[] @db.ObjectId
+  genre            Genre[]  @relation(fields: [genreId], references: [id])
+  genreId          String[] @db.ObjectId
+  track            Track[]  @relation(fields: [trackId], references: [id])
+  trackId          String[] @db.ObjectId
+  user             User[]   @relation(fields: [albumLikedBy], references: [id])
+  albumCreatedBy   User?    @relation("albumCreatedBy", fields: [albumCreatedById], references: [id])
+  albumCreatedById String?  @db.ObjectId
+
+  albumLikedBy String[] @db.ObjectId
+  post         Post[]
 }
 
 model Genre {

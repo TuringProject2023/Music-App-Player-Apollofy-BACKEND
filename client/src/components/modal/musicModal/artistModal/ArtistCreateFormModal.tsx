@@ -47,7 +47,9 @@ export const ArtistCreateForm: FC<userFormModal> = ({ closeModal }) => {
       setIsLoading(true);
       const formData = new FormData();
       formData.append("artistName", newArtistData.artistName);
-      formData.append("artistImage", newArtistData.artistImage[0]);
+      if(newArtistData.artistImage[0]){
+        formData.append("artistImage", newArtistData.artistImage[0]);
+      }
       formData.append("popularity", newArtistData.popularity.toString());
 
       if (Array.isArray(newArtistData.albumId)) {

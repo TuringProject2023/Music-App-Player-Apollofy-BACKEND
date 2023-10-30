@@ -260,46 +260,65 @@ export const createTrack = async (userId: string, formData: FormData, getToken: 
   }
 };
 
-export const createAlbum = async (formData: FormData,userId:string, getToken: GetTokenFunction) => {
-  try {
-    const token = await getToken();
-    const response = await fetch(`${urlAlbum}/${userId}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });    
+// export const createAlbum = async (formData: FormData,userId:string, getToken: GetTokenFunction) => {
+//   try {
+//     const token = await getToken();
+//     const response = await fetch(`${urlAlbum}/${userId}`, {
+//       method: "POST",
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//       body: formData,
+//     });    
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    return data;
-  } catch (error) {
-    console.error("error in the track post request:", error);
-    throw error;
-  }
-};
-export const updateAlbumAddTrack = async (trackId: string,albumId:string,) => {
-  try {
-    const formData = new FormData();
-    formData.append('trackId', trackId);
-    const response = await fetch(`${urlAlbum}/patch/${albumId}`, {
-      method: "PATCH",
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // },
-      body: formData,
-    });    
-    const data = await response.json();
-    console.log(data)
-    console.log("llega hasta aqui")
+//     return data;
+//   } catch (error) {
+//     console.error("error in the track post request:", error);
+//     throw error;
+//   }
+// };
+// export const updateAlbumById = async (formData: FormData, albumId:string, getToken: GetTokenFunction) => {
+//   try {
+//     const token = await getToken();
+//     const response = await fetch(`${urlAlbum}`, {
+//       method: "PUT",
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//       body: formData,
+//     });    
+
+//     const data = await response.json();
+
+//     return data;
+//   } catch (error) {
+//     console.error("error in the album put request:", error);
+//     throw error;
+//   }
+// };
+// export const updateAlbumAddTrack = async (trackId: string,albumId:string) => {
+//   try {
+//     const formData = new FormData();
+//     formData.append('trackId', trackId);
+//     const response = await fetch(`${urlAlbum}/patch/${albumId}`, {
+//       method: "PATCH",
+//       // headers: {
+//       //   Authorization: `Bearer ${token}`,
+//       // },
+//       body: formData,
+//     });    
+//     const data = await response.json();
+//     console.log(data)
+//     console.log("llega hasta aqui")
     
-    return data;
-  } catch (error) {
-    console.error("error in the track post request:", error);
-    throw error;
-  }
-};
+//     return data;
+//   } catch (error) {
+//     console.error("error in the track post request:", error);
+//     throw error;
+//   }
+// };
 
 export const toggleLikedPlaylist = async (userEmail: string, getToken: GetTokenFunction) => {
   try {

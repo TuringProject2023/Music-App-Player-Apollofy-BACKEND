@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { PlaylistContainerHome, SearchBar, TracksContainer } from "..";
 import styled from "styled-components";
 import { AlbumContainer } from "./home-albumsContainer/AlbumMainContainer";
+// import { ToastContainer } from "react-toastify";
 
 export const HomeMainContainer = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,9 +11,12 @@ export const HomeMainContainer = () => {
   const handleChangeParams = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams({ q: target.value });
   };
+  
   return (
     <HomeMainContainerStyles>
       <SearchBar searchParams={searchParams} setSearchParams={setSearchParams} query={query} handleChangeParams={handleChangeParams} />
+      
+      
       <PlaylistContainerHome query={query} />
       <AlbumContainer query={query} />
       <TracksContainer query={query} />

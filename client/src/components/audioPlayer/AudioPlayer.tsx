@@ -6,13 +6,13 @@ import { useEffect, useState } from "react";
 
 export const AudioPlayerComponent = () => {
   const { currentTrack, handleNextTrackInList, handlePrevTrackInList } = useQueuePlayerContext();
-  const [isPlaying, setIsPlaying] = useState(false);
+  // const [isPlaying, setIsPlaying] = useState(false);
 
-  useEffect(() => {
-    if (currentTrack?.trackUrl) {
-      setIsPlaying(true);
-    }
-  }, [currentTrack]);
+  // useEffect(() => {
+  //   if (currentTrack?.trackUrl) {
+  //     setIsPlaying(true);
+  //   }
+  // }, [currentTrack]);
 
   return (
     <AudioPlayerStyles>
