@@ -1,4 +1,4 @@
-import { FC, createContext, useContext, useEffect, useState } from "react";
+import { FC, createContext, useEffect, useState } from "react";
 import { getAllGenres } from "../api/genres.fetch";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -11,7 +11,7 @@ interface GenresProps {
 } //TOFIX, atención no se trae las imagenes ya que aún no están en la base de datos...
 
 
-const GenresContext = createContext<{ allGenres: GenresProps[], setAllGenres: (newAllGenres: GenresProps[]) => void }>({ allGenres: [], setAllGenres: () => { } });
+export const GenresContext = createContext<{ allGenres: GenresProps[], setAllGenres: (newAllGenres: GenresProps[]) => void }>({ allGenres: [], setAllGenres: () => { } });
 
 
 export const GenresProvider: FC<ChildrenProps> = ({ children }) => {
@@ -19,12 +19,12 @@ export const GenresProvider: FC<ChildrenProps> = ({ children }) => {
     const [allGenres, setAllGenres] = useState<GenresProps[]>([])
     const { isAuthenticated } = useAuth0();
 
+    async function getAllGenresLauncher() {
+        const newAllGenres = await getAllGenres();
+        setAllGenres(newAllGenres);
+    }
     useEffect(() => {
         if (isAuthenticated) {
-            async function getAllGenresLauncher() {
-                const newAllGenres = await getAllGenres();
-                setAllGenres(newAllGenres);
-            }
             getAllGenresLauncher();
         }
     }, [isAuthenticated]);
@@ -38,11 +38,4 @@ export const GenresProvider: FC<ChildrenProps> = ({ children }) => {
 }
 
 
-export const useGenresContext = () => {
-    const context = useContext(GenresContext);
-    if (!context) {
-        throw new Error('useUserContext debe ser usado dentro de un UserProvider');
-    }
-    return context;
-};
 

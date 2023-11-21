@@ -1,21 +1,21 @@
 import { Link } from "react-router-dom";
 import { PLAYER } from "../../config/routes/paths";
 import styled from "styled-components";
-import { useQueuePlayerContext } from "../../context/QueuePlayerContext";
+import { useQueuePlayerContext } from "../../hooks/useQueuePlayerContext";
 import { BsHeartFill, BsHeart, BsJournalAlbum } from "react-icons/bs";
 import { BiSolidPlaylist } from "react-icons/bi";
 import { useState } from "react";
 import { breakpoints } from "../../styles/breakpoints";
-import { useUserContext, useUserMusicContext } from "../../context";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useUserContext, useUserMusicContext } from "../../hooks";
 
-export interface Track {
+
+export interface TrackProps {
   id: string;
   trackName: string;
   trackUrl: string;
   trackImage: string;
   artist: ArtistProps[];
-  userData: any;
+  // userData: User;
 }
 interface ArtistProps {
   artistName: string;
@@ -25,7 +25,7 @@ interface ArtistProps {
   genreId: string[];
 }
 
-const CardForTrack = ({ id, trackName, trackImage }: Track) => {
+const CardForTrack = ({ id, trackName, trackImage }: TrackProps) => {
   const { tracks, artists, albums, modifyAlbumAddingTrack } = useUserMusicContext();
   const [isOpenModal, setIsOpenModal] = useState(false);
 

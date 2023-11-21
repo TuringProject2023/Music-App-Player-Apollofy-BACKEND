@@ -1,21 +1,28 @@
 import { animated} from 'react-spring';
 import useBoop from '../hooks/useBoop';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 // components/Boop.jsx
+interface Props {
+  children: React.ReactNode;
+  rotation: number;
+  timing: number;
+  
+}
 
-export const Boop = ({ children, ...boopConfig }) => {
+export const Boop = ({ children, ...boopConfig }: Props) => {
     const [style, trigger] = useBoop(boopConfig);
+     
     return (
-      <animated.span onMouseEnter={trigger} style={style}>
+      <animated.span onMouseEnter={trigger as React.MouseEventHandler<HTMLSpanElement>} style={style}>
         {children}
       </animated.span>
     );
   };
 
 
-  export const BoopSu = ({ rotation = 0, timing = 150, children }) => {
+  export const BoopSu = ({ rotation = 0, timing = 150, children }: Props) => {
     const [isBooped, setIsBooped] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const style: any = {

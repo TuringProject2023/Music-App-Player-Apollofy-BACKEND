@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { LandingPage, LoginPage, RegisterPage, StartingPage } from "../pages/index";
+import { LandingPage, StartingPage } from "../pages/index";
 import "../App.css";
 import RouteSkeletor from "../assets/skeleton/routeSkeletor.tsx";
-import { ALBUM, HOME, LANDING, LIBRARY, LOGIN, PLAYER, PLAYERID, PLAYLISTS, PROFILE, REGISTER, STARTING } from "../config/routes/paths.ts";
+import { ALBUM, HOME, LANDING, LIBRARY, PLAYER, PLAYERID, PLAYLISTS, PROFILE, STARTING } from "../config/routes/paths.ts";
 import { PublicRoute } from "../components/index.ts";
 import { ProtectedRoutes } from "../utils/ProtectedRoutes.tsx";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -26,8 +26,8 @@ export const Router = () => {
         <Route path={LANDING} element={<PublicRoute />}>
           <Route index element={<LandingPage />} />
           <Route path={STARTING} element={<StartingPage />} />
-          <Route path={LOGIN} element={<LoginPage />} />
-          <Route path={REGISTER} element={<RegisterPage />} />
+          {/* <Route path={LOGIN} element={<LoginPage />} />
+          <Route path={REGISTER} element={<RegisterPage />} /> */}
         </Route>
         <Route
           path={HOME}
@@ -40,7 +40,7 @@ export const Router = () => {
             index
             element={
               <Suspense fallback={<RouteSkeletor />}>
-                <ProtectedRoutes user={user}>
+                <ProtectedRoutes user={user} redirectPath={HOME}>
                   <LazyHomePage />
                 </ProtectedRoutes>
               </Suspense>
@@ -50,7 +50,7 @@ export const Router = () => {
             path={PLAYER}
             element={
               <Suspense fallback={<RouteSkeletor />}>
-                <ProtectedRoutes user={user}>
+                <ProtectedRoutes user={user} redirectPath={HOME}>
                   <LazyPLayerPage />
                 </ProtectedRoutes>
               </Suspense>
@@ -60,7 +60,7 @@ export const Router = () => {
             path={PLAYERID}
             element={
               <Suspense fallback={<RouteSkeletor />}>
-                <ProtectedRoutes user={user}>
+                <ProtectedRoutes user={user} redirectPath={HOME}>
                   <LazyPLayerPage />
                 </ProtectedRoutes>
               </Suspense>
@@ -70,7 +70,7 @@ export const Router = () => {
             path={`${PLAYLISTS}/:id`}
             element={
               <Suspense fallback={<RouteSkeletor />}>
-                <ProtectedRoutes user={user}>
+                <ProtectedRoutes user={user} redirectPath={HOME}>
                   <LazyPlaylistPage />
                 </ProtectedRoutes>
               </Suspense>
@@ -80,7 +80,7 @@ export const Router = () => {
             path={LIBRARY}
             element={
               <Suspense fallback={<RouteSkeletor />}>
-                <ProtectedRoutes user={user}>
+                <ProtectedRoutes user={user} redirectPath={HOME}>
                   <LazyLibraryPage />
                 </ProtectedRoutes>
               </Suspense>
@@ -90,7 +90,7 @@ export const Router = () => {
             path={`${ALBUM}/:id`}
             element={
               <Suspense fallback={<RouteSkeletor />}>
-                <ProtectedRoutes user={user}>
+                <ProtectedRoutes user={user} redirectPath={HOME}>
                   <LazyAlbumPage />
                 </ProtectedRoutes>
               </Suspense>
@@ -100,7 +100,7 @@ export const Router = () => {
             path={PROFILE}
             element={
               <Suspense fallback={<RouteSkeletor />}>
-                <ProtectedRoutes user={user}>
+                <ProtectedRoutes user={user} redirectPath={HOME}>
                   <LazyProfilePage />
                 </ProtectedRoutes>
               </Suspense>

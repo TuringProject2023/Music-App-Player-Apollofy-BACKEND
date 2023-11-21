@@ -1,7 +1,7 @@
-import { createContext, FC, useState, ReactNode, useContext, useEffect } from 'react';
-import { userPost, UserPatch, userDelete, UserPatchLiked } from '../api/user.fetch'
-import { User, useAuth0 } from '@auth0/auth0-react'
-import { useUserMusicContext } from '.';
+import { createContext, FC, useState, ReactNode, useEffect } from "react";
+import { userPost, UserPatch, userDelete, UserPatchLiked } from "../api/user.fetch";
+import { User, useAuth0 } from "@auth0/auth0-react";
+import { useUserMusicContext } from "../hooks";
 
 
 interface userData {
@@ -15,7 +15,7 @@ interface userData {
   tracksId: string[];
 }
 
-interface UserContextType {
+export interface UserContextType {
   userData: userData | null;
   updatedUserData: (userUpdateData: FormData, userId: string) => Promise<void>;
   handleUserData: (id: string, dataType: string) => void;
@@ -25,19 +25,20 @@ interface UserContextType {
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-    const { albums,artistCreated,tracks } = useUserMusicContext();
-    const [userData, setUserData] = useState<userData | null>(null);
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { albums, artistCreated, tracks } = useUserMusicContext();
+  const [userData, setUserData] = useState<userData | null>(null);
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            async function userGetLauncher() {
-                await createUser(user);
-                // await getUserData(user?.email ?? '');
-            }
-            userGetLauncher();
-        }
-    }, [isAuthenticated,albums,artistCreated,tracks ])
+  useEffect(() => {
+    if (isAuthenticated) {
+      // eslint-disable-next-line no-inner-declarations
+      async function userGetLauncher() {
+        await createUser(user);
+      }
+      userGetLauncher();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, albums, artistCreated, tracks]);
 
   const createUser = async (user: User | undefined) => {
     try {
@@ -63,7 +64,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const handleUserData = async (id: string, dataType: string) => {
     try {
-      let newUserData = userData;
+      const newUserData = userData;
 
       if (dataType === "track") {
         const index = userData?.tracksId.findIndex((trackId) => trackId === id);
@@ -116,10 +117,4 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   return <UserContext.Provider value={{ userData, handleUserData, deleteUser, updatedUserData }}>{children}</UserContext.Provider>;
 };
 
-export const useUserContext = (): UserContextType => {
-  const context = useContext(UserContext);
-  if (!context) {
-    throw new Error("useUserContext debe ser usado dentro de un UserProvider");
-  }
-  return context;
-};
+

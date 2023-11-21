@@ -15,10 +15,12 @@ import styled from "styled-components";
 
 import HomeSkeleton from "../../../assets/skeleton/homeSkeleton";
 
-import { useUserMusicContext } from "../../../context";
-import { breakpoints } from "../../../styles/breakpoints";
+import { useUserMusicContext } from "../../../hooks";
 
-const LazyCardAlbumHome: LazyExoticComponent<ComponentType<any>> = lazy(() => {
+import { breakpoints } from "../../../styles/breakpoints";
+import { AlbumProps } from "../../cards/CardForAlbum";
+
+const LazyCardAlbumHome: LazyExoticComponent<ComponentType<AlbumProps>> = lazy(() => {
   return new Promise((resolve) => {
     setTimeout(() => {
       return resolve(import("../../cards/CardForAlbum"));
@@ -60,7 +62,7 @@ export const AlbumContainer = ({ query }: ProprQuery) => {
               .map(({ id, albumName, albumImage, trackId }) => (
                 <SwiperSlide key={id}>
                   <Suspense key={id} fallback={<HomeSkeleton />}>
-                    <LazyCardAlbumHome id={id} albumImage={albumImage} albumName={albumName} trackId={trackId} />
+                    <LazyCardAlbumHome id={id} albumImage={albumImage} albumName={albumName} trackId={trackId}  />
                   </Suspense>
                 </SwiperSlide>
               ))}

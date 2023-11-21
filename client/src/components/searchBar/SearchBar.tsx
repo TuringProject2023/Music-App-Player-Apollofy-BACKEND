@@ -6,13 +6,14 @@ import { Button } from "..";
 import { Boop } from "../../animations/boopAnimation";
 import { useAuth0 } from "@auth0/auth0-react";
 import { PROFILE } from "../../config/routes/paths";
-import { useUserContext } from "../../context";
 import { SetURLSearchParams } from "react-router-dom";
+import styled from "styled-components";
+import { useUserContext } from "../../hooks";
 
 interface QueryProps {
   searchParams: URLSearchParams | undefined;
   setSearchParams: SetURLSearchParams | undefined;
-  handleChangeParams:  (e: React.ChangeEvent<HTMLInputElement>) => void ;
+  handleChangeParams?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   query: string | undefined;
 }
 
@@ -55,7 +56,7 @@ export const SearchBar = ({ handleChangeParams, query }: QueryProps) => {
   );
 };
 
-import styled from "styled-components";
+
 
 export const SearchBarContainer = styled.header`
   grid-area: 1 / 1 / 2 / 6;
@@ -144,11 +145,9 @@ export const SearchBarRight = styled.div`
   }
   @media (height < 500px) {
     display: none;
-    
   }
   @media (width < 500px) {
-    
-    .header__username{
+    .header__username {
       display: none;
     }
   }

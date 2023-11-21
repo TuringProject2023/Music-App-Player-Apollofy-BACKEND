@@ -1,5 +1,4 @@
-import { useForm } from 'react-hook-form'
-import { useUserContext } from '../../../context/UserContext';
+import { useForm } from 'react-hook-form';
 import { useState, FC } from 'react';
 import { AlertMessageSuccess } from '../../confirmationMessage/AlertMessageSuccess';
 import { UserFormContainer } from './userFormEditContainer.styled';
@@ -8,6 +7,7 @@ import Modal from '../Modal';
 import { useModal } from '../../../hooks/useModal';
 import { UserDelete } from './UserDelete';
 import { useAuth0 } from '@auth0/auth0-react'
+import { useUserContext } from '../../../hooks';
 
 
 interface userUpdate {

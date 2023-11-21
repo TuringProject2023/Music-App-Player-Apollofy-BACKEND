@@ -2,22 +2,19 @@ import { lazy, Suspense, LazyExoticComponent, ComponentType } from "react";
 import SwiperCore from "swiper";
 import { Navigation, Pagination, EffectCoverflow } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import styled from "styled-components";
+import HomeSkeleton from "../../../assets/skeleton/homeSkeleton";
+import { useUserMusicContext } from "../../../hooks";
+import { breakpoints } from "../../../styles/breakpoints";
+import { TrackProps } from "../../cards/CardForTrack";
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
 SwiperCore.use([Navigation, Pagination]);
 
-import styled from "styled-components";
-
-import HomeSkeleton from "../../../assets/skeleton/homeSkeleton";
-import { useUserMusicContext } from "../../../context";
-import { breakpoints } from "../../../styles/breakpoints";
-import { Track } from "../../cards/CardForTrack";
-
-const LazyCardTrackHome: LazyExoticComponent<ComponentType<Track>> = lazy(() => {
+const LazyCardTrackHome: LazyExoticComponent<ComponentType<TrackProps>> = lazy(() => {
   return new Promise((resolve) => {
     setTimeout(() => {
       return resolve(import("../../cards/CardForTrack"));
@@ -37,7 +34,7 @@ type ProprQuery = {
 };
 export const TracksContainer = ({ query }: ProprQuery) => {
   const { tracks } = useUserMusicContext();
-  
+
   return (
     <TracksContainerStyles>
       <h2 className="tracksTitle">Songs</h2>
@@ -65,7 +62,7 @@ export const TracksContainer = ({ query }: ProprQuery) => {
               .map(({ id, trackName, trackUrl, trackImage }: CardProps) => (
                 <SwiperSlide key={id}>
                   <Suspense key={id} fallback={<HomeSkeleton />}>
-                    <LazyCardTrackHome id={id} trackImage={trackImage} trackName={trackName} trackUrl={trackUrl} artist={[]} userData={""}   />
+                    <LazyCardTrackHome id={id} trackImage={trackImage} trackName={trackName} trackUrl={trackUrl} artist={[]} />
                   </Suspense>
                 </SwiperSlide>
               ))}
@@ -137,10 +134,10 @@ const TracksContainerStyles = styled.div`
     .swiper-pagination {
       bottom: 0px;
     }
-    .swiper-slide-shadow-right{
+    .swiper-slide-shadow-right {
       background-image: none;
     }
-    .swiper-slide-shadow-left{
+    .swiper-slide-shadow-left {
       background-image: none;
     }
   }

@@ -15,6 +15,7 @@ const simulatedUserData = {
     tracksId: ['3', '4'],
     postId: ['5', '6'],
     albumId: ['7', '8'],
+    albumCreatedId: ['9', '10'],
     playlistCreatedId: ['9', '10'],
   };
 beforeEach(() => {

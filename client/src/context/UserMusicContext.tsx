@@ -1,12 +1,12 @@
 /* eslint-disable no-inner-declarations */
-import { createContext, FC, useState, ReactNode, useContext, useEffect } from "react";
+import { createContext, FC, useState, ReactNode, useEffect } from "react";
 import { userPlaylistsCreatedGet, userPlaylistsLikedGet, userAlbumsGet, userTracksGet, createTrack, createArtist, artistGet  } from "../api/user.fetch";
 import { useAuth0 } from "@auth0/auth0-react";
 import { createPlaylist, getAllPlaylist } from "../api/playlist.fetch";
 import { trackDelete, trackPatch } from "../api/track.service";
 import { albumDelete, createAlbum, updateAlbumAddTrack, updateAlbumById } from "../api/album.fetch";
 
-interface UserMusicContextType {
+export interface UserMusicContextType {
   playlistsCreated: PlaylistInterface[];
   playlistsLiked: PlaylistInterface[];
   playlistsAll: PlaylistInterface[];
@@ -129,7 +129,7 @@ interface ArtistInterface {
   trackId: string[];
 }
 
-const UserMusicContext = createContext<UserMusicContextType | undefined>(undefined);
+export const UserMusicContext = createContext<UserMusicContextType | undefined>(undefined);
 
 export const UserMusicProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { getAccessTokenSilently, isAuthenticated, user } = useAuth0();
@@ -138,12 +138,14 @@ export const UserMusicProvider: FC<{ children: ReactNode }> = ({ children }) => 
   const [playlistsAll, setPlaylistsAll] = useState<PlaylistInterface[]>([]);
   const [albums, setAlbums] = useState<AlbumInterface[]>([]);
   const [tracks, setTracks] = useState<TrackInterface[]>([]);
-  const [deleteTrack, setDeleteTrack] = useState<TrackInterface[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [deleteTrack] = useState<TrackInterface[]>([]);
   const [artists, setArtist] = useState<ArtistInterface[]>([]);
   const [tracksCreated, setTracksCreated] = useState<CreateTrackType[]>([]);
   const [artistCreated, setArtistCreated] = useState<CreateArtistType[]>([]);
   const [albumCreated, setAlbumCreated] = useState<albumCreateInterface[]>([]);
-  const [albumDeleted, setAlbumDeleted] = useState<AlbumInterface[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [albumDeleted] = useState<AlbumInterface[]>([]);
   const [newPlaylistCreated, setPlaylistCreated] = useState<PlaylistCreateInterface[]>([]);
   const userEmail = user?.email || "";
 
@@ -159,6 +161,7 @@ export const UserMusicProvider: FC<{ children: ReactNode }> = ({ children }) => 
       }
      getAllMusicLauncher();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, albumCreated]);
 
   const handleUserPlaylistsCreated = async (userEmail: string) => {
@@ -212,7 +215,7 @@ export const UserMusicProvider: FC<{ children: ReactNode }> = ({ children }) => 
   };
   const handleDeleteTrack = async (trackId: string) => {
     try {
-      const responseDelete = await trackDelete(trackId, getAccessTokenSilently);
+      await trackDelete(trackId, getAccessTokenSilently);
       setTracks((prevTracks) => prevTracks.filter((track) => track.id !== trackId));
       const response = await userTracksGet(getAccessTokenSilently);
       setTracks(response);
@@ -352,10 +355,4 @@ export const UserMusicProvider: FC<{ children: ReactNode }> = ({ children }) => 
   );
 };
 
-export const useUserMusicContext = (): UserMusicContextType => {
-  const context = useContext(UserMusicContext);
-  if (!context) {
-    throw new Error("useUserMusicContext debe ser utilizado dentro de un UserMusicProvider");
-  }
-  return context;
-};
+

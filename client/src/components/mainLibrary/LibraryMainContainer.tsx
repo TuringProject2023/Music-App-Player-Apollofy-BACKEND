@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { AlbumCreateForm, Modal, PlaylistCreateForm, SearchBar, TracksCreateForm } from "..";
 import { useSearchParams } from "react-router-dom";
 import { breakpoints } from "../../styles/breakpoints";
-import { useUserMusicContext } from "../../context/UserMusicContext";
+import { useUserMusicContext } from "../../hooks";
+
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { useModal } from "../../hooks/useModal";
 import { AddDropdownMenu } from "../dropdownMenu/AddDropdownMenu";
@@ -219,9 +220,9 @@ const LibraryMainContainerStyles = styled.main`
 
   .toasterContainer {
     position: fixed;
-    top: 10%; /* Centra verticalmente */
-    left: 50%; /* Centra horizontalmente */
-    transform: translate(-50%, -50%); /* Ajusta el centro */
+    top: 10%;
+    left: 50%; 
+    transform: translate(-50%, -50%); 
     font-family: system-ui, "Segoe UI", "Open Sans", "Helvetica Neue", sans-serif;
     width: 320px;
     padding: 12px;

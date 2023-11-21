@@ -13,10 +13,11 @@ SwiperCore.use([Navigation, Pagination]);
 import styled from "styled-components";
 
 import HomeSkeleton from "../../../assets/skeleton/homeSkeleton";
-import { useUserMusicContext } from "../../../context";
+import { useUserMusicContext } from "../../../hooks";
 import { breakpoints } from "../../../styles/breakpoints";
+import { PlaylistProps } from "../../cards/CardForPlaylistPlayerHome";
 
-const LazyCardPlaylistHome: LazyExoticComponent<ComponentType<any>> = lazy(() => {
+const LazyCardPlaylistHome: LazyExoticComponent<ComponentType<PlaylistProps>> = lazy(() => {
   return new Promise((resolve) => {
     setTimeout(() => {
       return resolve(import("../../cards/CardForPlaylistPlayerHome"));
@@ -35,8 +36,8 @@ export const PlaylistContainerHome = ({ query }: ProprQuery) => {
     <PlaylistContainerStyles>
       <h2 className="playlistTitle">Playlists</h2>
       {playlistsAll && (
-        <Swiper 
-        navigation
+        <Swiper
+          navigation
           slidesPerView={3}
           spaceBetween={30}
           effect={"coverflow"}
@@ -130,10 +131,10 @@ const PlaylistContainerStyles = styled.div`
     .swiper-pagination {
       bottom: 0px;
     }
-    .swiper-slide-shadow-right{
+    .swiper-slide-shadow-right {
       background-image: none;
     }
-    .swiper-slide-shadow-left{
+    .swiper-slide-shadow-left {
       background-image: none;
     }
   }

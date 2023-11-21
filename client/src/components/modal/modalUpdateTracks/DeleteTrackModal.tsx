@@ -1,10 +1,9 @@
 import { FC, useState } from "react";
-import { useUserMusicContext } from "../../../context/UserMusicContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "styled-components";
 import { trackDelete } from "../../../api/track.service";
 import { AlertMessageSuccess, LoaderForm } from "../..";
-import { useUserContext } from "../../../context";
+import { useUserContext, useUserMusicContext } from "../../../hooks";
 
 interface ModalConfirmationProps {
   onClose: () => void;

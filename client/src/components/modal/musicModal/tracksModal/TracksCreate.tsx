@@ -2,10 +2,9 @@ import styled from "styled-components";
 import { useState, FC } from "react";
 import { AlertMessageSuccess, LoaderForm } from "../../..";
 import { useForm, Controller } from "react-hook-form";
-import { useGenresContext, useUserContext } from "../../../../context";
-import { useUserMusicContext } from "../../../../context/UserMusicContext";
 import { MultiSelect } from "react-multi-select-component";
 import { readData } from "../../../../utils/readData";
+import { useUserContext, useGenresContext, useUserMusicContext } from "../../../../hooks";
 
 interface userFormModal {
   closeModal: () => void;

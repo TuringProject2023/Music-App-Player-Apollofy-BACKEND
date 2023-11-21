@@ -1,10 +1,10 @@
-import { FC, PropsWithChildren, ReactNode, createContext, useContext, useEffect, useState } from "react";
-import { useUserMusicContext } from "./UserMusicContext";
+import { FC, PropsWithChildren, createContext, useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { loadNextTracksFromLS, saveNextTracksToLS } from "../utils/nextTracksToLS";
+import { useUserMusicContext } from "../hooks";
 
 
-interface QueuePlayerContextType {
+export interface QueuePlayerContextType {
     currentTrack: TrackInterface | undefined;
     handleCurrentTrackById: (id: string) => void;
     nextTracks: TrackInterface[] | [];
@@ -41,7 +41,7 @@ interface ArtistInterface {
     trackId: string[]
 }
 
-const QueuePlayerContext = createContext<QueuePlayerContextType | undefined>(undefined);
+export const QueuePlayerContext = createContext<QueuePlayerContextType | undefined>(undefined);
 
 export const QueuePlayerProvider: FC<PropsWithChildren> = ({ children }) => {
 
@@ -53,10 +53,10 @@ export const QueuePlayerProvider: FC<PropsWithChildren> = ({ children }) => {
 
     useEffect(() => {
         if (isAuthenticated) {
-            setNextTracks(loadNextTracksFromLS(user?.email))
+            setNextTracks(loadNextTracksFromLS(user?.email as string ))
         }
 
-    }, [isAuthenticated])
+    }, [isAuthenticated, user?.email])
 
 
     const handleCurrentTrackById = (id: string) => {
@@ -70,13 +70,13 @@ export const QueuePlayerProvider: FC<PropsWithChildren> = ({ children }) => {
         if (incomingTrack) {
             setNextTracks(prevNextTracks => [...prevNextTracks, incomingTrack]);
             const newNextTracks = [...nextTracks, incomingTrack]
-            saveNextTracksToLS(newNextTracks, user?.email);
+            saveNextTracksToLS(newNextTracks, user?.email as string);
         }
     }
     const handleDeleteTrackInList = (index: number) => {
-        const newNextTracks = nextTracks.filter((track, i) => i !== index);
+        const newNextTracks = nextTracks.filter((_track, i) => i !== index);
         setNextTracks(newNextTracks);
-        saveNextTracksToLS(newNextTracks, user?.email);
+        saveNextTracksToLS(newNextTracks, user?.email as string);
     }
     const handleNextTrackInList = () => {
         if (nextTracks && nextTracks?.length > 0) {
@@ -88,7 +88,7 @@ export const QueuePlayerProvider: FC<PropsWithChildren> = ({ children }) => {
             if (incomingTrack) {
                 setCurrentTrack(incomingTrack);
                 setNextTracks(nextTracks.slice(1));
-                saveNextTracksToLS(nextTracks.slice(1), user?.email);
+                saveNextTracksToLS(nextTracks.slice(1), user?.email as string);
             }
         }
     }
@@ -99,7 +99,7 @@ export const QueuePlayerProvider: FC<PropsWithChildren> = ({ children }) => {
             if (currentTrack) {
                 const newNextTracks = [currentTrack, ...nextTracks];
                 setNextTracks(newNextTracks);
-                saveNextTracksToLS(newNextTracks, user?.email);
+                saveNextTracksToLS(newNextTracks, user?.email as string);
             }
             setCurrentTrack(selectedPrevTrack);
 
@@ -124,7 +124,7 @@ export const QueuePlayerProvider: FC<PropsWithChildren> = ({ children }) => {
         })
         setCurrentTrack(newNextTracks[0]);
         setNextTracks(newNextTracks.slice(1));
-        saveNextTracksToLS(newNextTracks, user?.email);
+        saveNextTracksToLS(newNextTracks, user?.email as string);
     }
 
 
@@ -134,11 +134,3 @@ export const QueuePlayerProvider: FC<PropsWithChildren> = ({ children }) => {
         </QueuePlayerContext.Provider>
     )
 }
-
-export const useQueuePlayerContext = (): QueuePlayerContextType => {
-    const context = useContext(QueuePlayerContext);
-    if (!context) {
-        throw new Error("useUserMusicContext debe ser utilizado dentro de un UserMusicProvider");
-    }
-    return context;
-};

@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { useState, FC } from "react";
-import { useGenresContext, useUserContext, useUserMusicContext } from "../../../context";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { MultiSelect } from "react-multi-select-component";
 import { LoaderForm, AlertMessageSuccess } from "../..";
 import { readData } from "../../../utils/readData";
+import { useUserMusicContext, useGenresContext, useUserContext } from "../../../hooks";
 
 interface albumFormModal {
   id: string;
@@ -31,24 +31,12 @@ interface Option {
   value: string;
 }
 
-export const ModalUpdateAlbum: FC<albumFormModal> = ({id, closeModal, albumName, albumImage, albumCreatedAt, genreId, artistId, trackId }) => {
-  const { albums, tracks, artists, modifyAlbum } = useUserMusicContext();
+export const ModalUpdateAlbum: FC<albumFormModal> = ({ closeModal, albumName, albumImage, albumCreatedAt }) => {
+  const { tracks, artists, modifyAlbum } = useUserMusicContext();
   const { allGenres } = useGenresContext();
   const { userData } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [albumUpdated, setAlbumUpdated] = useState(false);
-
-  // const updateAlbum = async (formData: FormData): Promise<Response> => {
-  //   try {
-  //     const response = await modifyAlbum(formData, id);
-  //     setAlbumUpdated(response);
-  //     return response;
-  //   } catch (error) {
-  //     console.error("Error getting albums:", error);
-  //     throw error;
-  //   }
-  // };
 
   const form = useForm({
     defaultValues: {
@@ -69,9 +57,14 @@ export const ModalUpdateAlbum: FC<albumFormModal> = ({id, closeModal, albumName,
       setIsLoading(true);
       const formData = new FormData();
       formData.append("albumName", modifyAlbumData.albumName);
-      if(modifyAlbumData.albumImage[0]){
-        const imageAlbum:any = await readData(modifyAlbumData.albumImage[0])
-        formData.append("albumImage", imageAlbum);
+      if (modifyAlbumData.albumImage[0]) {
+        const imageAlbum: unknown = await readData(modifyAlbumData.albumImage[0]);
+      
+        if (typeof imageAlbum === 'string' || imageAlbum instanceof Blob) {
+          formData.append("albumImage", imageAlbum);
+        } else {
+          console.error("Invalid type for albumImage");
+        }
       }
       formData.append("albumImage", modifyAlbumData.albumImage[0]);
       formData.append("albumCreatedAt", modifyAlbumData.albumCreatedAt);

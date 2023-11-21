@@ -3,17 +3,18 @@ import { ALBUM } from "../../config/routes/paths";
 import styled from "styled-components";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { breakpoints } from "../../styles/breakpoints";
-import { useUserContext, useUserMusicContext } from "../../context";
-import { useState } from "react";
 
-interface AlbumProps {
+import { useState } from "react";
+import { useUserContext, useUserMusicContext } from "../../hooks";
+
+export interface AlbumProps {
   id: string;
   albumName: string;
-  albumUrl: string;
+  trackId: string[];
   albumImage: string;
 }
 
-const CardForAlbum = ({ id, albumName, albumUrl, albumImage }: AlbumProps) => {
+const CardForAlbum = ({ id, albumName, albumImage }: AlbumProps) => {
   const { albums, artists } = useUserMusicContext();
   const { userData, handleUserData } = useUserContext();
   const [isLiked, setIsLiked] = useState(userData?.albumId.includes(id));
@@ -31,7 +32,7 @@ const CardForAlbum = ({ id, albumName, albumUrl, albumImage }: AlbumProps) => {
     <CardForAlbumStyles key={id}>
       <Link to={`${ALBUM}/${id}`} className="cardForAlbum">
         <div className="cardForAlbum__header">
-          <img alt={albumUrl} className="cardForAlbum__header_img" src={albumImage} />
+          <img alt={`Album image: ${albumName}`} className="cardForAlbum__header_img" src={albumImage} />
         </div>
         <div className="cardForAlbum__body">
           <h3 className="cardForAlbum__body_title-h3">{albumName}</h3>

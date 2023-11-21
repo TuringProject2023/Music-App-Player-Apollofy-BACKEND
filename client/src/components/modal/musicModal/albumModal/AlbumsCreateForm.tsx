@@ -2,10 +2,9 @@ import styled from "styled-components";
 import { useState, FC } from "react";
 import { AlertMessageSuccess, LoaderForm } from "../../..";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { useUserMusicContext } from "../../../../context/UserMusicContext";
 import { MultiSelect } from "react-multi-select-component";
-import { useGenresContext, useUserContext } from "../../../../context";
 import { readData } from "../../../../utils/readData";
+import { useUserMusicContext, useGenresContext, useUserContext } from "../../../../hooks";
 
 interface userFormModal {
   closeModal: () => void;
@@ -51,10 +50,14 @@ export const AlbumCreateForm: FC<userFormModal> = ({ closeModal }) => {
       setIsLoading(true);
       const formData = new FormData();
       formData.append("albumName", newAlbumData.albumName);
-      if(newAlbumData.albumImage[0]){
-        const imageAlbum:any = await readData(newAlbumData.albumImage[0])
-        formData.append("albumImage", imageAlbum);
-
+      if (newAlbumData.albumImage[0]) {
+        const imageAlbum: unknown = await readData(newAlbumData.albumImage[0])
+      
+        if (typeof imageAlbum === 'string' || imageAlbum instanceof Blob) {
+          formData.append("albumImage", imageAlbum);
+        } else {
+          console.error("Invalid type for albumImage");
+        }
       }
       formData.append("albumCreatedAt", newAlbumData.albumCreatedAt);
       if (Array.isArray(newAlbumData.artistId)) {

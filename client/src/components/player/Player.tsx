@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { AudioPlayerComponent } from "..";
 import { breakpoints } from '../../styles/breakpoints.ts'
-import { useQueuePlayerContext } from "../../context/QueuePlayerContext.tsx";
+import { useQueuePlayerContext } from "../../hooks/useQueuePlayerContext";
 
 
 export const Player = () => {

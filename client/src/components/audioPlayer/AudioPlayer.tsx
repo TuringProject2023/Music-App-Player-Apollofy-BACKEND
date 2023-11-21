@@ -1,19 +1,11 @@
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import styled from "styled-components";
-import { useQueuePlayerContext } from "../../context/QueuePlayerContext";
-import { useEffect, useState } from "react";
+import { useQueuePlayerContext } from "../../hooks/useQueuePlayerContext";
 
 export const AudioPlayerComponent = () => {
   const { currentTrack, handleNextTrackInList, handlePrevTrackInList } = useQueuePlayerContext();
-  // const [isPlaying, setIsPlaying] = useState(false);
-
-  // useEffect(() => {
-  //   if (currentTrack?.trackUrl) {
-  //     setIsPlaying(true);
-  //   }
-  // }, [currentTrack]);
-
+ 
   return (
     <AudioPlayerStyles>
       <AudioPlayer

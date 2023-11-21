@@ -1,12 +1,12 @@
 import { IoChevronBackOutline, IoEllipsisVerticalSharp } from "react-icons/io5";
 import { Boop } from "../../animations/boopAnimation";
-import { useUserContext } from "../../context";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TfiPencil } from "react-icons/tfi";
 import { useModal } from "../../hooks/useModal";
 import Modal from "../modal/Modal";
 import { UserForms, ArtistCreateForm } from "..";
 import styled from "styled-components";
+import { useUserContext } from "../../hooks";
 
 export const ProfileMainContainer = () => {
   const { user } = useAuth0();

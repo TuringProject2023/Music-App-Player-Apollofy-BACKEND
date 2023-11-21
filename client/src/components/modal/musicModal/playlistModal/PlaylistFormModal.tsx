@@ -2,10 +2,9 @@ import styled from "styled-components";
 import { useState, FC } from "react";
 import { AlertMessageSuccess, LoaderForm } from "../../..";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { useUserMusicContext } from "../../../../context/UserMusicContext";
 import { MultiSelect } from "react-multi-select-component";
-import { useGenresContext, useUserContext } from "../../../../context";
 import { readData } from "../../../../utils/readData";
+import { useUserMusicContext, useUserContext, useGenresContext } from "../../../../hooks";
 
 interface userFormModal {
   closeModal: () => void;
@@ -19,10 +18,12 @@ interface CreatePlaylistType {
   trackId: string[];
 }
 
+
 interface Option {
   label: string;
   value: string;
 }
+
 
 export const PlaylistCreateForm: FC<userFormModal> = ({ closeModal }) => {
   const { createNewPlaylist, tracks } = useUserMusicContext();
@@ -51,8 +52,13 @@ export const PlaylistCreateForm: FC<userFormModal> = ({ closeModal }) => {
       formData.append("playlistName", newPlaylistData.playlistName);
       formData.append("playlistCreatedById", newPlaylistData.playlistCreatedById);
       if (newPlaylistData.playlistImage[0]){
-        const imagePlaylist:any = await readData(newPlaylistData.playlistImage[0])
-        formData.append("playlistImage", imagePlaylist);
+        const imagePlaylist: unknown = await readData(newPlaylistData.playlistImage[0])
+      
+        if (typeof imagePlaylist === 'string' || imagePlaylist instanceof Blob) {
+          formData.append("playlistImage", imagePlaylist);
+        } else {
+          console.error("Invalid type for albumImage");
+        }
       }
 
       if (Array.isArray(newPlaylistData.trackId)) {
@@ -104,7 +110,8 @@ export const PlaylistCreateForm: FC<userFormModal> = ({ closeModal }) => {
             control={control}
             render={({ field }) => (
               <MultiSelect
-                options={allGenres.map((genre) => ({ label: genre.genreName, value: genre.id }))}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                options={allGenres.map((genre: any) => ({ label: genre.genreName, value: genre.id }))}
                 labelledBy="Select Genre"
                 {...field}
                 overrideStrings={{
@@ -119,7 +126,8 @@ export const PlaylistCreateForm: FC<userFormModal> = ({ closeModal }) => {
             control={control}
             render={({ field }) => (
               <MultiSelect
-                options={tracks.map((track) => ({ label: track.trackName, value: track.id }))}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                options={tracks.map((track: any) => ({ label: track.trackName, value: track.id }))}
                 labelledBy="Select Track"
                 {...field}
                 overrideStrings={{

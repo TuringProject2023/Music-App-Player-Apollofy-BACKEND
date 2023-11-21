@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { SearchBar } from "..";
 import { useParams, useSearchParams } from "react-router-dom";
 import { breakpoints } from "../../styles/breakpoints";
-import { useUserMusicContext } from "../../context/UserMusicContext";
+import { useUserMusicContext } from "../../hooks";
+
 import { BiSolidPlaylist } from "react-icons/bi";
-import { useQueuePlayerContext } from "../../context/QueuePlayerContext";
+import { useQueuePlayerContext } from "../../hooks/useQueuePlayerContext";
 import { TrackProps } from '../mainLibrary/cards/TracksForLibrary';
 
 

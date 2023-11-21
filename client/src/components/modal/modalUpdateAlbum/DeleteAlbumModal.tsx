@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { useUserContext } from "../../../context";
-import { useUserMusicContext } from "../../../context";
+import { useUserContext, useUserMusicContext } from "../../../hooks";
+
 
 interface ModalConfirmationProps {
   onClose: () => void;

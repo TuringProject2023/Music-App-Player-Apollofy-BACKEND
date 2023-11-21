@@ -1,5 +1,6 @@
 
-export const saveNextTracksToLS = (nextTracks, userEmail: string) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const saveNextTracksToLS = (nextTracks: any, userEmail: string) => {
 
     try {
         const nextTracksLS = JSON.stringify(nextTracks);

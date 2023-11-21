@@ -1,9 +1,9 @@
 import {FC,useState} from 'react'
-import { UserDeleteContainer } from './userDeleteContainer.styled'
-import { useUserContext } from '../../../context';
+import { UserDeleteContainer } from './userDeleteContainer.styled';
 import { useAuth0 } from '@auth0/auth0-react';
 import { LoaderForm } from '../..';
 import { AlertMessageSuccess } from '../../confirmationMessage/AlertMessageSuccess';
+import { useUserContext } from '../../../hooks';
 
 interface ModalConfirmationProps {
     onClose: () => void;

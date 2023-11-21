@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { PLAYER } from "../../../config/routes/paths";
 import styled from "styled-components";
 import { breakpoints } from "../../../styles/breakpoints";
-import { useQueuePlayerContext } from "../../../context/QueuePlayerContext";
+import { useQueuePlayerContext } from "../../../hooks/useQueuePlayerContext";
 import { DropdownMenu } from "../../modal/modalUpdateTracks/DropdownMenu";
 
 export interface TrackProps {

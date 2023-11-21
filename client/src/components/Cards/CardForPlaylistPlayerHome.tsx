@@ -1,21 +1,24 @@
 import { useState } from "react";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
-import { useUserContext} from "../../context";
+import { useUserContext } from "../../hooks";
+
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { PLAYLISTS } from "../../config/routes/paths";
 import { breakpoints } from "../../styles/breakpoints";
 
-interface Playlist {
+export interface PlaylistProps {
   id: string;
   playlistImage?: string;
   playlistName: string;
-  trackId?: string;
+  trackId?: string[];
 }
 
-const CardForPlaylistPlayerHome = ({ id, playlistImage, playlistName, trackId }: Playlist) => {
+const CardForPlaylistPlayerHome = ({ id, playlistImage, playlistName }: PlaylistProps) => {
   const { userData, handleUserData } = useUserContext();
   const [isLiked, setIsLiked] = useState(userData?.playlistLikedId.includes(id));
+
+  
 
   const handleLiked = (id: string) => {
     handleUserData(id, "playlist");
@@ -26,7 +29,7 @@ const CardForPlaylistPlayerHome = ({ id, playlistImage, playlistName, trackId }:
     <CardForPlaylistPlayerHomeStyles>
       <Link to={`${PLAYLISTS}/${id}`} className={"cardForPlaylistPlayer"}>
         <div className="cardForPlaylistPlayer__header">
-          <img className="cardForPlaylistPlayer__header_img" src={playlistImage} alt={trackId} />
+          <img className="cardForPlaylistPlayer__header_img" src={playlistImage} alt={`Track image: ${playlistName}`} />
         </div>
         <div className="cardForPlaylistPlayer__body">
           <h3 className="cardForPlaylistPlayer__body_title-h3">{playlistName}</h3>

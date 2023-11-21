@@ -1,13 +1,14 @@
 import { LazyExoticComponent, ComponentType, lazy } from "react";
 import styled from "styled-components";
-import { SearchBar } from "..";
-import { useParams } from "react-router-dom";
+import { SearchBar, TrackProps } from "..";
+import { useParams, useSearchParams } from "react-router-dom";
 import { breakpoints } from "../../styles/breakpoints";
-import { useUserMusicContext } from "../../context/UserMusicContext";
-import { BiSolidPlaylist } from 'react-icons/bi'
-import { useQueuePlayerContext } from "../../context/QueuePlayerContext";
+import { useUserMusicContext } from "../../hooks";
 
-const LazyCards: LazyExoticComponent<ComponentType<any>> = lazy(() => {
+import { BiSolidPlaylist } from "react-icons/bi";
+import { useQueuePlayerContext } from "../../hooks/useQueuePlayerContext";
+
+const LazyCards: LazyExoticComponent<ComponentType<TrackProps>> = lazy(() => {
   return new Promise((resolve) => {
     setTimeout(() => {
       return resolve(import("../mainLibrary/cards/TracksForLibrary"));
@@ -20,19 +21,29 @@ export const AlbumMainContainer = () => {
   const { albums } = useUserMusicContext();
   const { handleListChange } = useQueuePlayerContext();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("q") || "";
+
+  const handleChangeParams = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams({ q: target.value });
+  };
+
   const selectedAlbum = albums.find((album) => album.id === id);
 
   return (
     <>
       <AlbumMainContainerStyles>
-        <SearchBar setSearchParams={undefined} searchParams={undefined} handleChangeParams={undefined} query={undefined} />
+        <SearchBar setSearchParams={setSearchParams} searchParams={searchParams} handleChangeParams={handleChangeParams} query={query} />
 
         <section className="titleDiv">
-          <h2 className="titleDiv__h2">{selectedAlbum && selectedAlbum.albumName}<BiSolidPlaylist className="titleDiv__icon" onClick={() => handleListChange(selectedAlbum ? selectedAlbum?.trackId : [])} /> </h2>
+          <h2 className="titleDiv__h2">
+            {selectedAlbum && selectedAlbum.albumName}
+            <BiSolidPlaylist className="titleDiv__icon" onClick={() => handleListChange(selectedAlbum ? selectedAlbum?.trackId : [])} />{" "}
+          </h2>
         </section>
         <section className="zone-cards">
-          {selectedAlbum?.track.map(({ id, trackName, trackUrl, trackImage, trackCreatedAt, artist }) => (
-            <LazyCards key={id} id={id} trackName={trackName} trackUrl={trackUrl} trackImage={trackImage} trackCreatedAt={trackCreatedAt} artist={artist} />
+          {selectedAlbum?.track.map(({ id, trackName, trackUrl, trackImage, trackCreatedAt, artist, albumId, artistId, genre, genreId, trackCreatedById, trackLikedById, trackUpdatedAt }) => (
+            <LazyCards key={id} id={id} trackName={trackName} trackUrl={trackUrl} trackImage={trackImage} trackCreatedAt={trackCreatedAt} artist={artist} albumId={albumId} artistId={artistId} genre={genre} genreId={genreId} trackCreatedById={trackCreatedById} trackId={id} trackLikedById={trackLikedById} trackUpdatedAt={trackUpdatedAt}  />
           ))}
         </section>
       </AlbumMainContainerStyles>

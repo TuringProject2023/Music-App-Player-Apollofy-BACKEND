@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { PLAYER, PLAYLISTS } from '../../../config/routes/paths';
+import { PLAYLISTS } from '../../../config/routes/paths';
 import styled from 'styled-components';
 import { breakpoints } from '../../../styles/breakpoints';
 

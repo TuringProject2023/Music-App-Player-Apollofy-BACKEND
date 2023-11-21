@@ -16,7 +16,9 @@ function usePrefersReducedMotion() {
   );
   React.useEffect(() => {
     const mediaQueryList = window.matchMedia(QUERY);
-    const listener = (event) => {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const listener = (event: { matches: any; }) => {
       setPrefersReducedMotion(!event.matches);
     };
     if (mediaQueryList.addEventListener) {
@@ -68,11 +70,11 @@ function useBoop({
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [isBooped]);
+  }, [isBooped, timing]);
   const trigger = React.useCallback(() => {
     setIsBooped(true);
   }, []);
-  let appliedStyle = prefersReducedMotion ? {} : style;
+  const appliedStyle = prefersReducedMotion ? {} : style;
   return [appliedStyle, trigger];
 }
 export default useBoop;

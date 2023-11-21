@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useQueuePlayerContext } from '../../../context/QueuePlayerContext';
+import { useQueuePlayerContext } from "../../../hooks/useQueuePlayerContext";
 import { FaTimes } from 'react-icons/fa';
 import { breakpoints } from '../../../styles/breakpoints';
 

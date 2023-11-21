@@ -14,8 +14,7 @@ function App() {
 				<UserProvider>
 					<GenresProvider>
 						<QueuePlayerProvider>
-							<Router />
-							
+							<Router />							
 						</QueuePlayerProvider>
 					</GenresProvider>
 				</UserProvider>

@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { useState, FC } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useGenresContext } from "../../../context";
-import { useUserMusicContext } from "../../../context/UserMusicContext";
+
 import { MultiSelect } from "react-multi-select-component";
 import { AlertMessageSuccess, ButtonAdd, LoaderForm } from "../..";
 import { readData } from "../../../utils/readData";
+import { useGenresContext, useUserMusicContext } from "../../../hooks";
 
 interface trackFormModal {
   closeModal2: () => void;
@@ -19,7 +19,7 @@ interface trackFormModal {
   albumId: string;
 }
 interface ModifyTrackType {
-  id: string;
+  id?: string;
   trackName: string;
   trackUrl: string;
   trackImage: string;
@@ -45,9 +45,9 @@ export const ModifyTrackModal: FC<trackFormModal> = ({ closeModal2, id, trackNam
       trackName: trackName,
       trackImage: trackImage,
       trackUrl: trackUrl,
-      genreId: [genreId],
-      artistId: [artistId],
-      albumId: [albumId],
+      genreId: genreId,
+      artistId: artistId,
+      albumId: albumId,
       trackCreatedAt: trackCreatedAt,
     },
   });
@@ -64,11 +64,14 @@ export const ModifyTrackModal: FC<trackFormModal> = ({ closeModal2, id, trackNam
       formData.append("trackUrl", modifyTrackData.trackUrl[0]);
 
       if (modifyTrackData.trackImage[0]) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const imageTrack: any = await readData(modifyTrackData.trackImage[0]);
-        formData.append("trackImage", imageTrack);
+        const imageTrack: unknown = await readData(modifyTrackData.trackImage[0]);
+
+        if (typeof imageTrack === "string" || imageTrack instanceof Blob) {
+          formData.append("albumImage", imageTrack);
+        } else {
+          console.error("Invalid type for imageTrack");
+        }
       }
-      // formData.append("trackImage", modifyTrackData.trackImage[0]);
 
       if (Array.isArray(modifyTrackData.artistId)) {
         for (const artist of modifyTrackData.artistId as unknown as Option[]) {
@@ -130,13 +133,14 @@ export const ModifyTrackModal: FC<trackFormModal> = ({ closeModal2, id, trackNam
                 options={allGenres.map((genre) => ({ label: genre.genreName, value: genre.id }))}
                 labelledBy="Select Genre"
                 {...field}
+                value={genreId.map((id) => ({ label: id, value: id }))}
                 overrideStrings={{
                   selectSomeItems: "Select Genre",
                 }}
               />
             )}
           />
-          {errors.genreId && <span className="error_input">At least one genre is required</span>}
+          // Repite un patrón similar para artistId y albumId
           <Controller
             name="artistId"
             control={control}
@@ -145,6 +149,7 @@ export const ModifyTrackModal: FC<trackFormModal> = ({ closeModal2, id, trackNam
                 options={artists.map((artist) => ({ label: artist.artistName, value: artist.id }))}
                 labelledBy="Select Artist"
                 {...field}
+                value={artistId.map((id) => ({ label: id, value: id }))}
                 overrideStrings={{
                   selectSomeItems: "Select Artist",
                 }}
@@ -159,6 +164,7 @@ export const ModifyTrackModal: FC<trackFormModal> = ({ closeModal2, id, trackNam
                 options={albums.map((album) => ({ label: album.albumName, value: album.id }))}
                 labelledBy="Select Album"
                 {...field}
+                value={albumId ? [{ label: albumId, value: albumId }] : []}
                 overrideStrings={{
                   selectSomeItems: "Select Album",
                 }}
@@ -195,9 +201,9 @@ export const ModifyTrackModal: FC<trackFormModal> = ({ closeModal2, id, trackNam
           {errors.trackUrl && <span className="error_input">{errors.trackUrl.message}</span>}
         </div>
         <ButtonAdd type="submit">
-        <span className="shadow"></span>
+          <span className="shadow"></span>
           <span className="front">
-            <strong className='font-size'>Update Track</strong>
+            <strong className="font-size">Update Track</strong>
           </span>
         </ButtonAdd>
       </form>
